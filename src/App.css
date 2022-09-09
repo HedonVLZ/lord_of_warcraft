@@ -1,0 +1,76 @@
+.App-logo {
+  width: 5rem;
+  height: 5rem;
+}
+
+.xp1, .xp2 {
+  color: green;
+}
+
+.mp1, .mp2 {
+  color: blue;
+}
+.gold1, .gold2, .income1, .income2 {
+  color: orange;
+}
+
+.int1, .int2 {
+  color: darkblue;
+}
+.ability {
+  width: 2rem;
+  height: 2rem;
+}
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+.unit {
+  border: 1px solid black;
+  background-color: antiquewhite;
+  line-height: 0.1;
+  width: 150px;
+  height: 235px;
+}
+.unit.selectedUnit {
+  border: 1px solid blue;
+  outline: 3px solid blue;
+}
+
+.units11, .units12, .units21, .units22  {
+  display: flex;
+  flex-direction: row;
+}
+.userInput {
+  display: flex;
+  flex-direction: row;
+}
+.cell {
+  border-style: double;
+  background-color: whitesmoke;
+  height: 250px;
+  width: 168px;
+}
+.cells {
+  display: flex;
+  flex-direction: row;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
