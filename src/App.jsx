@@ -71,7 +71,7 @@ import windRunner from './winda.png';
 import ShackleShot from './vinda_1.jpg';
 import PowerShot from './vinda_2.jpg';
 import BTNSlow from './BTNSlow.webp';
-import cloneDeep from 'lodash'
+import { cloneDeep } from 'lodash'
 import BTNPeon from './BTNPeon.webp';
 import PASBTNPillage from './PASBTNPillage.webp';
 import BTNRaider from './BTNRaider.webp';
@@ -88,10 +88,463 @@ import NaturalOrder from './Natural_Order.jpg';
 import BTNHeroTaurenChieftain from './BTNHeroTaurenChieftain.webp';
 import BTNCriticalStrike from './BTNCriticalStrike.webp';
 import BTNHeroBlademaster from './BTNHeroBlademaster.webp';
+import BTNSkeletonWarrior from './BTNSkeletonWarrior.webp';
+import BTNSkeletonMage from './BTNSkeletonMage.webp';
+import BTNSacrifice from './BTNSacrifice.webp';
+import SkeletonKing from './Skeleton_King.gif';
+import CriticalStrike from './Critical_Strike.jpg';
+import ReincarnationImg from './Reincarnation.gif';
+import BTNOrbOfCorruption from './BTNOrbOfCorruption.webp';
+import BTNAntiMagicShell from './BTNAntiMagicShell.webp';
+import BTNUnholyFrenzy from './BTNUnholyFrenzy.webp';
+import BTNHeal from './BTNHeal.webp';
+import BTNDeathCoil from './BTNDeathCoil.webp';
+import BTNCorpseExplode from './BTNCorpseExplode.webp';
+import BTNInnerFire from './BTNInnerFire.webp';
+import BTNResurrection from './BTNResurrection.webp';
+import Purifying_Flames from './Purifying_Flames.jpg';
+import Stygian_Desolator from './Stygian_Desolator.png';
 
+import { Magic } from './magic'
 import { Unit } from './unit'
 import { Cell } from './cell'
+
+let income1 = 10
+let income2 = 10
+let defaultBoneFletcher = {
+    type: "unitCard",
+    img: BTNSkeletonMage,
+    name: "BoneFletcher",
+    attack: 3,
+    rangeOfAttack: "range",
+    typeOfAttack: "physic",
+    attackSpeed: 3,
+    hp: 9,
+    hpMax: 9,
+    armor: 1,
+    DefaultArmor: 1,
+    abilityImg: [BTNSkeletalLongevity],
+    ability: ["undead"],
+    cost: 72,
+}
+let defaultSkeletonWarrior = {
+    type: "summunitCardon",
+    img: BTNSkeletonWarrior,
+    name: "SkeletonWarrior",
+    attack: 3,
+    rangeOfAttack: "melee",
+    typeOfAttack: "physic",
+    attackSpeed: 1,
+    hp: 9,
+    hpMax: 9,
+    armor: 1,
+    DefaultArmor: 1,
+    abilityImg: [BTNSkeletalLongevity],
+    ability: ["undead"],
+    cost: 23,
+}
+
+let defaultSkeletonKing = {
+    type: "unitCard",
+    img: SkeletonKing,
+    name: "SkeletonKing",
+    attack: 4,
+    rangeOfAttack: "melee",
+    typeOfAttack: "physic",
+    attackSpeed: 1,
+    hp: 16,
+    hpMax: 16,
+    armor: 2,
+    DefaultArmor: 2,
+    abilityImg: [BTNSkeletalLongevity, CriticalStrike],
+    ability: ["undead", "CriticalStrike15X3"],
+    cost: 131,
+}
+let raiseSkeleton = {
+    name: "raiseSkeleton",
+    img: BTNSkeletonWarrior,
+    type: "magic",
+    target: ["ally"],
+    manacost: 23,
+    bonusXP: 0,
+    effect: function (target, numberOfPlayer, Intelligence) {
+        if (target.cl.ability.indexOf("building") > -1 || target.player !== numberOfPlayer || target.cl.hp > 0) {
+            alert("incorrect target")
+            return
+        } else {
+            return {
+                ...defaultSkeletonWarrior,
+                cl: {
+                    ...defaultSkeletonWarrior,
+                    hp: defaultSkeletonWarrior.hp + Intelligence - 3,
+                    hpMax: defaultSkeletonWarrior.hpMax + Intelligence - 3
+                }
+            }
+        }
+    }
+
+}
+
+let raiseBoneFletcher = {
+    name: "raiseBoneFletcher",
+    img: BTNSkeletonMage,
+    type: "magic",
+    target: ["ally"],
+    manacost: 72,
+    bonusXP: 0,
+    effect: function (target, numberOfPlayer, Intelligence) {
+        if (target.cl.ability.indexOf("building") > -1 || target.player !== numberOfPlayer || target.cl.hp > 0) {
+            alert("incorrect target")
+            return
+        } else {
+            return {
+                ...defaultBoneFletcher,
+                cl: {
+                    ...defaultBoneFletcher,
+                    attack: defaultBoneFletcher.attack + Intelligence - 3
+                }
+            }
+        }
+    }
+}
+let raiseSkeletonKing = {
+    name: "raiseSkeletonKing",
+    img: SkeletonKing,
+    type: "magic",
+    target: ["ally"],
+    manacost: 131,
+    bonusXP: 0,
+    effect: function (target, numberOfPlayer, Intelligence) {
+        if (target.cl.ability.indexOf("building") > -1 || target.player !== numberOfPlayer || target.cl.hp > 0) {
+            alert("incorrect target")
+            return
+        } else {
+            return {
+                ...defaultSkeletonKing,
+                cl: {
+                    ...defaultSkeletonKing.cl,
+                    hp: defaultSkeletonKing.hp + 2 * Intelligence - 6,
+                    hpMax: defaultSkeletonKing.hpMax + 2 * Intelligence - 6,
+                    attack: defaultSkeletonKing.attack + 2 * Intelligence - 6,
+                }
+            }
+        }
+    }
+}
+let deathCoil = {
+    name: "deathCoil",
+    img: BTNDeathCoil,
+    type: "magic",
+    target: ["ally", "enemy"],
+    manacost: 20,
+    bonusXP: 0,
+    effect: function (target, numberOfPlayer, Intelligence) {
+        if (target.cl.ability.indexOf("building") > -1) {
+            alert("incorrect target")
+            return
+        }
+        if (target.cl.ability.indexOf("undead") > -1) {
+            let result = 0
+            if (target.cl.hp + 3 + Intelligence * 2 > target.cl.hpMax) {
+                result = target.cl.hpMax
+            } else {
+                result = target.cl.hp + 3 + Intelligence * 2
+            }
+            return {
+                ...target,
+                cl: {
+                    ...target.cl,
+                    hp: result
+                }
+            }
+        }
+        if (target.cl.ability.indexOf("undead") === -1) {
+            return {
+                ...target,
+                cl: {
+                    ...target.cl,
+                    hp: target.cl.hp - 3 - Intelligence
+                }
+            }
+        }
+    }
+}
+let sacrifice = {
+    name: "Sacrifice",
+    img: BTNSacrifice,
+    type: "magic",
+    target: ["ally"],
+    manacost: 30,
+    bonusXP: 1,
+    effect: function (target, numberOfPlayer, Intelligence) {
+        if (target.cl.ability.indexOf("building") > -1 || target.player !== numberOfPlayer || target.cl.hp <= 0) {
+            alert("incorrect target")
+            return
+        } else {
+            return {
+                ...target,
+                cl: {
+                    ...target.cl,
+                    hp: -999
+                }
+            }
+        }
+    }
+}
+
+let reincarnation = {
+    name: "Reincarnation",
+    img: ReincarnationImg,
+    type: "magic",
+    target: ["ally"],
+    manacost: 40,
+    bonusXP: 0,
+    effect: function (target, numberOfPlayer, Intelligence) {
+        if (target.cl.ability.indexOf("undead") === -1 || target.player !== numberOfPlayer || target.cl.hp > 0 || target.cl.cost >= Intelligence * 15) {
+            alert("incorrect target")
+            if (target.cl.cost >= Intelligence * 15) {
+                alert("Intelligence is not enough")
+            }
+            return
+        } else {
+            return {
+                ...target,
+                cl: {
+                    ...target.cl,
+                    hp: target.cl.hpMax
+                }
+            }
+        }
+    }
+}
+let suddenDeath = {
+    name: "SuddenDeath",
+    img: BTNCorpseExplode,
+    type: "magic",
+    target: ["enemy"],
+    manacost: 50,
+    bonusXP: 0,
+    effect: function (target, numberOfPlayer, Intelligence) {
+        if (target.cl.hp <= 0  || target.cl.ability.indexOf("undead") > -1 || target.cl.ability.indexOf("building") > -1 || target.cl.cost >= Intelligence * 10) {
+            alert("incorrect target")
+            if (target.cl.cost >= Intelligence * 10) {
+                alert("Intelligence is not enough")
+            }
+            return
+        } else {
+            return {
+                ...target,
+                cl: {
+                    ...target.cl,
+                    hp: -999
+                }
+            }
+        }
+    }
+}
+let orbOfCorroption = {
+    name: "orbOfCorroption",
+    img: BTNOrbOfCorruption,
+    type: "magic",
+    target: ["ally"],
+    manacost: 30,
+    bonusXP: 0,
+    effect: function (target, numberOfPlayer, Intelligence) {
+        if (target.cl.ability.indexOf("building") > -1) {
+            alert("incorrect target")
+            return
+        } else {
+            return {
+                ...target,
+                cl: {
+                    ...target.cl,
+                    attack: target.cl.attack + Intelligence - 1,
+                    ability: target.cl.ability.concat("corruptAttack"),
+                    abilityImg: target.cl.abilityImg.concat(BTNOrbOfCorruption)
+                }
+            }
+        }
+    }
+}
+let antiMagicShell = {
+    name: "AntiMagicShell",
+    img: BTNAntiMagicShell,
+    type: "magic",
+    target: ["ally"],
+    manacost: 40,
+    bonusXP: 0,
+    effect: function (target, numberOfPlayer, Intelligence) {
+        if (target.cl.ability.indexOf("building") > -1 || target.cl.cost >= Intelligence * 20) {
+            alert("incorrect target")
+            if (target.cl.cost >= Intelligence * 20) {
+                alert("Intelligence is not enough")
+            }
+            return
+        } else {
+            return {
+                ...target,
+                cl: {
+                    ...target.cl,
+                    ability: target.cl.ability.concat("MagicImmunity"),
+                    abilityImg: target.cl.ability.concat(BTNAntiMagicShell)
+                }
+            }
+        }
+    }
+}
+let unholyFrenzy = {
+    name: "UnholyFrenzy",
+    img: BTNUnholyFrenzy,
+    type: "magic",
+    target: ["ally"],
+    manacost: 50,
+    bonusXP: 0,
+    effect: function (target, numberOfPlayer, Intelligence) {
+        if (target.cl.ability.indexOf("building") > -1 || target.cl.cost >= Intelligence * 20) {
+            alert("incorrect target")
+            if (target.cl.cost >= Intelligence * 20) {
+                alert("Intelligence is not enough")
+            }
+            return
+        } else {
+            return {
+                ...target,
+                cl: {
+                    ...target.cl,
+                    armor: target.cl.armor - 5,
+                    AS: target.cl.AS + Intelligence - 2,
+                    ability: target.cl.ability.concat("UnholyFrenzy"),
+                    abilityImg: target.cl.abilityImg.concat(BTNUnholyFrenzy)
+                }
+            }
+        }
+    }
+}
+let heal = {
+    name: "buff",
+    img: BTNHeal,
+    type: "magic",
+    target: ["ally"],
+    manacost: 15,
+    bonusXP: 0,
+    effect: function (target, numberOfPlayer, Intelligence) {
+        if (target.player !== numberOfPlayer || target.cl.ability.indexOf("building") > -1) {
+            alert("incorrect target")
+            return
+        } else {
+            let result = 0
+            if (target.cl.hp + 3 + Intelligence * 2 > target.cl.hpMax) {
+                result = target.cl.hpMax
+            } else {
+                result = target.cl.hp + 3 + Intelligence * 2
+            }
+            return {
+                ...target,
+                cl: {
+                    ...target.cl,
+                    hp: result
+                }
+            }
+        }
+    }
+}
+let holyAttackMagic = {
+    name: "holyAttack",
+    img: BTNDivineIntervention,
+    type: "magic",
+    target: ["ally"],
+    manacost: 30,
+    bonusXP: 0,
+    effect: function (target, numberOfPlayer, Intelligence) {
+        if (target.cl.ability.indexOf("building") > -1) {
+            alert("incorrect target")
+            return
+        } else {
+            return {
+                ...target,
+                cl: {
+                    ...target.cl,
+                    attack: target.cl.attack + Intelligence - 1,
+                    ability: target.cl.ability.concat("holyAttack"),
+                    abilityImg: target.cl.abilityImg.concat(BTNDivineIntervention)
+                }
+            }
+        }
+    }
+}
+let innerFire = {
+    name: "innerFire",
+    img: BTNInnerFire,
+    type: "magic",
+    target: ["ally"],
+    manacost: 70,
+    bonusXP: 0,
+    effect: function (target, numberOfPlayer, Intelligence) {
+        if (target.cl.ability.indexOf("building") > -1) {
+            alert("incorrect target")
+            return
+        } else {
+            return {
+                ...target,
+                cl: {
+                    ...target.cl,
+                    attack: target.cl.armor + Intelligence - 1,
+                    ability: target.cl.ability.concat("innerFireEffect"),
+                    abilityImg: target.cl.abilityImg.concat(BTNInnerFire)
+                }
+            }
+        }
+    }
+}
+let resurrection = {
+    name: "Reincarnation",
+    img: BTNResurrection,
+    type: "magic",
+    target: ["ally"],
+    manacost: 60,
+    bonusXP: 0,
+    effect: function (target, numberOfPlayer, Intelligence) {
+        if (target.cl.hp > 0 || target.player !== numberOfPlayer || target.cl.ability.indexOf("undead") === 0 || target.cl.cost >= Intelligence * 15) {
+            alert("incorrect target")
+            if (target.cl.cost >= Intelligence * 15) {
+                alert("Intelligence is not enough")
+            }
+            return
+        } else {
+            return {
+                ...target,
+                cl: {
+                    ...target.cl,
+                    hp: target.cl.hpMax
+                }
+            }
+        }
+    }
+}
+let purifyingFlames = {
+    name: "purifyingFlames",
+    img: Purifying_Flames,
+    type: "magic",
+    target: ["ally"],
+    manacost: 40,
+    bonusXP: 0,
+    effect: function (target, numberOfPlayer, Intelligence) {
+        if (target.cl.ability.indexOf("building") === -1) {
+            return {
+                ...target,
+                cl: {
+                    ...target.cl,
+                    hp: target.cl.hp - 3 - Intelligence * 2,
+                    ability: target.cl.ability.concat("purifyingFlamesEffect"),
+                    abilityImg: target.cl.abilityImg.concat(Purifying_Flames)
+                }
+            }
+        }
+    }
+}
+
 let defaultPeasant = Object.freeze({
+    type: "unitCard",
     img: BTNPeasant,
     name: "Peasant",
     attack: 1,
@@ -107,6 +560,7 @@ let defaultPeasant = Object.freeze({
     cost: 20,
 })
 let defaultMilitia = Object.freeze({
+    type: "unitCard",
     img: BTNMilitia,
     name: "Militia",
     attack: 2,
@@ -122,6 +576,7 @@ let defaultMilitia = Object.freeze({
     cost: 20,
 })
 let defaultFootman = {
+    type: "unitCard",
     img: footmanImg,
     name: "Footman",
     attack: 3,
@@ -137,6 +592,7 @@ let defaultFootman = {
     cost: 82,
 }
 let defaultGryphonRider = {
+    type: "unitCard",
     img: BTNGryphonRider,
     name: "GryphonRider",
     attack: 4,
@@ -152,6 +608,7 @@ let defaultGryphonRider = {
     cost: 133,
 }
 let defaultTower = {
+    type: "unitCard",
     img: BTNGuardTower,
     name: "Tower",
     attack: 2,
@@ -167,6 +624,7 @@ let defaultTower = {
     cost: 76,
 }
 let defaultKnight = {
+    type: "unitCard",
     img: Legion_Commander,
     name: "Knight",
     attack: 5,
@@ -182,6 +640,7 @@ let defaultKnight = {
     cost: 315,
 }
 let defaultPaladin = {
+    type: "unitCard",
     img: BTNHeroPaladin,
     name: "Paladin",
     attack: 4,
@@ -198,6 +657,7 @@ let defaultPaladin = {
 }
 
 let defaultAcolyte = {
+    type: "unitCard",
     img: BTNAcolyte,
     name: "Acolyte",
     attack: 2,
@@ -213,6 +673,7 @@ let defaultAcolyte = {
     cost: 16,
 }
 let defaultGhoul = {
+    type: "unitCard",
     img: BTNGhoul,
     name: "Ghoul",
     attack: 3,
@@ -228,6 +689,7 @@ let defaultGhoul = {
     cost: 37,
 }
 let defaultZombi = {
+    type: "unitCard",
     img: BTNDalaranMutant,
     name: "Zombi",
     attack: 4,
@@ -243,6 +705,7 @@ let defaultZombi = {
     cost: 61,
 }
 let defaultTraxa = {
+    type: "unitCard",
     img: BTNBansheeRanger,
     name: "Traxa",
     attack: 4,
@@ -259,6 +722,7 @@ let defaultTraxa = {
 }
 
 let defaultButcher = {
+    type: "unitCard",
     img: BTNAbomination,
     name: "Butcher",
     attack: 4,
@@ -275,6 +739,7 @@ let defaultButcher = {
 }
 
 let defaultWyrm = {
+    type: "unitCard",
     img: BTNFrostWyrm,
     name: "Wyrm",
     attack: 6,
@@ -290,6 +755,7 @@ let defaultWyrm = {
     cost: 246,
 }
 let defaultDreadLord = {
+    type: "unitCard",
     img: BTNHeroDreadLord,
     name: "DreadLord",
     attack: 4,
@@ -305,6 +771,7 @@ let defaultDreadLord = {
     cost: 280,
 }
 let defaultFiend = {
+    type: "unitCard",
     img: BTNCryptFiend,
     name: "CryptFiend",
     attack: 4,
@@ -320,6 +787,7 @@ let defaultFiend = {
     cost: 72,
 }
 let defaultNerub = {
+    type: "unitCard",
     img: anubarak,
     name: "Nerub",
     attack: 3,
@@ -335,21 +803,23 @@ let defaultNerub = {
     cost: 331,
 }
 let defaultDK = {
+    type: "unitCard",
     img: BTNHeroDeathKnight,
     name: "DeathKnight",
     attack: 4,
     rangeOfAttack: "melee",
     typeOfAttack: "physic",
     attackSpeed: 1,
-    hp: 11,
-    hpMax: 11,
-    armor: 4,
+    hp: 15,
+    hpMax: 15,
+    armor: 3,
     DefaultArmor: 4,
     abilityImg: [BTNSkeletalLongevity, BTNUnholyAura, BTNAnimateDead],
     ability: ["undead", "UnholyAura", "BorrowedTime"],
     cost: 349,
 }
 let defaultElfWorker = {
+    type: "unitCard",
     img: BTNBloodElfPeasant,
     name: "ElfWorker",
     attack: 1,
@@ -365,6 +835,7 @@ let defaultElfWorker = {
     cost: 7,
 }
 let defaultHighElvenArcher = {
+    type: "unitCard",
     img: BTNHighElvenArcher,
     name: "HighElvenArcher",
     attack: 3,
@@ -380,6 +851,7 @@ let defaultHighElvenArcher = {
     cost: 89,
 }
 let defaultPriest = {
+    type: "unitCard",
     img: BTNPriest,
     name: "Priest",
     attack: 2,
@@ -395,6 +867,7 @@ let defaultPriest = {
     cost: 23,
 }
 let defaultSorceress = {
+    type: "unitCard",
     img: BTNSorceress,
     name: "Sorceress",
     attack: 3,
@@ -405,11 +878,12 @@ let defaultSorceress = {
     hpMax: 9,
     armor: 0,
     DefaultArmor: 0,
-    abilityImg: [BTNHealOff, BTNSheep],
+    abilityImg: [BTNSlowOff, BTNSheep],
     ability: ["Slow", "Hex"],
     cost: 46,
 }
 let defaultDragonHawk = {
+    type: "unitCard",
     img: BTNDragonHawk,
     name: "DragonHawk",
     attack: 3,
@@ -425,6 +899,7 @@ let defaultDragonHawk = {
     cost: 166,
 }
 let defaultSpellBreaker = {
+    type: "unitCard",
     img: BTNSpellBreaker,
     name: "SpellBreaker",
     attack: 3,
@@ -440,6 +915,7 @@ let defaultSpellBreaker = {
     cost: 217,
 }
 let defaultWindRunner = {
+    type: "unitCard",
     img: windRunner,
     name: "Windrunner",
     attack: 4,
@@ -455,6 +931,7 @@ let defaultWindRunner = {
     cost: 314,
 }
 let defaultPeon = {
+    type: "unitCard",
     img: BTNPeon,
     name: "Peon",
     attack: 1,
@@ -470,6 +947,7 @@ let defaultPeon = {
     cost: 10,
 }
 let defaultRaider = {
+    type: "unitCard",
     img: BTNRaider,
     name: "Raider",
     attack: 3,
@@ -485,6 +963,7 @@ let defaultRaider = {
     cost: 101,
 }
 let defaultWyvernRider = {
+    type: "unitCard",
     img: BTNWyvernRider,
     name: "WyvernRider",
     attack: 3,
@@ -500,6 +979,7 @@ let defaultWyvernRider = {
     cost: 88,
 }
 let defaultGrunt = {
+    type: "unitCard",
     img: BTNGrunt,
     name: "Grunt",
     attack: 3,
@@ -515,6 +995,7 @@ let defaultGrunt = {
     cost: 130,
 }
 let defaultKodo = {
+    type: "unitCard",
     img: BTNKotoBeast,
     name: "Kodo",
     attack: 2,
@@ -530,6 +1011,7 @@ let defaultKodo = {
     cost: 204,
 }
 let defaultTaurenChieftain = {
+    type: "unitCard",
     img: BTNHeroTaurenChieftain,
     name: "TaurenChieftain",
     attack: 4,
@@ -545,6 +1027,7 @@ let defaultTaurenChieftain = {
     cost: 278,
 }
 let defaultBladeMaster = {
+    type: "unitCard",
     img: BTNHeroBlademaster,
     name: "BladeMaster",
     attack: 4,
@@ -566,6 +1049,11 @@ let unitsOfRaces = {
     highElves: [defaultElfWorker, defaultPriest, defaultSorceress, defaultHighElvenArcher, defaultDragonHawk, defaultSpellBreaker, defaultWindRunner],
     orcs: [defaultPeon, defaultWyvernRider, defaultRaider, defaultGrunt, defaultKodo, defaultTaurenChieftain, defaultBladeMaster],
 }
+let magicsOfMage = {
+    necromancer: [raiseSkeleton, raiseBoneFletcher, raiseSkeletonKing, deathCoil, sacrifice, reincarnation, suddenDeath, orbOfCorroption, antiMagicShell, unholyFrenzy],
+    cleric: [heal, holyAttackMagic, innerFire, resurrection, purifyingFlames],
+}
+
 let int = {
     necromancer: 3,
     cleric: 3,
@@ -579,10 +1067,10 @@ let hp = {
     mageOfWater: 54,
 }
 let mp = {
-    necromancer: 10,
-    cleric: 10,
-    mageOfFire: 5,
-    mageOfWater: 13,
+    necromancer: 100,
+    cleric: 100,
+    mageOfFire: 50,
+    mageOfWater: 130,
 }
 let icon = {
     necromancer: BTNNecromancer,
@@ -595,26 +1083,32 @@ let defaultPlayer1 = Object.freeze({
     classOfHero: "necromancer",
     race1: "human",
     race2: "human",
+    magic: "death",
     gold: 1000,
-    lvl: 1,
+    lvl: 0,
     intelligence: 3,
     hp: 50,
-    mp: 10,
-    maxMP: 10,
+    mp: 100,
+    maxMP: 100,
     xp: 0,
+    abilityPoint: 0,
+    magicPoint: 0
 });
 let defaultPlayer2 = {
     nameOfHero: "noname",
     classOfHero: "necromancer",
     race1: "human",
     race2: "human",
+    magic: "death",
     gold: 1000,
-    lvl: 1,
+    lvl: 0,
     intelligence: 3,
     hp: 50,
-    mp: 10,
-    maxMP: 10,
+    mp: 100,
+    maxMP: 100,
     xp: 0,
+    abilityPoint: 0,
+    magicPoint: 0
 };
 
 class PlayerUnit {
@@ -631,6 +1125,20 @@ class PlayerUnit {
         return `${this.cl.name}__${this.player}__${this.raceNumber}`
     }
 }
+class PlayerMagic {
+    cl = null
+    player = 0
+    magicNumber = 0
+    constructor(cl, player) {
+        this.cl = cl
+        this.player = player
+    }
+
+    get id() {
+        return `${this.cl.name}__${this.player}`
+    }
+}
+
 function clearCurrentEffect(unit) {
     if (unit) {
         if (unit.ability.indexOf("bashed") > -1) {
@@ -670,7 +1178,6 @@ function calculateLineDamage(unit, target, AS) {
 }
 
 function calculateHP(currentCells) {
-    console.log(currentCells)
     let AS1 = 0
     let AS2 = 0
     let index1 = 0
@@ -685,18 +1192,18 @@ function calculateHP(currentCells) {
         index1 = 2
         index2 = 3
         if (item2 && item2.cl.ability.indexOf("invisible") === -1) {
-            if (item2.cl.hp <= 0) {
-                return item2 = null
-            }
             item2.cl = doMeta(item2.cl, currentCells[index1][i2], currentCells[index2][i2])
             item2 = calculateBuff(currentCells[0][i2], item2)
             item2.cl = clearCurrentEffect(item2.cl)
             item2.cl = calculateRegeneration(item2.cl)
-            if (currentCells[index1][i2]) {
+            if (item2.cl.hp <= 0) {
+                return item2 = null
+            }
+            if (currentCells[index1][i2] && currentCells[index1][i2].cl.hp > 0) {
                 AS1 = checkOfAttack(currentCells[index1][i2].cl, item2.cl)
                 item2.cl = calculateDeBuff(currentCells[index1][i2].cl, item2.cl, AS1)
                 massDamage[0][i2] = massDamage[0][i2] + calculateLineDamage(currentCells[index1][i2], item2, AS1)
-                if (currentCells[index2][i2]) {
+                if (currentCells[index2][i2] && currentCells[index2][i2].cl.hp > 0) {
                     AS2 = checkOfAttack(currentCells[index2][i2].cl, item2.cl)
                     item2.cl = calculateDeBuff(currentCells[index2][i2].cl, item2.cl, AS2)
                     massDamage[0][i2] = massDamage[0][i2] + calculateLineDamage(currentCells[index2][i2], item2, AS2)
@@ -717,7 +1224,7 @@ function calculateHP(currentCells) {
                     }
                 }
             }
-            if (currentCells[index2][i2]) {
+            if (currentCells[index2][i2] && currentCells[index2][i2].cl.hp > 0) {
                 AS2 = checkOfAttack(currentCells[index2][i2].cl, item2.cl)
                 item2.cl = calculateDeBuff(currentCells[index2][i2].cl, item2.cl, AS2)
                 return {
@@ -742,11 +1249,11 @@ function calculateHP(currentCells) {
             if (item2.cl.hp <= 0) {
                 return item2 = null
             }
-            if (currentCells[index1][i2]) {
+            if (currentCells[index1][i2] && currentCells[index1][i2].cl.hp > 0) {
                 AS1 = checkOfAttack(currentCells[index1][i2].cl, item2.cl)
                 item2.cl = calculateDeBuff(currentCells[index1][i2].cl, item2.cl, AS1)
                 massDamage[3][i2] = massDamage[3][i2] + calculateLineDamage(currentCells[index1][i2], item2, AS1)
-                if (currentCells[index2][i2]) {
+                if (currentCells[index2][i2] && currentCells[index2][i2].cl.hp > 0) {
                     AS2 = checkOfAttack(currentCells[index2][i2].cl, item2.cl)
                     item2.cl = calculateDeBuff(currentCells[index2][i2].cl, item2.cl, AS2)
                     massDamage[3][i2] = massDamage[3][i2] + calculateLineDamage(currentCells[index2][i2], item2, AS2)
@@ -767,7 +1274,7 @@ function calculateHP(currentCells) {
                     }
                 }
             }
-            if (currentCells[index2][i2]) {
+            if (currentCells[index2][i2] && currentCells[index2][i2].cl.hp > 0) {
                 AS2 = checkOfAttack(currentCells[index2][i2].cl, item2.cl)
                 item2.cl = calculateDeBuff(currentCells[index2][i2].cl, item2.cl, AS2)
                 return {
@@ -792,10 +1299,10 @@ function calculateHP(currentCells) {
                 return item2 = null
             }
             if (!currentCells[1][i2] || (currentCells[1][i2] && currentCells[1][i2].cl.ability.indexOf("invisible") > -1)) {
-                if (currentCells[index1][i2]) {
+                if (currentCells[index1][i2] && currentCells[index1][i2].cl.hp > 0) {
                     AS1 = checkOfAttack(currentCells[index1][i2].cl, item2.cl)
                     item2.cl = calculateDeBuff(currentCells[index1][i2].cl, item2.cl, AS1)
-                    if (currentCells[index2][i2]) {
+                    if (currentCells[index2][i2] && currentCells[index2][i2].cl.hp > 0) {
                         AS2 = checkOfAttack(currentCells[index2][i2].cl, item2.cl)
                         item2.cl = calculateDeBuff(currentCells[index2][i2].cl, item2.cl, AS2)
                         return {
@@ -815,7 +1322,7 @@ function calculateHP(currentCells) {
                         }
                     }
                 }
-                if (currentCells[index2][i2]) {
+                if (currentCells[index2][i2] && currentCells[index2][i2].cl.hp > 0) {
                     AS2 = checkOfAttack(currentCells[index2][i2].cl, item2.cl)
                     item2.cl = calculateDeBuff(currentCells[index2][i2].cl, item2.cl, AS2)
                     return {
@@ -842,10 +1349,10 @@ function calculateHP(currentCells) {
                 return item2 = null
             }
             if (!currentCells[2][i2] || (currentCells[2][i2] && currentCells[2][i2].cl.ability.indexOf("invisible") > -1)) {
-                if (currentCells[index1][i2]) {
+                if (currentCells[index1][i2] && currentCells[index1][i2].cl.hp > 0) {
                     AS1 = checkOfAttack(currentCells[index1][i2].cl, item2.cl)
                     item2.cl = calculateDeBuff(currentCells[index1][i2].cl, item2.cl, AS1)
-                    if (currentCells[index2][i2]) {
+                    if (currentCells[index2][i2] && currentCells[index2][i2].cl.hp > 0) {
                         AS2 = checkOfAttack(currentCells[index2][i2].cl, item2.cl)
                         item2.cl = calculateDeBuff(currentCells[index2][i2].cl, item2.cl, AS2)
                         return {
@@ -865,7 +1372,7 @@ function calculateHP(currentCells) {
                         }
                     }
                 }
-                if (currentCells[index2][i2]) {
+                if (currentCells[index2][i2] && currentCells[index2][i2].cl.hp > 0) {
                     AS2 = checkOfAttack(currentCells[index2][i2].cl, item2.cl)
                     item2.cl = calculateDeBuff(currentCells[index2][i2].cl, item2.cl, AS2)
                     return {
@@ -934,9 +1441,7 @@ function calculateHP(currentCells) {
 }
 
 function calculateMassEffect(currentCells) {
-    let a = cloneDeep(currentCells)
-    let newCells = a.__wrapped__
-    console.log(newCells)
+    let newCells = cloneDeep(currentCells)
     let effects1 = []
     let effects2 = []
     for (let i = 0; i < 2; i++) {
@@ -1033,7 +1538,7 @@ function calculateMassEffect(currentCells) {
                 }
             }
         }
-        
+
         if (item2 && item2.cl.abilityImg.indexOf(BTNDevotion) > -1 && effects1.indexOf("devotionAura") === -1) {
             newItem = {
                 ...newItem,
@@ -1333,7 +1838,7 @@ function calculateMassEffect(currentCells) {
 
 function calculateBuff(unit, target) {
     if (unit && target) {
-        if (target.cl.ability.indexOf("building") === -1) {
+        if (target.cl.ability.indexOf("building") === -1 && target.cl.ability.indexOf("MagicImmunity") === -1 && target.cl.ability.indexOf("dragonAbilities") === -1) {
             if (unit.cl.ability.indexOf("Heal") > -1 && target.cl.hp < target.cl.hpMax) {
                 return {
                     ...target,
@@ -1402,7 +1907,7 @@ function doMeta(unit, enemy1, enemy2) {
     if (enemy1 && enemy1.cl.ability.indexOf("Devour") > -1 && unit.hpMax < 11) {
         return {
             ...unit,
-            hp: 0,
+            hp: -100,
         }
     }
     if (unit.ability.indexOf("backToWork") > -1) {
@@ -1462,7 +1967,7 @@ function doMeta(unit, enemy1, enemy2) {
             abilityImg: unit.abilityImg.filter(a => a !== BTNAlbatross).concat(BTNEnsnare)
         }
     }
-    if (unit.ability.indexOf("UnBurrow") > -1 && unit.hp < 5) {
+    if (unit.ability.indexOf("UnBurrow") > -1 && unit.hp < 5 && unit.hp > 0) {
         return {
             ...unit,
             attack: 0,
@@ -1494,6 +1999,7 @@ function doMeta(unit, enemy1, enemy2) {
     }
     return unit
 }
+
 function calculateRegeneration(unit) {
     let regeneration = 0
     if (unit.ability.indexOf("underPoison") > -1) {
@@ -1507,6 +2013,7 @@ function calculateRegeneration(unit) {
         hp: unit.hp + regeneration,
     }
 }
+
 function calculateBonusDamage(unit, enemy, numberOfAttack) {
     let bonus = 1
     if (unit && enemy) {
@@ -1528,6 +2035,14 @@ function calculateBonusDamage(unit, enemy, numberOfAttack) {
             if (unit.ability.indexOf("CriticalStrike15X4") > -1 && (Math.random() <= 0.15)) {
                 alert("x4 criticalStrike!!!")
                 bonus = bonus * 4
+            }
+        }
+    }
+    if (unit && enemy) {
+        if (numberOfAttack > 0) {
+            if (unit.ability.indexOf("CriticalStrike15X3") > -1 && (Math.random() <= 0.15)) {
+                alert("x3 criticalStrike!!!")
+                bonus = bonus * 3
             }
         }
     }
@@ -1558,14 +2073,12 @@ function calculateDeBuff(unit, enemy, numberOfAttack) {
                     ability: enemy.ability.concat("underPoison")
                 }
             }
-            if (unit.ability.indexOf("BreathOfFrost") > -1 && enemy.ability.indexOf("building") === -1 && enemy.ability.indexOf("cooling") === -1) {
-                if (enemy.attackSpeed > 1) {
-                    return {
-                        ...enemy,
-                        attackSpeed: enemy.attackSpeed - 1,
-                        ability: enemy.ability.concat("cooling"),
-                        abilityImg: enemy.abilityImg.concat(BTNFrost)
-                    }
+            if (unit.ability.indexOf("BreathOfFrost") > -1 && enemy.ability.indexOf("building") === -1 && enemy.ability.indexOf("cooling") === -1 && enemy.attackSpeed > 1) {
+                return {
+                    ...enemy,
+                    attackSpeed: enemy.attackSpeed - 1,
+                    ability: enemy.ability.concat("cooling"),
+                    abilityImg: enemy.abilityImg.concat(BTNFrost)
                 }
             }
             if (unit.ability.indexOf("thornShield") > -1 && enemy.rangeOfAttack === "melee") {
@@ -1587,7 +2100,7 @@ function calculateDeBuff(unit, enemy, numberOfAttack) {
                     }
                 }
             }
-            if (unit.ability.indexOf("Slow") > -1 && enemy.ability.indexOf("building") === -1 && enemy.ability.indexOf("Slowed") === -1 && enemy.attackSpeed > 1) {
+            if (unit.ability.indexOf("Slow") > -1 && enemy.ability.indexOf("building") === -1 && enemy.ability.indexOf("MagicImmunity") === -1 && enemy.ability.indexOf("dragonAbilities") === -1 && enemy.ability.indexOf("Slowed") === -1 && enemy.attackSpeed > 1) {
                 return {
                     ...enemy,
                     attackSpeed: enemy.attackSpeed - 1,
@@ -1595,7 +2108,7 @@ function calculateDeBuff(unit, enemy, numberOfAttack) {
                     abilityImg: enemy.abilityImg.concat(BTNSlow)
                 }
             }
-            if (unit.ability.indexOf("Hex") > -1 && enemy.ability.indexOf("building") === -1 && enemy.name !== "Sheep") {
+            if (unit.ability.indexOf("Hex") > -1 && enemy.ability.indexOf("building") === -1 && enemy.name !== "Sheep" && enemy.ability.indexOf("MagicImmunity") === -1 && enemy.ability.indexOf("dragonAbilities") === -1) {
                 if (Math.round((enemy.cost / 50) * Math.random() * 0.625 + 0.375) === 0) {
                     alert("Hex!")
                     return {
@@ -1612,6 +2125,14 @@ function calculateDeBuff(unit, enemy, numberOfAttack) {
                         ability: [],
                         cost: 3,
                     }
+                }
+            }
+            if (unit.ability.indexOf("corruptAttack") > -1 && enemy.ability.indexOf("building") === -1 && enemy.ability.indexOf("underCorruptAttack") === -1) {
+                return {
+                    ...enemy,
+                    armor: enemy.armor - 2,
+                    abilityImg: enemy.abilityImg.concat(Stygian_Desolator),
+                    ability: enemy.ability.concat("underCorruptAttack")
                 }
             }
         }
@@ -1631,6 +2152,7 @@ function App() {
         [null, null, null, null, null, null],
         [null, null, null, null, null, null],
     ])
+    console.log(cells)
     function timeOfDay(turn) {
         if ((Math.floor(turn / 2)) % 2 === 0) {
             return setTime("day")
@@ -1702,19 +2224,65 @@ function App() {
             />
         )
     })
+    const magic1 = magicsOfMage[player1.classOfHero].map(cl => {
+        const plu = new PlayerMagic(cl, 1)
+        return (
+            <Magic
+                key={plu.id}
+                cl={plu.cl}
+                selected={selectedPlu ? selectedPlu.id === plu.id : false}
+                onSelect={() => {
+                    if (turn % 2 !== 0) {
+                        return
+                    }
+                    setSelectedPlu(plu)
+                }}
+            />
+        )
+    })
+    const magic2 = magicsOfMage[player2.classOfHero].map(cl => {
+        const plu = new PlayerMagic(cl, 2)
+        return (
+            <Magic
+                key={plu.id}
+                cl={plu.cl}
+                selected={selectedPlu ? selectedPlu.id === plu.id : false}
+                onSelect={() => {
+                    if (turn % 2 === 0) {
+                        return
+                    }
+                    setSelectedPlu(plu)
+                }}
+            />
+        )
+    })
     const calculateStatsOfHeroes = () => {
-        let manaBurn1 = 0;
-        let manaBurn2 = 0;
-        let income1 = 10;
-        let income2 = 10;
-        let damage1 = 0;
-        let damage2 = 0;
+        let manaBurn1 = -Math.round(player1.maxMP / 10)
+        let manaBurn2 = -Math.round(player2.maxMP / 10)
+        let damage1 = 0
+        let damage2 = 0
+        let experience1 = 0
+        let experience2 = 0
+        for (let i = 0; i < 2; i++) {
+            for (let j = 0; j < 6; j++) {
+                if (cells[i][j] && cells[i][j].cl.hp < 1) {
+                    experience2 = experience2 + cells[i][j].cl.cost
+                }
+            }
+        }
+        for (let i = 2; i < 4; i++) {
+            for (let j = 0; j < 6; j++) {
+                if (cells[i][j] && cells[i][j].cl.hp < 1) {
+                    experience1 = experience1 + cells[i][j].cl.cost
+                }
+            }
+        }
         for (let i = 0; i < 6; i++) {
-            if ((!cells[0][i] && !cells[1][i]) || (cells[0][i] && cells[0][i].cl.ability.indexOf("invisible") > -1 && !cells[1][i]) || (cells[1][i] && cells[1][i].cl.ability.indexOf("invisible") > -1 && !cells[0][i]) || (cells[0][i] && cells[0][i].cl.ability.indexOf("invisible") > -1 && cells[0][i] && cells[1][i].cl.ability.indexOf("invisible") > -1)) {
+            if ((!cells[0][i] && !cells[1][i]) || (cells[0][i] && (cells[0][i].cl.ability.indexOf("invisible") > -1 || cells[0][i].cl.hp <= 0) && !cells[1][i]) || (cells[1][i] && (cells[1][i].cl.ability.indexOf("invisible") > -1 || cells[1][i].cl.hp <= 0) && !cells[0][i]) || (cells[0][i] && (cells[0][i].cl.ability.indexOf("invisible") > -1 || cells[0][i].cl.hp <= 0) && cells[0][i] && (cells[1][i].cl.ability.indexOf("invisible") > -1 || cells[1][i].cl.hp <= 0))) {
                 if (cells[2][i]) {
                     damage1 = damage1 + forDamage(cells[2][i].cl.attack, 0, cells[2][i].cl.attackSpeed)
                     if (cells[2][i].cl.ability.indexOf("Feedback") > -1) {
-                        manaBurn1 = manaBurn1 + 1
+                        manaBurn1 = manaBurn1 + 10
                     }
                     if (cells[2][i].cl.ability.indexOf("Pillage") > -1) {
                         income2 = income2 + 1
@@ -1724,7 +2292,7 @@ function App() {
                 if (cells[3][i]) {
                     damage1 = damage1 + forDamage(cells[3][i].cl.attack, 0, cells[3][i].cl.attackSpeed)
                     if (cells[3][i].cl.ability.indexOf("Feedback") > -1) {
-                        manaBurn1 = manaBurn1 + 1
+                        manaBurn1 = manaBurn1 + 10
                     }
                 }
             }
@@ -1732,13 +2300,13 @@ function App() {
                 if (cells[0][i]) {
                     damage2 = damage2 + forDamage(cells[0][i].cl.attack, 0, cells[0][i].cl.attackSpeed)
                     if (cells[0][i].cl.ability.indexOf("Feedback") > -1) {
-                        manaBurn2 = manaBurn2 + 1
+                        manaBurn2 = manaBurn2 + 10
                     }
                 }
                 if (cells[1][i]) {
                     damage2 = damage2 + forDamage(cells[1][i].cl.attack, 0, cells[1][i].cl.attackSpeed)
                     if (cells[1][i].cl.ability.indexOf("Feedback") > -1) {
-                        manaBurn2 = manaBurn2 + 1
+                        manaBurn2 = manaBurn2 + 10
                     }
                     if (cells[1][i].cl.ability.indexOf("Pillage") > -1) {
                         income1 = income1 + 1
@@ -1750,8 +2318,14 @@ function App() {
         if (player1.mp - manaBurn1 < 0) {
             manaBurn1 = player1.mp
         }
+        if (player1.mp - manaBurn1 > player1.maxMP) {
+            manaBurn1 = player1.mp - player1.maxMP
+        }
         if (player2.mp - manaBurn2 < 0) {
             manaBurn2 = player2.mp
+        }
+        if (player2.mp - manaBurn2 > player2.maxMP) {
+            manaBurn2 = player2.mp - player2.maxMP
         }
         for (let i = 0; i < 6; i++) {
             if (cells[1][i] && cells[1][i].cl.ability.indexOf("worker") > -1) {
@@ -1761,17 +2335,33 @@ function App() {
                 income2 = income2 + 3;
             }
         }
+        let point1 = 0
+        let point2 = 0
+        if (Math.round(0.1 * (player1.xp + experience1) ** 0.5) - player1.lvl > 0) {
+            point1 = Math.round(0.1 * (player1.xp + experience1) ** 0.5) - player1.lvl
+        }
+        if (Math.round(0.1 * (player2.xp + experience2) ** 0.5) - player2.lvl > 0) {
+            point2 = Math.round(0.1 * (player2.xp + experience2) ** 0.5) - player2.lvl
+        }
         setPlayer1({
             ...player1,
             hp: player1.hp - damage1,
             gold: player1.gold + income1,
-            mp: player1.mp - manaBurn1
+            mp: player1.mp - manaBurn1,
+            xp: player1.xp + experience1,
+            abilityPoint: player1.abilityPoint + point1,
+            magicPoint: player1.magicPoint + point1,
+            lvl: Math.round(0.1 * (player1.xp + experience1) ** 0.5)
         })
         setPlayer2({
             ...player2,
             hp: player2.hp - damage2,
             gold: player2.gold + income2,
-            mp: player1.mp - manaBurn2
+            mp: player2.mp - manaBurn2,
+            xp: player2.xp + experience2,
+            abilityPoint: player2.abilityPoint + point2,
+            magicPoint: player2.magicPoint + point2,
+            lvl: Math.round(0.1 * (player2.xp + experience2) ** 0.5)
         })
         if (player1.hp <= 0 && player2.hp > 0) {
             alert("the second player are winner")
@@ -1792,6 +2382,7 @@ function App() {
                 onClick={() => {
                     setPlayer1({
                         ...player1,
+                        magic: magicsOfMage[player1.classOfHero],
                         intelligence: int[player1.classOfHero],
                         hp: hp[player1.classOfHero],
                         mp: mp[player1.classOfHero],
@@ -1800,10 +2391,11 @@ function App() {
                     })
                     setPlayer2({
                         ...player2,
-                        intelligence: int[player1.classOfHero],
-                        hp: hp[player1.classOfHero],
-                        mp: mp[player1.classOfHero],
-                        maxMP: mp[player1.classOfHero],
+                        magic: magicsOfMage[player1.classOfHero],
+                        intelligence: int[player2.classOfHero],
+                        hp: hp[player2.classOfHero],
+                        mp: mp[player2.classOfHero],
+                        maxMP: mp[player2.classOfHero],
                         xp: 0,
                     })
                 }}>
@@ -1815,15 +2407,40 @@ function App() {
             <div className="classOfHero1">Class: {JSON.stringify(player1.classOfHero)}</div>
             <img src={icon[player1.classOfHero]} className="App-logo" alt="logo" />
             <div className="races1">Races: {JSON.stringify(player1.race1)}, {JSON.stringify(player1.race2)}</div>
+            <div className="magic1">Magic: {JSON.stringify(player1.magic)}</div>
             <div className='gold1'>Gold: {JSON.stringify(player1.gold)}</div>
             <div className='LVL1'>LVL: {JSON.stringify(player1.lvl)}</div>
-            <div className='int1'>Intelligence: {JSON.stringify(player1.intelligence)} </div>
+            <div className='int1'>Intelligence: {JSON.stringify(player1.intelligence)} <button onClick={() => {
+                if (player1.abilityPoint > 0) {
+                    setPlayer1({
+                        ...player1,
+                        intelligence: player1.intelligence + 1,
+                        abilityPoint: player1.abilityPoint - 1,
+                    })
+                } else {
+                    alert("need more abilityPoints")
+                }
+            }}>+</button></div>
             <div className='hp1'>HP: {JSON.stringify(player1.hp)}</div>
             <div className='mp1'>MP: {JSON.stringify(player1.mp)}</div>
-            <div className='mp1'>maxMP: {JSON.stringify(player1.maxMP)}</div>
+            <div className='mp1'>maxMP: {JSON.stringify(player1.maxMP)} <button onClick={() => {
+                if (player1.abilityPoint > 0) {
+                    setPlayer1({
+                        ...player1,
+                        maxMP: player1.maxMP + 50,
+                        mp: player1.mp + 50,
+                        abilityPoint: player1.abilityPoint - 1,
+                    })
+                } else {
+                    alert("need more abilityPoints")
+                }
+            }}>+</button></div>
             <div className='xp1'>XP: {JSON.stringify(player1.xp)}</div>
+            <div className='xp1'>abilityPoint: {JSON.stringify(player1.abilityPoint)}</div>
+            <div className='xp1'>magicPoint: {JSON.stringify(player1.magicPoint)}</div>
             <div className="units11">Race1: {classUnits11}</div>
             <div className="units12">Race2: {classUnits12}</div>
+            <div className="magic">Magic: {magic1}</div>
             <div>------------------------------------------------------------------------------------------------------------------------------------------------------------------------</div>
             <div>Player 2</div>
             <div className='NameOfHero2'>Name: {JSON.stringify(player2.NameOfHero)}</div>
@@ -1832,13 +2449,37 @@ function App() {
             <div className="race21">Races: {JSON.stringify(player2.race1)}, {JSON.stringify(player2.race2)}</div>
             <div className='gold2'>Gold: {JSON.stringify(player2.gold)}</div>
             <div className='LVL2'>LVL: {JSON.stringify(player2.lvl)}</div>
-            <div className='int2'>Intelligence: {JSON.stringify(player2.intelligence)} </div>
+            <div className='int2'>Intelligence: {JSON.stringify(player2.intelligence)} <button onClick={() => {
+                if (player2.abilityPoint > 0) {
+                    setPlayer2({
+                        ...player2,
+                        intelligence: player2.intelligence + 1,
+                        abilityPoint: player2.abilityPoint - 1,
+                    })
+                } else {
+                    alert("need more abilityPoints")
+                }
+            }}>+</button></div>
             <div className='hp2'>HP: {JSON.stringify(player2.hp)}</div>
             <div className='mp2'>MP: {JSON.stringify(player2.mp)}</div>
-            <div className='mp1'>maxMP: {JSON.stringify(player2.maxMP)}</div>
+            <div className='mp1'>maxMP: {JSON.stringify(player2.maxMP)} <button onClick={() => {
+                if (player2.abilityPoint > 0) {
+                    setPlayer2({
+                        ...player2,
+                        maxMP: player2.maxMP + 50,
+                        mp: player2.mp + 50,
+                        abilityPoint: player2.abilityPoint - 1,
+                    })
+                } else {
+                    alert("need more abilityPoints")
+                }
+            }}>+</button></div>
             <div className='xp2'>XP: {JSON.stringify(player2.xp)}</div>
+            <div className='xp2'>abilityPoint: {JSON.stringify(player2.abilityPoint)}</div>
+            <div className='xp2'>magicPoint: {JSON.stringify(player2.magicPoint)}</div>
             <div className="units21">Race1: {classUnits21}</div>
             <div className="units22">Race2: {classUnits22}</div>
+            <div className="magic">Magic: {magic2}</div>
             <div className="turn">Turn: {JSON.stringify(turn)}</div>
             <div className="time">Time: {JSON.stringify(time)}</div>
             <button className="endOfTurn" onClick={() => {
@@ -1857,24 +2498,48 @@ function App() {
                             key={i}
                             plu={item}
                             onCellClick={() => {
-                                if (!selectedPlu || turn % 2 !== 0 || selectedPlu.cl.rangeOfAttack === "melee") {
-                                    return
-                                }
-
-                                if ((player1.gold - selectedPlu.cl.cost) < 0) {
-                                    alert("need more gold")
-                                    return
-                                }
-                                const newRow = cells[0].map((item2, i2) => {
-                                    if (i2 === i) {
-                                        setPlayer1({
-                                            ...player1,
-                                            gold: player1.gold - selectedPlu.cl.cost
-                                        })
-                                        return selectedPlu
+                                let newRow = cells[0]
+                                if (selectedPlu.cl.type === "unitCard") {
+                                    if (!selectedPlu || turn % 2 !== 0 || selectedPlu.cl.rangeOfAttack === "melee") {
+                                        return
                                     }
-                                    return item2
-                                })
+
+                                    if ((player1.gold - selectedPlu.cl.cost) < 0) {
+                                        alert("need more gold")
+                                        return
+                                    }
+                                    newRow = cells[0].map((item2, i2) => {
+                                        if (i2 === i) {
+                                            setPlayer1({
+                                                ...player1,
+                                                gold: player1.gold - selectedPlu.cl.cost
+                                            })
+                                            return selectedPlu
+                                        }
+                                        return item2
+                                    })
+                                }
+                                if (selectedPlu.cl.type === "magic") {
+                                    if (!selectedPlu || turn % 2 !== 0) {
+                                        return
+                                    }
+                                    if ((player1.mp - selectedPlu.cl.manacost) < 0) {
+                                        alert("need more mana")
+                                        return
+                                    }
+                                    newRow = cells[0].map((item2, i2) => {
+
+                                        if (i2 === i) {
+                                            setPlayer1({
+                                                ...player1,
+                                                mp: player1.mp - selectedPlu.cl.manacost,
+                                                xp: player1.xp + player1.intelligence * 10 * selectedPlu.cl.bonusXP
+                                            })
+                                            item2 = selectedPlu.cl.effect(item2, 1, player1.intelligence)
+                                        }
+                                        return item2
+                                    })
+                                }
 
                                 setSelectedCells([
                                     newRow,
@@ -1895,23 +2560,48 @@ function App() {
                             key={i}
                             plu={item}
                             onCellClick={() => {
-                                if (!selectedPlu || turn % 2 !== 0) {
-                                    return
-                                }
-                                if ((player1.gold - selectedPlu.cl.cost) < 0) {
-                                    alert("need more gold")
-                                    return
-                                }
-                                const newRow = cells[1].map((item2, i2) => {
-                                    if (i2 === i) {
-                                        setPlayer1({
-                                            ...player1,
-                                            gold: player1.gold - selectedPlu.cl.cost
-                                        })
-                                        return selectedPlu
+                                let newRow = cells[1]
+                                if (selectedPlu.cl.type === "unitCard") {
+                                    if (!selectedPlu || turn % 2 !== 0) {
+                                        return
                                     }
-                                    return item2
-                                })
+
+                                    if ((player1.gold - selectedPlu.cl.cost) < 0) {
+                                        alert("need more gold")
+                                        return
+                                    }
+                                    newRow = cells[1].map((item2, i2) => {
+                                        if (i2 === i) {
+                                            setPlayer1({
+                                                ...player1,
+                                                gold: player1.gold - selectedPlu.cl.cost
+                                            })
+                                            return selectedPlu
+                                        }
+                                        return item2
+                                    })
+                                }
+                                if (selectedPlu.cl.type === "magic") {
+                                    if (!selectedPlu || turn % 2 !== 0) {
+                                        return
+                                    }
+                                    if ((player1.mp - selectedPlu.cl.manacost) < 0) {
+                                        alert("need more mana")
+                                        return
+                                    }
+                                    newRow = cells[1].map((item2, i2) => {
+
+                                        if (i2 === i) {
+                                            setPlayer1({
+                                                ...player1,
+                                                mp: player1.mp - selectedPlu.cl.manacost,
+                                                xp: player1.xp + player1.intelligence * 10 * selectedPlu.cl.bonusXP
+                                            })
+                                            item2 = selectedPlu.cl.effect(item2, 1, player1.intelligence)
+                                        }
+                                        return item2
+                                    })
+                                }
 
                                 setSelectedCells([
                                     cells[0],
@@ -1932,23 +2622,48 @@ function App() {
                             key={i}
                             plu={item}
                             onCellClick={() => {
-                                if ((!selectedPlu) || (turn % 2 === 0)) {
-                                    return
-                                }
-                                if ((player2.gold - selectedPlu.cl.cost) < 0) {
-                                    alert("need more gold")
-                                    return
-                                }
-                                const newRow = cells[2].map((item2, i2) => {
-                                    if (i2 === i) {
-                                        setPlayer2({
-                                            ...player2,
-                                            gold: player2.gold - selectedPlu.cl.cost
-                                        })
-                                        return selectedPlu
+                                let newRow = cells[2]
+                                if (selectedPlu.cl.type === "unitCard") {
+                                    if (!selectedPlu || turn % 2 !== 0) {
+                                        return
                                     }
-                                    return item2
-                                })
+
+                                    if ((player1.gold - selectedPlu.cl.cost) < 0) {
+                                        alert("need more gold")
+                                        return
+                                    }
+                                    newRow = cells[2].map((item2, i2) => {
+                                        if (i2 === i) {
+                                            setPlayer1({
+                                                ...player1,
+                                                gold: player1.gold - selectedPlu.cl.cost
+                                            })
+                                            return selectedPlu
+                                        }
+                                        return item2
+                                    })
+                                }
+                                if (selectedPlu.cl.type === "magic") {
+                                    if (!selectedPlu || turn % 2 !== 0) {
+                                        return
+                                    }
+                                    if ((player1.mp - selectedPlu.cl.manacost) < 0) {
+                                        alert("need more mana")
+                                        return
+                                    }
+                                    newRow = cells[2].map((item2, i2) => {
+
+                                        if (i2 === i) {
+                                            setPlayer1({
+                                                ...player1,
+                                                mp: player1.mp - selectedPlu.cl.manacost,
+                                                xp: player1.xp + player1.intelligence * 10 * selectedPlu.cl.bonusXP
+                                            })
+                                            item2 = selectedPlu.cl.effect(item2, 1, player1.intelligence)
+                                        }
+                                        return item2
+                                    })
+                                }
 
                                 setSelectedCells([
                                     cells[0],
@@ -1969,23 +2684,48 @@ function App() {
                             key={i}
                             plu={item}
                             onCellClick={() => {
-                                if ((!selectedPlu) || (turn % 2 === 0) || selectedPlu.cl.rangeOfAttack === "melee") {
-                                    return
-                                }
-                                if ((player2.gold - selectedPlu.cl.cost) < 0) {
-                                    alert("need more gold")
-                                    return
-                                }
-                                const newRow = cells[3].map((item2, i2) => {
-                                    if (i2 === i) {
-                                        setPlayer2({
-                                            ...player2,
-                                            gold: player2.gold - selectedPlu.cl.cost
-                                        })
-                                        return selectedPlu
+                                let newRow = cells[3]
+                                if (selectedPlu.cl.type === "unitCard") {
+                                    if (!selectedPlu || turn % 2 !== 0) {
+                                        return
                                     }
-                                    return item2
-                                })
+
+                                    if ((player1.gold - selectedPlu.cl.cost) < 0) {
+                                        alert("need more gold")
+                                        return
+                                    }
+                                    newRow = cells[3].map((item2, i2) => {
+                                        if (i2 === i) {
+                                            setPlayer1({
+                                                ...player1,
+                                                gold: player1.gold - selectedPlu.cl.cost
+                                            })
+                                            return selectedPlu
+                                        }
+                                        return item2
+                                    })
+                                }
+                                if (selectedPlu.cl.type === "magic") {
+                                    if (!selectedPlu || turn % 2 !== 0) {
+                                        return
+                                    }
+                                    if ((player1.mp - selectedPlu.cl.manacost) < 0) {
+                                        alert("need more mana")
+                                        return
+                                    }
+                                    newRow = cells[3].map((item2, i2) => {
+
+                                        if (i2 === i) {
+                                            setPlayer1({
+                                                ...player1,
+                                                mp: player1.mp - selectedPlu.cl.manacost,
+                                                xp: player1.xp + player1.intelligence * 10 * selectedPlu.cl.bonusXP
+                                            })
+                                            item2 = selectedPlu.cl.effect(item2, 1, player1.intelligence)
+                                        }
+                                        return item2
+                                    })
+                                }
 
                                 setSelectedCells([
                                     cells[0],
@@ -2002,5 +2742,4 @@ function App() {
         </div>
     )
 }
-
 export default App;

@@ -43,7 +43,7 @@
   outline: 3px solid blue;
 }
 
-.units11, .units12, .units21, .units22  {
+.units11, .units12, .units21, .units22, .magic  {
   display: flex;
   flex-direction: row;
 }
