@@ -112,7 +112,7 @@ import { Cell } from './cell'
 let income1 = 10
 let income2 = 10
 let defaultBoneFletcher = {
-    type: "unitCard",
+    type: "summonUnitCard",
     img: BTNSkeletonMage,
     name: "BoneFletcher",
     attack: 3,
@@ -128,7 +128,7 @@ let defaultBoneFletcher = {
     cost: 72,
 }
 let defaultSkeletonWarrior = {
-    type: "summunitCardon",
+    type: "summonUnitCard",
     img: BTNSkeletonWarrior,
     name: "SkeletonWarrior",
     attack: 3,
@@ -145,7 +145,7 @@ let defaultSkeletonWarrior = {
 }
 
 let defaultSkeletonKing = {
-    type: "unitCard",
+    type: "summonUnitCard",
     img: SkeletonKing,
     name: "SkeletonKing",
     attack: 4,
@@ -163,7 +163,7 @@ let defaultSkeletonKing = {
 let raiseSkeleton = {
     name: "raiseSkeleton",
     img: BTNSkeletonWarrior,
-    type: "magic",
+    type: "buff",
     target: ["ally"],
     manacost: 23,
     bonusXP: 0,
@@ -188,7 +188,7 @@ let raiseSkeleton = {
 let raiseBoneFletcher = {
     name: "raiseBoneFletcher",
     img: BTNSkeletonMage,
-    type: "magic",
+    type: "buff",
     target: ["ally"],
     manacost: 72,
     bonusXP: 0,
@@ -210,7 +210,7 @@ let raiseBoneFletcher = {
 let raiseSkeletonKing = {
     name: "raiseSkeletonKing",
     img: SkeletonKing,
-    type: "magic",
+    type: "buff",
     target: ["ally"],
     manacost: 131,
     bonusXP: 0,
@@ -234,7 +234,7 @@ let raiseSkeletonKing = {
 let deathCoil = {
     name: "deathCoil",
     img: BTNDeathCoil,
-    type: "magic",
+    type: ["buff", "damage"],
     target: ["ally", "enemy"],
     manacost: 20,
     bonusXP: 0,
@@ -272,7 +272,7 @@ let deathCoil = {
 let sacrifice = {
     name: "Sacrifice",
     img: BTNSacrifice,
-    type: "magic",
+    type: "buff",
     target: ["ally"],
     manacost: 30,
     bonusXP: 1,
@@ -295,7 +295,7 @@ let sacrifice = {
 let reincarnation = {
     name: "Reincarnation",
     img: ReincarnationImg,
-    type: "magic",
+    type: "buff",
     target: ["ally"],
     manacost: 40,
     bonusXP: 0,
@@ -320,7 +320,7 @@ let reincarnation = {
 let suddenDeath = {
     name: "SuddenDeath",
     img: BTNCorpseExplode,
-    type: "magic",
+    type: "damage",
     target: ["enemy"],
     manacost: 50,
     bonusXP: 0,
@@ -345,7 +345,7 @@ let suddenDeath = {
 let orbOfCorroption = {
     name: "orbOfCorroption",
     img: BTNOrbOfCorruption,
-    type: "magic",
+    type: "buff",
     target: ["ally"],
     manacost: 30,
     bonusXP: 0,
@@ -369,7 +369,7 @@ let orbOfCorroption = {
 let antiMagicShell = {
     name: "AntiMagicShell",
     img: BTNAntiMagicShell,
-    type: "magic",
+    type: "buff",
     target: ["ally"],
     manacost: 40,
     bonusXP: 0,
@@ -395,7 +395,7 @@ let antiMagicShell = {
 let unholyFrenzy = {
     name: "UnholyFrenzy",
     img: BTNUnholyFrenzy,
-    type: "magic",
+    type: "buff",
     target: ["ally"],
     manacost: 50,
     bonusXP: 0,
@@ -451,7 +451,7 @@ let heal = {
 let holyAttackMagic = {
     name: "holyAttack",
     img: BTNDivineIntervention,
-    type: "magic",
+    type: "buff",
     target: ["ally"],
     manacost: 30,
     bonusXP: 0,
@@ -475,7 +475,7 @@ let holyAttackMagic = {
 let innerFire = {
     name: "innerFire",
     img: BTNInnerFire,
-    type: "magic",
+    type: "buff",
     target: ["ally"],
     manacost: 70,
     bonusXP: 0,
@@ -499,7 +499,7 @@ let innerFire = {
 let resurrection = {
     name: "Reincarnation",
     img: BTNResurrection,
-    type: "magic",
+    type: "buff",
     target: ["ally"],
     manacost: 60,
     bonusXP: 0,
@@ -524,7 +524,7 @@ let resurrection = {
 let purifyingFlames = {
     name: "purifyingFlames",
     img: Purifying_Flames,
-    type: "magic",
+    type: "buff",
     target: ["ally"],
     manacost: 40,
     bonusXP: 0,
@@ -2519,7 +2519,7 @@ function App() {
                                         return item2
                                     })
                                 }
-                                if (selectedPlu.cl.type === "magic") {
+                                if (selectedPlu.cl.type.indexOf("buff") > -1) {
                                     if (!selectedPlu || turn % 2 !== 0) {
                                         return
                                     }
@@ -2581,7 +2581,7 @@ function App() {
                                         return item2
                                     })
                                 }
-                                if (selectedPlu.cl.type === "magic") {
+                                if (selectedPlu.cl.type.indexOf("buff") > -1) {
                                     if (!selectedPlu || turn % 2 !== 0) {
                                         return
                                     }
@@ -2643,7 +2643,7 @@ function App() {
                                         return item2
                                     })
                                 }
-                                if (selectedPlu.cl.type === "magic") {
+                                if (selectedPlu.cl.type.indexOf("buff") > -1) {
                                     if (!selectedPlu || turn % 2 === 0) {
                                         return
                                     }
@@ -2705,7 +2705,7 @@ function App() {
                                         return item2
                                     })
                                 }
-                                if (selectedPlu.cl.type === "magic") {
+                                if (selectedPlu.cl.type.indexOf("buff") > -1) {
                                     if (!selectedPlu || turn % 2 === 0) {
                                         return
                                     }
