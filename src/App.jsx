@@ -421,9 +421,9 @@ let unholyFrenzy = {
     }
 }
 let heal = {
-    name: "buff",
+    name: "heal",
     img: BTNHeal,
-    type: "magic",
+    type: "buff",
     target: ["ally"],
     manacost: 15,
     bonusXP: 0,
@@ -2520,6 +2520,7 @@ function App() {
                                     })
                                 }
                                 if (selectedPlu.cl.type.indexOf("buff") > -1) {
+                                    
                                     if (!selectedPlu || turn % 2 !== 0) {
                                         return
                                     }
@@ -2535,7 +2536,28 @@ function App() {
                                                 mp: player1.mp - selectedPlu.cl.manacost,
                                                 xp: player1.xp + player1.intelligence * 10 * selectedPlu.cl.bonusXP
                                             })
+                                            
                                             item2 = selectedPlu.cl.effect(item2, 1, player1.intelligence)
+                                        }
+                                        return item2
+                                    })
+                                }
+                                if (selectedPlu.cl.type.indexOf("damage") > -1) {
+                                    
+                                    if (!selectedPlu || turn % 2 === 0) {
+                                        return
+                                    }
+                                    if ((player2.mp - selectedPlu.cl.manacost) < 0) {
+                                        alert("need more mana")
+                                        return
+                                    }
+                                    newRow = cells[0].map((item2, i2) => {
+                                        if (i2 === i) {
+                                            setPlayer2({
+                                                ...player2,
+                                                mp: player2.mp - selectedPlu.cl.manacost,
+                                            })
+                                            item2 = selectedPlu.cl.effect(item2, 2, player2.intelligence)
                                         }
                                         return item2
                                     })
@@ -2602,6 +2624,26 @@ function App() {
                                         return item2
                                     })
                                 }
+                                if (selectedPlu.cl.type.indexOf("damage") > -1) {
+                                    
+                                    if (!selectedPlu || turn % 2 === 0) {
+                                        return
+                                    }
+                                    if ((player2.mp - selectedPlu.cl.manacost) < 0) {
+                                        alert("need more mana")
+                                        return
+                                    }
+                                    newRow = cells[1].map((item2, i2) => {
+                                        if (i2 === i) {
+                                            setPlayer2({
+                                                ...player2,
+                                                mp: player2.mp - selectedPlu.cl.manacost,
+                                            })
+                                            item2 = selectedPlu.cl.effect(item2, 2, player2.intelligence)
+                                        }
+                                        return item2
+                                    })
+                                }
 
                                 setSelectedCells([
                                     cells[0],
@@ -2647,17 +2689,37 @@ function App() {
                                     if (!selectedPlu || turn % 2 === 0) {
                                         return
                                     }
-                                    if ((player1.mp - selectedPlu.cl.manacost) < 0) {
+                                    if ((player2.mp - selectedPlu.cl.manacost) < 0) {
                                         alert("need more mana")
                                         return
                                     }
                                     newRow = cells[2].map((item2, i2) => {
 
                                         if (i2 === i) {
+                                            setPlayer2({
+                                                ...player2,
+                                                mp: player2.mp - selectedPlu.cl.manacost,
+                                                xp: player2.xp + player2.intelligence * 10 * selectedPlu.cl.bonusXP
+                                            })
+                                            item2 = selectedPlu.cl.effect(item2, 2, player2.intelligence)
+                                        }
+                                        return item2
+                                    })
+                                }
+                                if (selectedPlu.cl.type.indexOf("damage") > -1) {
+                                    
+                                    if (!selectedPlu || turn % 2 !== 0) {
+                                        return
+                                    }
+                                    if ((player1.mp - selectedPlu.cl.manacost) < 0) {
+                                        alert("need more mana")
+                                        return
+                                    }
+                                    newRow = cells[2].map((item2, i2) => {
+                                        if (i2 === i) {
                                             setPlayer1({
                                                 ...player1,
                                                 mp: player1.mp - selectedPlu.cl.manacost,
-                                                xp: player1.xp + player1.intelligence * 10 * selectedPlu.cl.bonusXP
                                             })
                                             item2 = selectedPlu.cl.effect(item2, 1, player1.intelligence)
                                         }
@@ -2709,17 +2771,37 @@ function App() {
                                     if (!selectedPlu || turn % 2 === 0) {
                                         return
                                     }
-                                    if ((player1.mp - selectedPlu.cl.manacost) < 0) {
+                                    if ((player2.mp - selectedPlu.cl.manacost) < 0) {
                                         alert("need more mana")
                                         return
                                     }
                                     newRow = cells[3].map((item2, i2) => {
 
                                         if (i2 === i) {
+                                            setPlayer2({
+                                                ...player2,
+                                                mp: player2.mp - selectedPlu.cl.manacost,
+                                                xp: player2.xp + player2.intelligence * 10 * selectedPlu.cl.bonusXP
+                                            })
+                                            item2 = selectedPlu.cl.effect(item2, 2, player1.intelligence)
+                                        }
+                                        return item2
+                                    })
+                                }
+                                if (selectedPlu.cl.type.indexOf("damage") > -1) {
+                                    
+                                    if (!selectedPlu || turn % 2 !== 0) {
+                                        return
+                                    }
+                                    if ((player1.mp - selectedPlu.cl.manacost) < 0) {
+                                        alert("need more mana")
+                                        return
+                                    }
+                                    newRow = cells[3].map((item2, i2) => {
+                                        if (i2 === i) {
                                             setPlayer1({
                                                 ...player1,
                                                 mp: player1.mp - selectedPlu.cl.manacost,
-                                                xp: player1.xp + player1.intelligence * 10 * selectedPlu.cl.bonusXP
                                             })
                                             item2 = selectedPlu.cl.effect(item2, 1, player1.intelligence)
                                         }
