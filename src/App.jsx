@@ -2499,7 +2499,7 @@ function App() {
                             plu={item}
                             onCellClick={() => {
                                 let newRow = cells[0]
-                                if (selectedPlu.cl.type === "unitCard") {
+                                if (selectedPlu.cl.type.indexOf("unitCard") > -1) {
                                     if (!selectedPlu || turn % 2 !== 0 || selectedPlu.cl.rangeOfAttack === "melee") {
                                         return
                                     }
@@ -2561,7 +2561,7 @@ function App() {
                             plu={item}
                             onCellClick={() => {
                                 let newRow = cells[1]
-                                if (selectedPlu.cl.type === "unitCard") {
+                                if (selectedPlu.cl.type.indexOf("unitCard") > -1) {
                                     if (!selectedPlu || turn % 2 !== 0) {
                                         return
                                     }
@@ -2623,8 +2623,8 @@ function App() {
                             plu={item}
                             onCellClick={() => {
                                 let newRow = cells[2]
-                                if (selectedPlu.cl.type === "unitCard") {
-                                    if (!selectedPlu || turn % 2 !== 0) {
+                                if (selectedPlu.cl.type.indexOf("unitCard") > -1) {
+                                    if (!selectedPlu || turn % 2 === 0) {
                                         return
                                     }
 
@@ -2644,7 +2644,7 @@ function App() {
                                     })
                                 }
                                 if (selectedPlu.cl.type === "magic") {
-                                    if (!selectedPlu || turn % 2 !== 0) {
+                                    if (!selectedPlu || turn % 2 === 0) {
                                         return
                                     }
                                     if ((player1.mp - selectedPlu.cl.manacost) < 0) {
@@ -2685,8 +2685,8 @@ function App() {
                             plu={item}
                             onCellClick={() => {
                                 let newRow = cells[3]
-                                if (selectedPlu.cl.type === "unitCard") {
-                                    if (!selectedPlu || turn % 2 !== 0) {
+                                if (selectedPlu.cl.type.indexOf("unitCard") > -1) {
+                                    if (!selectedPlu || turn % 2 === 0) {
                                         return
                                     }
 
@@ -2706,7 +2706,7 @@ function App() {
                                     })
                                 }
                                 if (selectedPlu.cl.type === "magic") {
-                                    if (!selectedPlu || turn % 2 !== 0) {
+                                    if (!selectedPlu || turn % 2 === 0) {
                                         return
                                     }
                                     if ((player1.mp - selectedPlu.cl.manacost) < 0) {
