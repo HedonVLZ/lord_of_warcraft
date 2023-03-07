@@ -36,8 +36,7 @@ export default class Input extends React.Component {
                         })
                     }}>
                         <option value="human">Human</option>
-                        <option value="scourge">Scourge</option>
-                        <option value="forsaken">Forsaken</option>                      
+                        <option value="scourge">Scourge</option>                    
                         <option value="highElves">HighElves</option>
                         <option value="orcs">Orcs</option>
                     </select> 
@@ -51,7 +50,6 @@ export default class Input extends React.Component {
                     }}>
                         <option value="human">Human</option>
                         <option value="scourge">Scourge</option>
-                        <option value="forsaken">Forsaken</option>
                         <option value="highElves">HighElves</option>
                         <option value="orcs">Orcs</option>
                     </select> 

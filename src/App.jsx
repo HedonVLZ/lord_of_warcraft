@@ -104,13 +104,35 @@ import BTNInnerFire from './BTNInnerFire.webp';
 import BTNResurrection from './BTNResurrection.webp';
 import Purifying_Flames from './Purifying_Flames.jpg';
 import Stygian_Desolator from './Stygian_Desolator.png';
-
+import BTNFire from './BTNFire.webp';
+import BTNSearingArrowsOff from './BTNSearingArrowsOff.webp';
+import BTNWallOfFire from './BTNWallOfFire.webp';
+import BTNFireBolt from './BTNFireBolt.webp';
+import BTNMarkOfFire from './BTNMarkOfFire.webp';
+import fenixImg from './fenix.jpg';
 import { Magic } from './magic'
 import { Unit } from './unit'
 import { Cell } from './cell'
 
 let income1 = 10
 let income2 = 10
+
+let defaultFenix = {
+    type: "summonUnitCard",
+    img: fenixImg,
+    name: "fenix",
+    attack: 4,
+    rangeOfAttack: "range",
+    typeOfAttack: "physic",
+    attackSpeed: 1,
+    hp: 16,
+    hpMax: 16,
+    armor: 2,
+    DefaultArmor: 2,
+    abilityImg: [BTNSkeletalLongevity, CriticalStrike],
+    ability: ["undead", "CriticalStrike15X3"],
+    cost: 131,
+}
 let defaultBoneFletcher = {
     type: "summonUnitCard",
     img: BTNSkeletonMage,
@@ -488,7 +510,7 @@ let innerFire = {
                 ...target,
                 cl: {
                     ...target.cl,
-                    attack: target.cl.armor + Intelligence - 1,
+                    armor: target.cl.armor + Intelligence - 1,
                     ability: target.cl.ability.concat("innerFireEffect"),
                     abilityImg: target.cl.abilityImg.concat(BTNInnerFire)
                 }
@@ -524,12 +546,15 @@ let resurrection = {
 let purifyingFlames = {
     name: "purifyingFlames",
     img: Purifying_Flames,
-    type: "buff",
-    target: ["ally"],
+    type: ["buff", "damage"],
+    target: ["any"],
     manacost: 40,
     bonusXP: 0,
     effect: function (target, numberOfPlayer, Intelligence) {
-        if (target.cl.ability.indexOf("building") === -1) {
+        if (target.cl.ability.indexOf("building") > -1) {
+            alert("incorrect target")
+            return
+        } else {
             return {
                 ...target,
                 cl: {
@@ -542,7 +567,122 @@ let purifyingFlames = {
         }
     }
 }
-
+let fireBolt = {
+    name: "fireBolt",
+    img: BTNFire,
+    type: ["damage"],
+    target: ["enemy"],
+    manacost: 20,
+    bonusXP: 0,
+    effect: function (target, numberOfPlayer, Intelligence) {
+        if (target.cl.ability.indexOf("building") > -1) {
+            alert("incorrect target")
+            return
+        } else {
+            return {
+                ...target,
+                cl: {
+                    ...target.cl,
+                    hp: target.cl.hp - 4 - Intelligence
+                }
+            }
+        }
+    }
+}
+let fireArrows = {
+    name: "fireArrows",
+    img: BTNSearingArrowsOff,
+    type: ["buff"],
+    target: ["ally"],
+    manacost: 20,
+    bonusXP: 0,
+    effect: function (target, numberOfPlayer, Intelligence) {
+        if (target.cl.ability.indexOf("building") > -1 || target.cl.ability.indexOf("fireArrows") > -1) {
+            alert("incorrect target")
+            return
+        } else {
+            return {
+                ...target,
+                cl: {
+                    ...target.cl,
+                    attack: target.cl.attack + Intelligence,
+                    ability: target.cl.ability.concat("fireArrows"),
+                    abilityImg: target.cl.abilityImg.concat(BTNSearingArrowsOff)
+                }
+            }
+        }
+    }
+}
+let wallOfFire = {
+    name: "WallOfFire",
+    img: BTNWallOfFire,
+    type: ["damage"],
+    target: ["enemy"],
+    manacost: 35,
+    bonusXP: 0,
+    effect: function (target, numberOfPlayer, Intelligence) {
+        if (target.cl.ability.indexOf("flying") > -1) {
+            alert("incorrect target")
+            return
+        } else {
+            return {
+                ...target,
+                cl: {
+                    ...target.cl,
+                    hp: target.cl.hp - 8 - 2 * Intelligence,
+                }
+            }
+        }
+    }
+}
+let fireBall = {
+    name: "fireBall",
+    img: BTNFireBolt,
+    type: ["damage"],
+    target: ["enemy"],
+    manacost: 40,
+    bonusXP: 0,
+    effect: function (target, numberOfPlayer, Intelligence) {
+        if (target.cl.ability.indexOf("building") > -1) {
+            alert("incorrect target")
+            return
+        } else {
+            return {
+                ...target,
+                cl: {
+                    ...target.cl,
+                    hp: target.cl.hp - 4 - 2 * Intelligence,
+                    ability: target.cl.ability.concat("bashed"),
+                    abilityImg: target.cl.abilityImg.concat(BTNStun)
+                }
+            }
+        }
+    }
+}
+let fenix = {
+    name: "fenix",
+    img: BTNMarkOfFire,
+    type: ["summon"],
+    target: ["freePlace"],
+    manacost: 80,
+    bonusXP: 0,
+    effect: function (target, numberOfPlayer, Intelligence) {
+        if (target !== null) {
+            alert("incorrect target")
+            return
+        } else {
+            return {
+                defaultFenix,
+                cl: {
+                    ...defaultFenix.cl,
+                    hp: defaultFenix.hp + 2 * Intelligence - 6,
+                    hpMax: defaultFenix.hpMax + 2 * Intelligence - 6,
+                    attack: defaultFenix.attack + 2 * Intelligence - 6,
+                }
+            }
+        }
+    }
+}
 let defaultPeasant = Object.freeze({
     type: "unitCard",
     img: BTNPeasant,
@@ -1050,8 +1190,9 @@ let unitsOfRaces = {
     orcs: [defaultPeon, defaultWyvernRider, defaultRaider, defaultGrunt, defaultKodo, defaultTaurenChieftain, defaultBladeMaster],
 }
 let magicsOfMage = {
-    necromancer: [raiseSkeleton, raiseBoneFletcher, raiseSkeletonKing, deathCoil, sacrifice, reincarnation, suddenDeath, orbOfCorroption, antiMagicShell, unholyFrenzy],
+    necromancer: [raiseSkeleton, deathCoil, sacrifice, reincarnation, suddenDeath, unholyFrenzy],
     cleric: [heal, holyAttackMagic, innerFire, resurrection, purifyingFlames],
+    mageOfFire: [fireBolt, fireArrows, wallOfFire, fireBall, fenix]
 }
 
 let int = {
@@ -2005,9 +2146,16 @@ function calculateRegeneration(unit) {
     if (unit.ability.indexOf("underPoison") > -1) {
         regeneration = regeneration - 1
     }
-    if (unit.ability.indexOf("burrow") > -1 && unit.hp < 15) {
+    if (unit.ability.indexOf("burrow") > -1 && unit.hp < unit.hpMax) {
         regeneration = regeneration + 1
     }
+    if (unit.ability.indexOf("innerFireEffect") > -1 && unit.hp < unit.hpMax) {
+        regeneration = regeneration + 1
+    }
+    if (unit.ability.indexOf("purifyingFlamesEffect") > -1 && unit.hp < unit.hpMax) {
+        regeneration = regeneration + 1
+    }
+    
     return {
         ...unit,
         hp: unit.hp + regeneration,
@@ -2562,7 +2710,28 @@ function App() {
                                         return item2
                                     })
                                 }
+                                if (selectedPlu.cl.type.indexOf("summon") > -1) {
+                                    
+                                    if (!selectedPlu || turn % 2 !== 0) {
+                                        return
+                                    }
+                                    if ((player1.mp - selectedPlu.cl.manacost) < 0) {
+                                        alert("need more mana")
+                                        return
+                                    }
+                                    newRow = cells[0].map((item2, i2) => {
 
+                                        if (i2 === i) {
+                                            setPlayer1({
+                                                ...player1,
+                                                mp: player1.mp - selectedPlu.cl.manacost,
+                                            })
+                                            
+                                            item2 = selectedPlu.cl.effect(item2, 1, player1.intelligence)
+                                        }
+                                        return item2
+                                    })
+                                }
                                 setSelectedCells([
                                     newRow,
                                     cells[1],
@@ -2644,7 +2813,28 @@ function App() {
                                         return item2
                                     })
                                 }
+                                if (selectedPlu.cl.type.indexOf("summon") > -1) {
+                                    
+                                    if (!selectedPlu || turn % 2 !== 0) {
+                                        return
+                                    }
+                                    if ((player1.mp - selectedPlu.cl.manacost) < 0) {
+                                        alert("need more mana")
+                                        return
+                                    }
+                                    newRow = cells[1].map((item2, i2) => {
 
+                                        if (i2 === i) {
+                                            setPlayer1({
+                                                ...player1,
+                                                mp: player1.mp - selectedPlu.cl.manacost,
+                                            })
+                                            
+                                            item2 = selectedPlu.cl.effect(item2, 1, player1.intelligence)
+                                        }
+                                        return item2
+                                    })
+                                }
                                 setSelectedCells([
                                     cells[0],
                                     newRow,
@@ -2726,7 +2916,28 @@ function App() {
                                         return item2
                                     })
                                 }
+                                if (selectedPlu.cl.type.indexOf("summon") > -1) {
+                                    
+                                    if (!selectedPlu || turn % 2 === 0) {
+                                        return
+                                    }
+                                    if ((player2.mp - selectedPlu.cl.manacost) < 0) {
+                                        alert("need more mana")
+                                        return
+                                    }
+                                    newRow = cells[3].map((item2, i2) => {
 
+                                        if (i2 === i) {
+                                            setPlayer2({
+                                                ...player2,
+                                                mp: player2.mp - selectedPlu.cl.manacost,
+                                            })
+                                            
+                                            item2 = selectedPlu.cl.effect(item2, 2, player2.intelligence)
+                                        }
+                                        return item2
+                                    })
+                                }
                                 setSelectedCells([
                                     cells[0],
                                     cells[1],
@@ -2808,7 +3019,28 @@ function App() {
                                         return item2
                                     })
                                 }
+                                if (selectedPlu.cl.type.indexOf("summon") > -1) {
+                                    
+                                    if (!selectedPlu || turn % 2 === 0) {
+                                        return
+                                    }
+                                    if ((player2.mp - selectedPlu.cl.manacost) < 0) {
+                                        alert("need more mana")
+                                        return
+                                    }
+                                    newRow = cells[4].map((item2, i2) => {
 
+                                        if (i2 === i) {
+                                            setPlayer2({
+                                                ...player2,
+                                                mp: player2.mp - selectedPlu.cl.manacost,
+                                            })
+                                            
+                                            item2 = selectedPlu.cl.effect(item2, 2, player2.intelligence)
+                                        }
+                                        return item2
+                                    })
+                                }
                                 setSelectedCells([
                                     cells[0],
                                     cells[1],
