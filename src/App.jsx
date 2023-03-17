@@ -1,1187 +1,45 @@
 import React from 'react';
 import "./App.css"
-import footmanImg from './BTNFootman.webp';
 import Input from './input'
-import BTNNecromancer from './BTNNecromancer-Reforged.webp';
-import BTNPriestImg from './BTNPriest-Reforged.webp';
-import BTNHeroBloodElfPrince from './BTNHeroBloodElfPrince-Reforged.webp';
-import BTNHeroArchMage from './BTNHeroArchMage-Reforged.webp';
-import Reflect from './BTNDefend.png';
-import BTNPeasant from './BTNPeasant.webp';
-import BTNHeroPaladin from './BTNHeroPaladin.webp';
-import BTNGryphonRider from './BTNGryphonRider.webp';
-import BTNMilitia from './BTNMilitia.webp';
-import BTNKnight from './BTNKnight.webp';
-import BTNDivineIntervention from './BTNDivineIntervention.webp';
-import BTNGuardTower from './BTNGuardTower.webp';
-import BTNGatherGold from './BTNGatherGold.webp';
-import BTNBacktoWork from './BTNBacktoWork.webp';
-import BTNArcaniteArchitecture from './BTNArcaniteArchitecture.webp';
-import BTNDevotion from './BTNDevotion.webp';
-import PASBTNBash from './PASBTNBash.webp';
-import BTNStun from './BTNStun.webp';
-import BTNAlbatross from './BTNAlbatross.webp';
-import BTNGhoul from './BTNGhoul.webp';
-import BTNSkeletalLongevity from './BTNSkeletalLongevity.webp';
-import BTNCannibalize from './BTNCannibalize.webp';
-import BTNAcolyte from './BTNAcolyte.webp';
-import BTNCallToArms from './BTNCallToArms.webp';
-import BTNDalaranMutant from './BTNDalaranMutant.webp';
-import BTNBansheeRanger from './BTNBansheeRanger.webp';
-import BTNMarksmanship from './BTNMarksmanship.webp';
-import BTNAbomination from './BTNAbomination.webp';
-import PASBTNPlagueCloud from './PASBTNPlagueCloud.webp';
-import BTNFrostWyrm from './BTNFrostWyrm.webp';
-import BTNBreathOfFrost from './BTNBreathOfFrost.webp';
-import BTNBreathOfFire from './BTNBreathOfFire.webp';
-import BTNHeroDreadLord from './BTNHeroDreadLord.webp';
-import BTNVampiricAura from './BTNVampiricAura.webp';
-import PASBTNMagicalSentry from './PASBTNMagicalSentry.webp';
-import BTNGreenDragonRoost from './BTNGreenDragonRoost.webp';
-import NightHunter from './bala-skill-4.png';
-import BTNCryptFiend from './BTNCryptFiend.webp';
-import BTNWebOff from './BTNWebOff.webp';
-import BTNWeb from './BTNWeb.webp';
-import BTNCryptFiendUnBurrow from './BTNCryptFiendUnBurrow.webp';
-import BTNCryptFiendBurrow from './BTNCryptFiendBurrow.webp';
-import anubarak from './anubarak.jpg';
-import Wc3PASBTNThornShield from './Wc3PASBTNThornShield.png';
-import BTNUnholyAura from './BTNUnholyAura.webp';
-import BTNHeroDeathKnight from './BTNHeroDeathKnight.webp';
-import BTNAnimateDead from './BTNAnimateDead.webp';
-import BTNMagicImmunity from './BTNMagicImmunity.webp';
-import BTNDestroyer from './BTNDestroyer.webp';
-import BTNGhost from './BTNGhost.webp';
-import BTNGargoyle from './BTNGargoyle.webp';
-import BTNWisp from './BTNWisp.webp';
-import BTNBloodElfPeasant from './BTNBloodElfPeasant.webp';
-import BTNDragonHawk from './BTNDragonHawk.webp';
-import BTNHighElvenArcher from './BTNHighElvenArcher.webp';
-import BTNSpellBreaker from './BTNSpellBreaker.webp';
-import BTNPriest from './BTNPriest.webp';
-import BTNFrost from './BTNFrost.webp';
-import Legion_Commander from './Legion_Commander.jpg';
-import Moment_of_Courage from './Moment_of_Courage.jpg';
-import BTNSlowOff from './BTNSlowOff.webp';
-import BTNHealOff from './BTNHealOff.webp';
-import BTNSorceress from './BTNSorceress.webp';
-import BTNSheep from './BTNSheep.webp';
-import Feedback from './Feedback.png';
-import windRunner from './winda.png';
-import ShackleShot from './vinda_1.jpg';
-import PowerShot from './vinda_2.jpg';
-import BTNSlow from './BTNSlow.webp';
+import BTNNecromancer from './pictures/BTNNecromancer-Reforged.webp';
+import BTNPriestImg from './pictures/BTNPriest-Reforged.webp';
+import BTNHeroBloodElfPrince from './pictures/BTNHeroBloodElfPrince-Reforged.webp';
+import BTNHeroArchMage from './pictures/BTNHeroArchMage-Reforged.webp';
+import BTNPeasant from './pictures/BTNPeasant.webp';
+import BTNMilitia from './pictures/BTNMilitia.webp';
+import BTNGatherGold from './pictures/BTNGatherGold.webp';
+import BTNBacktoWork from './pictures/BTNBacktoWork.webp';
+import BTNDevotion from './pictures/BTNDevotion.webp';
+import BTNStun from './pictures/BTNStun.webp';
+import BTNAlbatross from './pictures/BTNAlbatross.webp';
+import BTNCallToArms from './pictures/BTNCallToArms.webp';
+import PASBTNPlagueCloud from './pictures/PASBTNPlagueCloud.webp';
+import BTNWeb from './pictures/BTNWeb.webp';
+import BTNCryptFiendUnBurrow from './pictures/BTNCryptFiendUnBurrow.webp';
+import BTNCryptFiendBurrow from './pictures/BTNCryptFiendBurrow.webp';
+import BTNFrost from './pictures/BTNFrost.webp';
+import BTNSheep from './pictures/BTNSheep.webp';
+import BTNSlow from './pictures/BTNSlow.webp';
 import { cloneDeep } from 'lodash'
-import BTNPeon from './BTNPeon.webp';
-import PASBTNPillage from './PASBTNPillage.webp';
-import BTNRaider from './BTNRaider.webp';
-import BTNEnsnare from './BTNEnsnare.webp';
-import BTNWyvernRider from './BTNWyvernRider.webp';
-import BTNEnvenomedSpear from './BTNEnvenomedSpear.webp';
-import BTNPoisonArrow from './BTNPoisonArrow.webp';
-import BTNGrunt from './BTNGrunt.webp';
-import BTNKotoBeast from './BTNKotoBeast.webp';
-import BTNJanggo from './BTNJanggo.webp';
-import PASBTNDrum from './PASBTNDrum.webp';
-import BTNDevour from './BTNDevour.webp';
-import NaturalOrder from './Natural_Order.jpg';
-import BTNHeroTaurenChieftain from './BTNHeroTaurenChieftain.webp';
-import BTNCriticalStrike from './BTNCriticalStrike.webp';
-import BTNHeroBlademaster from './BTNHeroBlademaster.webp';
-import BTNSkeletonWarrior from './BTNSkeletonWarrior.webp';
-import BTNSkeletonMage from './BTNSkeletonMage.webp';
-import BTNSacrifice from './BTNSacrifice.webp';
-import SkeletonKing from './Skeleton_King.gif';
-import CriticalStrike from './Critical_Strike.jpg';
-import ReincarnationImg from './Reincarnation.gif';
-import BTNOrbOfCorruption from './BTNOrbOfCorruption.webp';
-import BTNAntiMagicShell from './BTNAntiMagicShell.webp';
-import BTNUnholyFrenzy from './BTNUnholyFrenzy.webp';
-import BTNHeal from './BTNHeal.webp';
-import BTNDeathCoil from './BTNDeathCoil.webp';
-import BTNCorpseExplode from './BTNCorpseExplode.webp';
-import BTNInnerFire from './BTNInnerFire.webp';
-import BTNResurrection from './BTNResurrection.webp';
-import Purifying_Flames from './Purifying_Flames.jpg';
-import Stygian_Desolator from './Stygian_Desolator.png';
-import BTNFire from './BTNFire.webp';
-import BTNSearingArrowsOff from './BTNSearingArrowsOff.webp';
-import BTNWallOfFire from './BTNWallOfFire.webp';
-import BTNFireBolt from './BTNFireBolt.webp';
-import BTNMarkOfFire from './BTNMarkOfFire.webp';
-import fenixImg from './fenix.jpg';
+import BTNEnsnare from './pictures/BTNEnsnare.webp';
+import BTNPoisonArrow from './pictures/BTNPoisonArrow.webp';
+import PASBTNDrum from './pictures/PASBTNDrum.webp';
+import NaturalOrder from './pictures/Natural_Order.jpg';
+import Stygian_Desolator from './pictures/Stygian_Desolator.png';
 import { Magic } from './magic'
 import { Unit } from './unit'
 import { Cell } from './cell'
-
+import { defaultFenix, defaultBoneFletcher, defaultSkeletonWarrior, defaultSkeletonKing, defaultPeasant } from './unitCards'
+import {defaultMilitia,  defaultFootman, defaultGryphonRider, defaultTower, defaultKnight, defaultPaladin, defaultAcolyte} from './unitCards'
+import {defaultGhoul, defaultZombi, defaultTraxa, defaultButcher, defaultWyrm, defaultDreadLord, defaultFiend, defaultNerub} from './unitCards'
+import {defaultDK, defaultElfWorker, defaultHighElvenArcher, defaultPriest, defaultSorceress, defaultDragonHawk} from './unitCards'
+import {defaultSpellBreaker, defaultWindRunner, defaultPeon, defaultRaider , defaultWyvernRider, defaultGrunt, defaultKodo} from './unitCards'
+import {defaultTaurenChieftain, defaultBladeMaster, } from './unitCards'
+import {raiseSkeleton, raiseBoneFletcher, raiseSkeletonKing, deathCoil, sacrifice, reincarnation, suddenDeath} from './magicCards'
+import {orbOfCorroption, antiMagicShell, unholyFrenzy, heal, holyAttackMagic, innerFire, resurrection, purifyingFlames} from './magicCards'
+import {fireBolt, fireArrows, wallOfFire, fireBall, fenix} from './magicCards'
 let income1 = 10
 let income2 = 10
-
-let defaultFenix = {
-    type: "summonUnitCard",
-    img: fenixImg,
-    name: "fenix",
-    attack: 4,
-    rangeOfAttack: "range",
-    typeOfAttack: "physic",
-    attackSpeed: 1,
-    hp: 16,
-    hpMax: 16,
-    armor: 2,
-    DefaultArmor: 2,
-    abilityImg: [BTNSkeletalLongevity, CriticalStrike],
-    ability: ["undead", "CriticalStrike15X3"],
-    cost: 131,
-}
-let defaultBoneFletcher = {
-    type: "summonUnitCard",
-    img: BTNSkeletonMage,
-    name: "BoneFletcher",
-    attack: 3,
-    rangeOfAttack: "range",
-    typeOfAttack: "physic",
-    attackSpeed: 3,
-    hp: 9,
-    hpMax: 9,
-    armor: 1,
-    DefaultArmor: 1,
-    abilityImg: [BTNSkeletalLongevity],
-    ability: ["undead"],
-    cost: 72,
-}
-let defaultSkeletonWarrior = {
-    type: "summonUnitCard",
-    img: BTNSkeletonWarrior,
-    name: "SkeletonWarrior",
-    attack: 3,
-    rangeOfAttack: "melee",
-    typeOfAttack: "physic",
-    attackSpeed: 1,
-    hp: 9,
-    hpMax: 9,
-    armor: 1,
-    DefaultArmor: 1,
-    abilityImg: [BTNSkeletalLongevity],
-    ability: ["undead"],
-    cost: 23,
-}
-
-let defaultSkeletonKing = {
-    type: "summonUnitCard",
-    img: SkeletonKing,
-    name: "SkeletonKing",
-    attack: 4,
-    rangeOfAttack: "melee",
-    typeOfAttack: "physic",
-    attackSpeed: 1,
-    hp: 16,
-    hpMax: 16,
-    armor: 2,
-    DefaultArmor: 2,
-    abilityImg: [BTNSkeletalLongevity, CriticalStrike],
-    ability: ["undead", "CriticalStrike15X3"],
-    cost: 131,
-}
-let raiseSkeleton = {
-    name: "raiseSkeleton",
-    img: BTNSkeletonWarrior,
-    type: "buff",
-    target: ["ally"],
-    manacost: 23,
-    bonusXP: 0,
-    effect: function (target, numberOfPlayer, Intelligence) {
-        if (target.cl.ability.indexOf("building") > -1 || target.player !== numberOfPlayer || target.cl.hp > 0) {
-            alert("incorrect target")
-            return
-        } else {
-            return {
-                ...defaultSkeletonWarrior,
-                cl: {
-                    ...defaultSkeletonWarrior,
-                    hp: defaultSkeletonWarrior.hp + Intelligence - 3,
-                    hpMax: defaultSkeletonWarrior.hpMax + Intelligence - 3
-                }
-            }
-        }
-    }
-
-}
-
-let raiseBoneFletcher = {
-    name: "raiseBoneFletcher",
-    img: BTNSkeletonMage,
-    type: "buff",
-    target: ["ally"],
-    manacost: 72,
-    bonusXP: 0,
-    effect: function (target, numberOfPlayer, Intelligence) {
-        if (target.cl.ability.indexOf("building") > -1 || target.player !== numberOfPlayer || target.cl.hp > 0) {
-            alert("incorrect target")
-            return
-        } else {
-            return {
-                ...defaultBoneFletcher,
-                cl: {
-                    ...defaultBoneFletcher,
-                    attack: defaultBoneFletcher.attack + Intelligence - 3
-                }
-            }
-        }
-    }
-}
-let raiseSkeletonKing = {
-    name: "raiseSkeletonKing",
-    img: SkeletonKing,
-    type: "buff",
-    target: ["ally"],
-    manacost: 131,
-    bonusXP: 0,
-    effect: function (target, numberOfPlayer, Intelligence) {
-        if (target.cl.ability.indexOf("building") > -1 || target.player !== numberOfPlayer || target.cl.hp > 0) {
-            alert("incorrect target")
-            return
-        } else {
-            return {
-                ...defaultSkeletonKing,
-                cl: {
-                    ...defaultSkeletonKing.cl,
-                    hp: defaultSkeletonKing.hp + 2 * Intelligence - 6,
-                    hpMax: defaultSkeletonKing.hpMax + 2 * Intelligence - 6,
-                    attack: defaultSkeletonKing.attack + 2 * Intelligence - 6,
-                }
-            }
-        }
-    }
-}
-let deathCoil = {
-    name: "deathCoil",
-    img: BTNDeathCoil,
-    type: ["buff", "damage"],
-    target: ["ally", "enemy"],
-    manacost: 20,
-    bonusXP: 0,
-    effect: function (target, numberOfPlayer, Intelligence) {
-        if (target.cl.ability.indexOf("building") > -1) {
-            alert("incorrect target")
-            return
-        }
-        if (target.cl.ability.indexOf("undead") > -1) {
-            let result = 0
-            if (target.cl.hp + 3 + Intelligence * 2 > target.cl.hpMax) {
-                result = target.cl.hpMax
-            } else {
-                result = target.cl.hp + 3 + Intelligence * 2
-            }
-            return {
-                ...target,
-                cl: {
-                    ...target.cl,
-                    hp: result
-                }
-            }
-        }
-        if (target.cl.ability.indexOf("undead") === -1) {
-            return {
-                ...target,
-                cl: {
-                    ...target.cl,
-                    hp: target.cl.hp - 3 - Intelligence
-                }
-            }
-        }
-    }
-}
-let sacrifice = {
-    name: "Sacrifice",
-    img: BTNSacrifice,
-    type: "buff",
-    target: ["ally"],
-    manacost: 30,
-    bonusXP: 1,
-    effect: function (target, numberOfPlayer, Intelligence) {
-        if (target.cl.ability.indexOf("building") > -1 || target.player !== numberOfPlayer || target.cl.hp <= 0) {
-            alert("incorrect target")
-            return
-        } else {
-            return {
-                ...target,
-                cl: {
-                    ...target.cl,
-                    hp: -999
-                }
-            }
-        }
-    }
-}
-
-let reincarnation = {
-    name: "Reincarnation",
-    img: ReincarnationImg,
-    type: "buff",
-    target: ["ally"],
-    manacost: 40,
-    bonusXP: 0,
-    effect: function (target, numberOfPlayer, Intelligence) {
-        if (target.cl.ability.indexOf("undead") === -1 || target.player !== numberOfPlayer || target.cl.hp > 0 || target.cl.cost >= Intelligence * 15) {
-            alert("incorrect target")
-            if (target.cl.cost >= Intelligence * 15) {
-                alert("Intelligence is not enough")
-            }
-            return
-        } else {
-            return {
-                ...target,
-                cl: {
-                    ...target.cl,
-                    hp: target.cl.hpMax
-                }
-            }
-        }
-    }
-}
-let suddenDeath = {
-    name: "SuddenDeath",
-    img: BTNCorpseExplode,
-    type: "damage",
-    target: ["enemy"],
-    manacost: 50,
-    bonusXP: 0,
-    effect: function (target, numberOfPlayer, Intelligence) {
-        if (target.cl.hp <= 0  || target.cl.ability.indexOf("undead") > -1 || target.cl.ability.indexOf("building") > -1 || target.cl.cost >= Intelligence * 10) {
-            alert("incorrect target")
-            if (target.cl.cost >= Intelligence * 10) {
-                alert("Intelligence is not enough")
-            }
-            return
-        } else {
-            return {
-                ...target,
-                cl: {
-                    ...target.cl,
-                    hp: -999
-                }
-            }
-        }
-    }
-}
-let orbOfCorroption = {
-    name: "orbOfCorroption",
-    img: BTNOrbOfCorruption,
-    type: "buff",
-    target: ["ally"],
-    manacost: 30,
-    bonusXP: 0,
-    effect: function (target, numberOfPlayer, Intelligence) {
-        if (target.cl.ability.indexOf("building") > -1) {
-            alert("incorrect target")
-            return
-        } else {
-            return {
-                ...target,
-                cl: {
-                    ...target.cl,
-                    attack: target.cl.attack + Intelligence - 1,
-                    ability: target.cl.ability.concat("corruptAttack"),
-                    abilityImg: target.cl.abilityImg.concat(BTNOrbOfCorruption)
-                }
-            }
-        }
-    }
-}
-let antiMagicShell = {
-    name: "AntiMagicShell",
-    img: BTNAntiMagicShell,
-    type: "buff",
-    target: ["ally"],
-    manacost: 40,
-    bonusXP: 0,
-    effect: function (target, numberOfPlayer, Intelligence) {
-        if (target.cl.ability.indexOf("building") > -1 || target.cl.cost >= Intelligence * 20) {
-            alert("incorrect target")
-            if (target.cl.cost >= Intelligence * 20) {
-                alert("Intelligence is not enough")
-            }
-            return
-        } else {
-            return {
-                ...target,
-                cl: {
-                    ...target.cl,
-                    ability: target.cl.ability.concat("MagicImmunity"),
-                    abilityImg: target.cl.ability.concat(BTNAntiMagicShell)
-                }
-            }
-        }
-    }
-}
-let unholyFrenzy = {
-    name: "UnholyFrenzy",
-    img: BTNUnholyFrenzy,
-    type: "buff",
-    target: ["ally"],
-    manacost: 50,
-    bonusXP: 0,
-    effect: function (target, numberOfPlayer, Intelligence) {
-        if (target.cl.ability.indexOf("building") > -1 || target.cl.cost >= Intelligence * 20) {
-            alert("incorrect target")
-            if (target.cl.cost >= Intelligence * 20) {
-                alert("Intelligence is not enough")
-            }
-            return
-        } else {
-            return {
-                ...target,
-                cl: {
-                    ...target.cl,
-                    armor: target.cl.armor - 5,
-                    AS: target.cl.AS + Intelligence - 2,
-                    ability: target.cl.ability.concat("UnholyFrenzy"),
-                    abilityImg: target.cl.abilityImg.concat(BTNUnholyFrenzy)
-                }
-            }
-        }
-    }
-}
-let heal = {
-    name: "heal",
-    img: BTNHeal,
-    type: "buff",
-    target: ["ally"],
-    manacost: 15,
-    bonusXP: 0,
-    effect: function (target, numberOfPlayer, Intelligence) {
-        if (target.player !== numberOfPlayer || target.cl.ability.indexOf("building") > -1) {
-            alert("incorrect target")
-            return
-        } else {
-            let result = 0
-            if (target.cl.hp + 3 + Intelligence * 2 > target.cl.hpMax) {
-                result = target.cl.hpMax
-            } else {
-                result = target.cl.hp + 3 + Intelligence * 2
-            }
-            return {
-                ...target,
-                cl: {
-                    ...target.cl,
-                    hp: result
-                }
-            }
-        }
-    }
-}
-let holyAttackMagic = {
-    name: "holyAttack",
-    img: BTNDivineIntervention,
-    type: "buff",
-    target: ["ally"],
-    manacost: 30,
-    bonusXP: 0,
-    effect: function (target, numberOfPlayer, Intelligence) {
-        if (target.cl.ability.indexOf("building") > -1) {
-            alert("incorrect target")
-            return
-        } else {
-            return {
-                ...target,
-                cl: {
-                    ...target.cl,
-                    attack: target.cl.attack + Intelligence - 1,
-                    ability: target.cl.ability.concat("holyAttack"),
-                    abilityImg: target.cl.abilityImg.concat(BTNDivineIntervention)
-                }
-            }
-        }
-    }
-}
-let innerFire = {
-    name: "innerFire",
-    img: BTNInnerFire,
-    type: "buff",
-    target: ["ally"],
-    manacost: 70,
-    bonusXP: 0,
-    effect: function (target, numberOfPlayer, Intelligence) {
-        if (target.cl.ability.indexOf("building") > -1) {
-            alert("incorrect target")
-            return
-        } else {
-            return {
-                ...target,
-                cl: {
-                    ...target.cl,
-                    armor: target.cl.armor + Intelligence - 1,
-                    ability: target.cl.ability.concat("innerFireEffect"),
-                    abilityImg: target.cl.abilityImg.concat(BTNInnerFire)
-                }
-            }
-        }
-    }
-}
-let resurrection = {
-    name: "Reincarnation",
-    img: BTNResurrection,
-    type: "buff",
-    target: ["ally"],
-    manacost: 60,
-    bonusXP: 0,
-    effect: function (target, numberOfPlayer, Intelligence) {
-        if (target.cl.hp > 0 || target.player !== numberOfPlayer || target.cl.ability.indexOf("undead") === 0 || target.cl.cost >= Intelligence * 15) {
-            alert("incorrect target")
-            if (target.cl.cost >= Intelligence * 15) {
-                alert("Intelligence is not enough")
-            }
-            return
-        } else {
-            return {
-                ...target,
-                cl: {
-                    ...target.cl,
-                    hp: target.cl.hpMax
-                }
-            }
-        }
-    }
-}
-let purifyingFlames = {
-    name: "purifyingFlames",
-    img: Purifying_Flames,
-    type: ["buff", "damage"],
-    target: ["any"],
-    manacost: 40,
-    bonusXP: 0,
-    effect: function (target, numberOfPlayer, Intelligence) {
-        if (target.cl.ability.indexOf("building") > -1) {
-            alert("incorrect target")
-            return
-        } else {
-            return {
-                ...target,
-                cl: {
-                    ...target.cl,
-                    hp: target.cl.hp - 3 - Intelligence * 2,
-                    ability: target.cl.ability.concat("purifyingFlamesEffect"),
-                    abilityImg: target.cl.abilityImg.concat(Purifying_Flames)
-                }
-            }
-        }
-    }
-}
-let fireBolt = {
-    name: "fireBolt",
-    img: BTNFire,
-    type: ["damage"],
-    target: ["enemy"],
-    manacost: 20,
-    bonusXP: 0,
-    effect: function (target, numberOfPlayer, Intelligence) {
-        if (target.cl.ability.indexOf("building") > -1) {
-            alert("incorrect target")
-            return
-        } else {
-            return {
-                ...target,
-                cl: {
-                    ...target.cl,
-                    hp: target.cl.hp - 4 - Intelligence
-                }
-            }
-        }
-    }
-}
-let fireArrows = {
-    name: "fireArrows",
-    img: BTNSearingArrowsOff,
-    type: ["buff"],
-    target: ["ally"],
-    manacost: 20,
-    bonusXP: 0,
-    effect: function (target, numberOfPlayer, Intelligence) {
-        if (target.cl.ability.indexOf("building") > -1 || target.cl.ability.indexOf("fireArrows") > -1) {
-            alert("incorrect target")
-            return
-        } else {
-            return {
-                ...target,
-                cl: {
-                    ...target.cl,
-                    attack: target.cl.attack + Intelligence,
-                    ability: target.cl.ability.concat("fireArrows"),
-                    abilityImg: target.cl.abilityImg.concat(BTNSearingArrowsOff)
-                }
-            }
-        }
-    }
-}
-let wallOfFire = {
-    name: "WallOfFire",
-    img: BTNWallOfFire,
-    type: ["damage"],
-    target: ["enemy"],
-    manacost: 35,
-    bonusXP: 0,
-    effect: function (target, numberOfPlayer, Intelligence) {
-        if (target.cl.ability.indexOf("flying") > -1) {
-            alert("incorrect target")
-            return
-        } else {
-            return {
-                ...target,
-                cl: {
-                    ...target.cl,
-                    hp: target.cl.hp - 8 - 2 * Intelligence,
-                }
-            }
-        }
-    }
-}
-let fireBall = {
-    name: "fireBall",
-    img: BTNFireBolt,
-    type: ["damage"],
-    target: ["enemy"],
-    manacost: 40,
-    bonusXP: 0,
-    effect: function (target, numberOfPlayer, Intelligence) {
-        if (target.cl.ability.indexOf("building") > -1) {
-            alert("incorrect target")
-            return
-        } else {
-            return {
-                ...target,
-                cl: {
-                    ...target.cl,
-                    hp: target.cl.hp - 4 - 2 * Intelligence,
-                    ability: target.cl.ability.concat("bashed"),
-                    abilityImg: target.cl.abilityImg.concat(BTNStun)
-                }
-            }
-        }
-    }
-}
-let fenix = {
-    name: "fenix",
-    img: BTNMarkOfFire,
-    type: ["summon"],
-    target: ["freePlace"],
-    manacost: 80,
-    bonusXP: 0,
-    effect: function (target, numberOfPlayer, Intelligence) {
-        if (target !== null) {
-            alert("incorrect target")
-            return
-        } else {
-            return {
-                defaultFenix,
-                cl: {
-                    ...defaultFenix.cl,
-                    hp: defaultFenix.hp + 2 * Intelligence - 6,
-                    hpMax: defaultFenix.hpMax + 2 * Intelligence - 6,
-                    attack: defaultFenix.attack + 2 * Intelligence - 6,
-                }
-            }
-        }
-    }
-}
-let defaultPeasant = Object.freeze({
-    type: "unitCard",
-    img: BTNPeasant,
-    name: "Peasant",
-    attack: 1,
-    rangeOfAttack: "melee",
-    typeOfAttack: "physic",
-    attackSpeed: 1,
-    hp: 7,
-    hpMax: 7,
-    armor: 0,
-    DefaultArmor: 0,
-    abilityImg: [BTNGatherGold, BTNCallToArms],
-    ability: ["worker", "militia"],
-    cost: 20,
-})
-let defaultMilitia = Object.freeze({
-    type: "unitCard",
-    img: BTNMilitia,
-    name: "Militia",
-    attack: 2,
-    rangeOfAttack: "melee",
-    typeOfAttack: "physic",
-    attackSpeed: 1,
-    hp: 7,
-    hpMax: 7,
-    armor: 1,
-    DefaultArmor: 1,
-    abilityImg: [BTNBacktoWork],
-    ability: ["backToWork"],
-    cost: 20,
-})
-let defaultFootman = {
-    type: "unitCard",
-    img: footmanImg,
-    name: "Footman",
-    attack: 3,
-    rangeOfAttack: "melee",
-    typeOfAttack: "physic",
-    attackSpeed: 1,
-    hp: 10,
-    hpMax: 10,
-    armor: 3,
-    DefaultArmor: 3,
-    abilityImg: [Reflect],
-    ability: ["reflect"],
-    cost: 82,
-}
-let defaultGryphonRider = {
-    type: "unitCard",
-    img: BTNGryphonRider,
-    name: "GryphonRider",
-    attack: 4,
-    rangeOfAttack: "range",
-    typeOfAttack: "physic",
-    attackSpeed: 1,
-    hp: 12,
-    hpMax: 12,
-    armor: 1,
-    DefaultArmor: 1,
-    abilityImg: [BTNAlbatross, PASBTNBash],
-    ability: ["flying", "bash"],
-    cost: 133,
-}
-let defaultTower = {
-    type: "unitCard",
-    img: BTNGuardTower,
-    name: "Tower",
-    attack: 2,
-    rangeOfAttack: "range",
-    typeOfAttack: "physic",
-    attackSpeed: 2,
-    hp: 10,
-    hpMax: 10,
-    armor: 1,
-    DefaultArmor: 1,
-    abilityImg: [BTNArcaniteArchitecture, PASBTNMagicalSentry],
-    ability: ["building", "trueSeen"],
-    cost: 76,
-}
-let defaultKnight = {
-    type: "unitCard",
-    img: Legion_Commander,
-    name: "Knight",
-    attack: 5,
-    rangeOfAttack: "melee",
-    typeOfAttack: "physic",
-    attackSpeed: 1,
-    hp: 16,
-    hpMax: 16,
-    armor: 4,
-    DefaultArmor: 4,
-    abilityImg: [Moment_of_Courage],
-    ability: ["MomentOfCourage"],
-    cost: 315,
-}
-let defaultPaladin = {
-    type: "unitCard",
-    img: BTNHeroPaladin,
-    name: "Paladin",
-    attack: 4,
-    rangeOfAttack: "melee",
-    typeOfAttack: "physic",
-    attackSpeed: 1,
-    hp: 11,
-    hpMax: 11,
-    armor: 4,
-    DefaultArmor: 4,
-    abilityImg: [BTNDivineIntervention, BTNDevotion, PASBTNBash],
-    ability: ["holyAttack", "devotionAura", "bash"],
-    cost: 349,
-}
-
-let defaultAcolyte = {
-    type: "unitCard",
-    img: BTNAcolyte,
-    name: "Acolyte",
-    attack: 2,
-    rangeOfAttack: "melee",
-    typeOfAttack: "physic",
-    attackSpeed: 1,
-    hp: 7,
-    hpMax: 7,
-    armor: 0,
-    DefaultArmor: 0,
-    abilityImg: [BTNSkeletalLongevity, BTNGatherGold],
-    ability: ["undead", "worker"],
-    cost: 16,
-}
-let defaultGhoul = {
-    type: "unitCard",
-    img: BTNGhoul,
-    name: "Ghoul",
-    attack: 3,
-    rangeOfAttack: "melee",
-    typeOfAttack: "physic",
-    attackSpeed: 2,
-    hp: 9,
-    hpMax: 9,
-    armor: 0,
-    DefaultArmor: 0,
-    abilityImg: [BTNSkeletalLongevity, BTNCannibalize],
-    ability: ["undead", "cannibalize"],
-    cost: 37,
-}
-let defaultZombi = {
-    type: "unitCard",
-    img: BTNDalaranMutant,
-    name: "Zombi",
-    attack: 4,
-    rangeOfAttack: "melee",
-    typeOfAttack: "physic",
-    attackSpeed: 1,
-    hp: 30,
-    hpMax: 30,
-    armor: 0,
-    DefaultArmor: 0,
-    abilityImg: [BTNSkeletalLongevity],
-    ability: ["undead"],
-    cost: 61,
-}
-let defaultTraxa = {
-    type: "unitCard",
-    img: BTNBansheeRanger,
-    name: "Traxa",
-    attack: 4,
-    rangeOfAttack: "range",
-    typeOfAttack: "physic",
-    attackSpeed: 2,
-    hp: 12,
-    hpMax: 12,
-    armor: 1,
-    DefaultArmor: 1,
-    abilityImg: [BTNSkeletalLongevity, BTNMarksmanship],
-    ability: ["undead", "marksman"],
-    cost: 189,
-}
-
-let defaultButcher = {
-    type: "unitCard",
-    img: BTNAbomination,
-    name: "Butcher",
-    attack: 4,
-    rangeOfAttack: "melee",
-    typeOfAttack: "physic",
-    attackSpeed: 1,
-    hp: 50,
-    hpMax: 50,
-    armor: 0,
-    DefaultArmor: 0,
-    abilityImg: [BTNSkeletalLongevity, PASBTNPlagueCloud],
-    ability: ["undead", "plagueCloud"],
-    cost: 150,
-}
-
-let defaultWyrm = {
-    type: "unitCard",
-    img: BTNFrostWyrm,
-    name: "Wyrm",
-    attack: 6,
-    rangeOfAttack: "range",
-    typeOfAttack: "physic",
-    attackSpeed: 1,
-    hp: 30,
-    hpMax: 30,
-    armor: 0,
-    DefaultArmor: 0,
-    abilityImg: [BTNSkeletalLongevity, BTNBreathOfFrost, BTNGreenDragonRoost],
-    ability: ["undead", "BreathOfFrost", "dragonAbilities"],
-    cost: 246,
-}
-let defaultDreadLord = {
-    type: "unitCard",
-    img: BTNHeroDreadLord,
-    name: "DreadLord",
-    attack: 4,
-    rangeOfAttack: "melee",
-    typeOfAttack: "physic",
-    attackSpeed: 2,
-    hp: 11,
-    hpMax: 11,
-    armor: 2,
-    DefaultArmor: 2,
-    abilityImg: [BTNSkeletalLongevity, BTNVampiricAura, NightHunter],
-    ability: ["undead", "vampire", "nightHunter"],
-    cost: 280,
-}
-let defaultFiend = {
-    type: "unitCard",
-    img: BTNCryptFiend,
-    name: "CryptFiend",
-    attack: 4,
-    rangeOfAttack: "range",
-    typeOfAttack: "physic",
-    attackSpeed: 1,
-    hp: 15,
-    hpMax: 15,
-    armor: 0,
-    DefaultArmor: 0,
-    abilityImg: [BTNSkeletalLongevity, BTNWebOff, BTNCryptFiendUnBurrow],
-    ability: ["undead", "web", "UnBurrow"],
-    cost: 72,
-}
-let defaultNerub = {
-    type: "unitCard",
-    img: anubarak,
-    name: "Nerub",
-    attack: 3,
-    rangeOfAttack: "melee",
-    typeOfAttack: "physic",
-    attackSpeed: 1,
-    hp: 20,
-    hpMax: 20,
-    armor: 5,
-    DefaultArmor: 5,
-    abilityImg: [BTNSkeletalLongevity, Wc3PASBTNThornShield],
-    ability: ["undead", "thornShield"],
-    cost: 331,
-}
-let defaultDK = {
-    type: "unitCard",
-    img: BTNHeroDeathKnight,
-    name: "DeathKnight",
-    attack: 4,
-    rangeOfAttack: "melee",
-    typeOfAttack: "physic",
-    attackSpeed: 1,
-    hp: 15,
-    hpMax: 15,
-    armor: 3,
-    DefaultArmor: 4,
-    abilityImg: [BTNSkeletalLongevity, BTNUnholyAura, BTNAnimateDead],
-    ability: ["undead", "UnholyAura", "BorrowedTime"],
-    cost: 349,
-}
-let defaultElfWorker = {
-    type: "unitCard",
-    img: BTNBloodElfPeasant,
-    name: "ElfWorker",
-    attack: 1,
-    rangeOfAttack: "melee",
-    typeOfAttack: "physic",
-    attackSpeed: 1,
-    hp: 7,
-    hpMax: 7,
-    armor: 0,
-    DefaultArmor: 0,
-    abilityImg: [BTNGatherGold],
-    ability: ["worker"],
-    cost: 7,
-}
-let defaultHighElvenArcher = {
-    type: "unitCard",
-    img: BTNHighElvenArcher,
-    name: "HighElvenArcher",
-    attack: 3,
-    rangeOfAttack: "range",
-    typeOfAttack: "physic",
-    attackSpeed: 2,
-    hp: 9,
-    hpMax: 9,
-    armor: 1,
-    DefaultArmor: 1,
-    abilityImg: [],
-    ability: [],
-    cost: 89,
-}
-let defaultPriest = {
-    type: "unitCard",
-    img: BTNPriest,
-    name: "Priest",
-    attack: 2,
-    rangeOfAttack: "range",
-    typeOfAttack: "physic",
-    attackSpeed: 1,
-    hp: 9,
-    hpMax: 9,
-    armor: 0,
-    DefaultArmor: 0,
-    abilityImg: [BTNHealOff],
-    ability: ["Heal"],
-    cost: 23,
-}
-let defaultSorceress = {
-    type: "unitCard",
-    img: BTNSorceress,
-    name: "Sorceress",
-    attack: 3,
-    rangeOfAttack: "range",
-    typeOfAttack: "physic",
-    attackSpeed: 1,
-    hp: 9,
-    hpMax: 9,
-    armor: 0,
-    DefaultArmor: 0,
-    abilityImg: [BTNSlowOff, BTNSheep],
-    ability: ["Slow", "Hex"],
-    cost: 46,
-}
-let defaultDragonHawk = {
-    type: "unitCard",
-    img: BTNDragonHawk,
-    name: "DragonHawk",
-    attack: 3,
-    rangeOfAttack: "range",
-    typeOfAttack: "physic",
-    attackSpeed: 1,
-    hp: 11,
-    hpMax: 11,
-    armor: 3,
-    DefaultArmor: 3,
-    abilityImg: [BTNAlbatross],
-    ability: ["flying"],
-    cost: 166,
-}
-let defaultSpellBreaker = {
-    type: "unitCard",
-    img: BTNSpellBreaker,
-    name: "SpellBreaker",
-    attack: 3,
-    rangeOfAttack: "range",
-    typeOfAttack: "physic",
-    attackSpeed: 1,
-    hp: 9,
-    hpMax: 9,
-    armor: 4,
-    DefaultArmor: 4,
-    abilityImg: [Feedback, BTNMagicImmunity],
-    ability: ["Feedback", "MagicImmunity"],
-    cost: 217,
-}
-let defaultWindRunner = {
-    type: "unitCard",
-    img: windRunner,
-    name: "Windrunner",
-    attack: 4,
-    rangeOfAttack: "range",
-    typeOfAttack: "physic",
-    attackSpeed: 3,
-    hp: 9,
-    hpMax: 9,
-    armor: 1,
-    DefaultArmor: 1,
-    abilityImg: [ShackleShot, PowerShot],
-    ability: ["ShackleShot", "PowerShot"],
-    cost: 314,
-}
-let defaultPeon = {
-    type: "unitCard",
-    img: BTNPeon,
-    name: "Peon",
-    attack: 1,
-    rangeOfAttack: "melee",
-    typeOfAttack: "physic",
-    attackSpeed: 1,
-    hp: 9,
-    hpMax: 9,
-    armor: 0,
-    DefaultArmor: 0,
-    abilityImg: [BTNGatherGold, PASBTNPillage],
-    ability: ["worker", "Pillage"],
-    cost: 10,
-}
-let defaultRaider = {
-    type: "unitCard",
-    img: BTNRaider,
-    name: "Raider",
-    attack: 3,
-    rangeOfAttack: "melee",
-    typeOfAttack: "physic",
-    attackSpeed: 1,
-    hp: 16,
-    hpMax: 16,
-    armor: 1,
-    DefaultArmor: 1,
-    abilityImg: [PASBTNPillage, BTNEnsnare],
-    ability: ["Pillage", "Ensnare"],
-    cost: 101,
-}
-let defaultWyvernRider = {
-    type: "unitCard",
-    img: BTNWyvernRider,
-    name: "WyvernRider",
-    attack: 3,
-    rangeOfAttack: "range",
-    typeOfAttack: "physic",
-    attackSpeed: 1,
-    hp: 25,
-    hpMax: 25,
-    armor: 0,
-    DefaultArmor: 0,
-    abilityImg: [BTNAlbatross, BTNEnvenomedSpear],
-    ability: ["flying", "EnvenomedSpear"],
-    cost: 88,
-}
-let defaultGrunt = {
-    type: "unitCard",
-    img: BTNGrunt,
-    name: "Grunt",
-    attack: 3,
-    rangeOfAttack: "melee",
-    typeOfAttack: "physic",
-    attackSpeed: 1,
-    hp: 30,
-    hpMax: 30,
-    armor: 1,
-    DefaultArmor: 1,
-    abilityImg: [PASBTNPillage],
-    ability: ["Pillage"],
-    cost: 130,
-}
-let defaultKodo = {
-    type: "unitCard",
-    img: BTNKotoBeast,
-    name: "Kodo",
-    attack: 2,
-    rangeOfAttack: "melee",
-    typeOfAttack: "physic",
-    attackSpeed: 1,
-    hp: 50,
-    hpMax: 50,
-    armor: 1,
-    DefaultArmor: 1,
-    abilityImg: [PASBTNDrum, BTNDevour],
-    ability: ["Drum", "Devour"],
-    cost: 204,
-}
-let defaultTaurenChieftain = {
-    type: "unitCard",
-    img: BTNHeroTaurenChieftain,
-    name: "TaurenChieftain",
-    attack: 4,
-    rangeOfAttack: "melee",
-    typeOfAttack: "physic",
-    attackSpeed: 1,
-    hp: 40,
-    hpMax: 40,
-    armor: 1,
-    DefaultArmor: 1,
-    abilityImg: [NaturalOrder],
-    ability: ["NaturalOrder"],
-    cost: 278,
-}
-let defaultBladeMaster = {
-    type: "unitCard",
-    img: BTNHeroBlademaster,
-    name: "BladeMaster",
-    attack: 4,
-    rangeOfAttack: "melee",
-    typeOfAttack: "physic",
-    attackSpeed: 3,
-    hp: 16,
-    hpMax: 16,
-    armor: 1,
-    DefaultArmor: 1,
-    abilityImg: [BTNCriticalStrike],
-    ability: ["CriticalStrike15X4"],
-    cost: 318,
-}
 
 let unitsOfRaces = {
     human: [defaultPeasant, defaultMilitia, defaultTower, defaultFootman, defaultGryphonRider, defaultKnight, defaultPaladin,],
@@ -1310,10 +168,10 @@ function clearCurrentEffect(unit) {
 function calculateLineDamage(unit, target, AS) {
     let damage = 0
     if (unit && unit.cl.ability.indexOf("dragonAbilities") > -1 && target) {
-        damage = forDamage(unit.cl.attack, target.cl.armor, AS) * calculateBonusDamage(unit.cl, target.cl, AS)
+        damage = calculateDamage(unit.cl.attack, target.cl.armor, AS) * calculateBonusDamage(unit.cl, target.cl, AS)
     }
     if (unit && unit.cl.ability.indexOf("PowerShot") > -1 && target) {
-        damage = forDamage(unit.cl.attack, target.cl.armor, AS) * calculateBonusDamage(unit.cl, target.cl, AS)
+        damage = calculateDamage(unit.cl.attack, target.cl.armor, AS) * calculateBonusDamage(unit.cl, target.cl, AS)
     }
     return damage
 }
@@ -1352,7 +210,7 @@ function calculateHP(currentCells) {
                         ...item2,
                         cl: {
                             ...item2.cl,
-                            hp: Math.ceil(item2.cl.hp - forDamage(currentCells[index1][i2].cl.attack, item2.cl.armor, AS1) * calculateBonusDamage(currentCells[index1][i2].cl, item2.cl, AS1) - forDamage(currentCells[index2][i2].cl.attack, item2.cl.armor, AS2) * calculateBonusDamage(currentCells[index2][i2].cl, item2.cl, AS2))
+                            hp: Math.ceil(item2.cl.hp - calculateDamage(currentCells[index1][i2].cl.attack, item2.cl.armor, AS1) * calculateBonusDamage(currentCells[index1][i2].cl, item2.cl, AS1) - calculateDamage(currentCells[index2][i2].cl.attack, item2.cl.armor, AS2) * calculateBonusDamage(currentCells[index2][i2].cl, item2.cl, AS2))
                         }
                     }
                 } else {
@@ -1360,7 +218,7 @@ function calculateHP(currentCells) {
                         ...item2,
                         cl: {
                             ...item2.cl,
-                            hp: Math.ceil(item2.cl.hp - forDamage(currentCells[index1][i2].cl.attack, item2.cl.armor, AS1) * calculateBonusDamage(currentCells[index1][i2].cl, item2.cl, AS1))
+                            hp: Math.ceil(item2.cl.hp - calculateDamage(currentCells[index1][i2].cl.attack, item2.cl.armor, AS1) * calculateBonusDamage(currentCells[index1][i2].cl, item2.cl, AS1))
                         }
                     }
                 }
@@ -1372,7 +230,7 @@ function calculateHP(currentCells) {
                     ...item2,
                     cl: {
                         ...item2.cl,
-                        hp: Math.ceil(item2.cl.hp - forDamage(currentCells[index2][i2].cl.attack, item2.cl.armor, AS2) * calculateBonusDamage(currentCells[index2][i2].cl, item2.cl, AS2))
+                        hp: Math.ceil(item2.cl.hp - calculateDamage(currentCells[index2][i2].cl.attack, item2.cl.armor, AS2) * calculateBonusDamage(currentCells[index2][i2].cl, item2.cl, AS2))
                     }
                 }
             }
@@ -1402,7 +260,7 @@ function calculateHP(currentCells) {
                         ...item2,
                         cl: {
                             ...item2.cl,
-                            hp: Math.ceil(item2.cl.hp - forDamage(currentCells[index1][i2].cl.attack, item2.cl.armor, AS1) * calculateBonusDamage(currentCells[index1][i2].cl, item2.cl, AS1) - forDamage(currentCells[index2][i2].cl.attack, item2.cl.armor, AS2) * calculateBonusDamage(currentCells[index2][i2].cl, item2.cl, AS2))
+                            hp: Math.ceil(item2.cl.hp - calculateDamage(currentCells[index1][i2].cl.attack, item2.cl.armor, AS1) * calculateBonusDamage(currentCells[index1][i2].cl, item2.cl, AS1) - calculateDamage(currentCells[index2][i2].cl.attack, item2.cl.armor, AS2) * calculateBonusDamage(currentCells[index2][i2].cl, item2.cl, AS2))
                         }
                     }
                 } else {
@@ -1410,7 +268,7 @@ function calculateHP(currentCells) {
                         ...item2,
                         cl: {
                             ...item2.cl,
-                            hp: Math.ceil(item2.cl.hp - forDamage(currentCells[index1][i2].cl.attack, item2.cl.armor, AS1) * calculateBonusDamage(currentCells[index1][i2].cl, item2.cl, AS1))
+                            hp: Math.ceil(item2.cl.hp - calculateDamage(currentCells[index1][i2].cl.attack, item2.cl.armor, AS1) * calculateBonusDamage(currentCells[index1][i2].cl, item2.cl, AS1))
                         }
                     }
                 }
@@ -1422,7 +280,7 @@ function calculateHP(currentCells) {
                     ...item2,
                     cl: {
                         ...item2.cl,
-                        hp: Math.ceil(item2.cl.hp - forDamage(currentCells[index2][i2].cl.attack, item2.cl.armor, AS2) * calculateBonusDamage(currentCells[index2][i2].cl, item2.cl, AS2))
+                        hp: Math.ceil(item2.cl.hp - calculateDamage(currentCells[index2][i2].cl.attack, item2.cl.armor, AS2) * calculateBonusDamage(currentCells[index2][i2].cl, item2.cl, AS2))
                     }
                 }
             }
@@ -1450,7 +308,7 @@ function calculateHP(currentCells) {
                             ...item2,
                             cl: {
                                 ...item2.cl,
-                                hp: Math.ceil(item2.cl.hp - forDamage(currentCells[index1][i2].cl.attack, item2.cl.armor, AS1) * calculateBonusDamage(currentCells[index1][i2].cl, item2.cl, AS1) - forDamage(currentCells[index2][i2].cl.attack, item2.cl.armor, AS2) * calculateBonusDamage(currentCells[index2][i2].cl, item2.cl, AS2))
+                                hp: Math.ceil(item2.cl.hp - calculateDamage(currentCells[index1][i2].cl.attack, item2.cl.armor, AS1) * calculateBonusDamage(currentCells[index1][i2].cl, item2.cl, AS1) - calculateDamage(currentCells[index2][i2].cl.attack, item2.cl.armor, AS2) * calculateBonusDamage(currentCells[index2][i2].cl, item2.cl, AS2))
                             }
                         }
                     } else {
@@ -1458,7 +316,7 @@ function calculateHP(currentCells) {
                             ...item2,
                             cl: {
                                 ...item2.cl,
-                                hp: Math.ceil(item2.cl.hp - forDamage(currentCells[index1][i2].cl.attack, item2.cl.armor, AS1) * calculateBonusDamage(currentCells[index1][i2].cl, item2.cl, AS1))
+                                hp: Math.ceil(item2.cl.hp - calculateDamage(currentCells[index1][i2].cl.attack, item2.cl.armor, AS1) * calculateBonusDamage(currentCells[index1][i2].cl, item2.cl, AS1))
                             }
                         }
                     }
@@ -1470,7 +328,7 @@ function calculateHP(currentCells) {
                         ...item2,
                         cl: {
                             ...item2.cl,
-                            hp: Math.ceil(item2.cl.hp - forDamage(currentCells[index2][i2].cl.attack, item2.cl.armor, AS2) * calculateBonusDamage(currentCells[index2][i2].cl, item2.cl, AS2))
+                            hp: Math.ceil(item2.cl.hp - calculateDamage(currentCells[index2][i2].cl.attack, item2.cl.armor, AS2) * calculateBonusDamage(currentCells[index2][i2].cl, item2.cl, AS2))
                         }
                     }
                 }
@@ -1500,7 +358,7 @@ function calculateHP(currentCells) {
                             ...item2,
                             cl: {
                                 ...item2.cl,
-                                hp: Math.ceil(item2.cl.hp - forDamage(currentCells[index1][i2].cl.attack, item2.cl.armor, AS1) * calculateBonusDamage(currentCells[index1][i2].cl, item2.cl, AS1) - forDamage(currentCells[index2][i2].cl.attack, item2.cl.armor, AS2) * calculateBonusDamage(currentCells[index2][i2].cl, item2.cl, AS2))
+                                hp: Math.ceil(item2.cl.hp - calculateDamage(currentCells[index1][i2].cl.attack, item2.cl.armor, AS1) * calculateBonusDamage(currentCells[index1][i2].cl, item2.cl, AS1) - calculateDamage(currentCells[index2][i2].cl.attack, item2.cl.armor, AS2) * calculateBonusDamage(currentCells[index2][i2].cl, item2.cl, AS2))
                             }
                         }
                     } else {
@@ -1508,7 +366,7 @@ function calculateHP(currentCells) {
                             ...item2,
                             cl: {
                                 ...item2.cl,
-                                hp: Math.ceil(item2.cl.hp - forDamage(currentCells[index1][i2].cl.attack, item2.cl.armor, AS1) * calculateBonusDamage(currentCells[index1][i2].cl, item2.cl, AS1))
+                                hp: Math.ceil(item2.cl.hp - calculateDamage(currentCells[index1][i2].cl.attack, item2.cl.armor, AS1) * calculateBonusDamage(currentCells[index1][i2].cl, item2.cl, AS1))
                             }
                         }
                     }
@@ -1520,7 +378,7 @@ function calculateHP(currentCells) {
                         ...item2,
                         cl: {
                             ...item2.cl,
-                            hp: Math.ceil(item2.cl.hp - forDamage(currentCells[index2][i2].cl.attack, item2.cl.armor, AS2) * calculateBonusDamage(currentCells[index2][i2].cl, item2.cl, AS2))
+                            hp: Math.ceil(item2.cl.hp - calculateDamage(currentCells[index2][i2].cl.attack, item2.cl.armor, AS2) * calculateBonusDamage(currentCells[index2][i2].cl, item2.cl, AS2))
                         }
                     }
                 }
@@ -1994,7 +852,7 @@ function calculateBuff(unit, target) {
     return target
 }
 
-function forDamage(attack, armor, attackSpeed) {
+function calculateDamage(attack, armor, attackSpeed) {
     if (attack > armor) {
         return (attack - armor) * (attackSpeed)
     } else {
@@ -2155,7 +1013,7 @@ function calculateRegeneration(unit) {
     if (unit.ability.indexOf("purifyingFlamesEffect") > -1 && unit.hp < unit.hpMax) {
         regeneration = regeneration + 1
     }
-    
+
     return {
         ...unit,
         hp: unit.hp + regeneration,
@@ -2232,7 +1090,7 @@ function calculateDeBuff(unit, enemy, numberOfAttack) {
             if (unit.ability.indexOf("thornShield") > -1 && enemy.rangeOfAttack === "melee") {
                 return {
                     ...enemy,
-                    hp: enemy.hp - Math.ceil((forDamage(enemy.attack, unit.armor, numberOfAttack) * calculateBonusDamage(enemy, unit, numberOfAttack)) * 0.5),
+                    hp: enemy.hp - Math.ceil((calculateDamage(enemy.attack, unit.armor, numberOfAttack) * calculateBonusDamage(enemy, unit, numberOfAttack)) * 0.5),
                 }
             }
             if (enemy.ability.indexOf("MomentOfCourage") > -1) {
@@ -2373,33 +1231,33 @@ function App() {
         )
     })
     const magic1 = magicsOfMage[player1.classOfHero].map(cl => {
-        const plu = new PlayerMagic(cl, 1)
+        const plm = new PlayerMagic(cl, 1)
         return (
             <Magic
-                key={plu.id}
-                cl={plu.cl}
-                selected={selectedPlu ? selectedPlu.id === plu.id : false}
+                key={plm.id}
+                cl={plm.cl}
+                selected={selectedPlu ? selectedPlu.id === plm.id : false}
                 onSelect={() => {
                     if (turn % 2 !== 0) {
                         return
                     }
-                    setSelectedPlu(plu)
+                    setSelectedPlu(plm)
                 }}
             />
         )
     })
     const magic2 = magicsOfMage[player2.classOfHero].map(cl => {
-        const plu = new PlayerMagic(cl, 2)
+        const plm = new PlayerMagic(cl, 2)
         return (
             <Magic
-                key={plu.id}
-                cl={plu.cl}
-                selected={selectedPlu ? selectedPlu.id === plu.id : false}
+                key={plm.id}
+                cl={plm.cl}
+                selected={selectedPlu ? selectedPlu.id === plm.id : false}
                 onSelect={() => {
                     if (turn % 2 === 0) {
                         return
                     }
-                    setSelectedPlu(plu)
+                    setSelectedPlu(plm)
                 }}
             />
         )
@@ -2428,7 +1286,7 @@ function App() {
         for (let i = 0; i < 6; i++) {
             if ((!cells[0][i] && !cells[1][i]) || (cells[0][i] && (cells[0][i].cl.ability.indexOf("invisible") > -1 || cells[0][i].cl.hp <= 0) && !cells[1][i]) || (cells[1][i] && (cells[1][i].cl.ability.indexOf("invisible") > -1 || cells[1][i].cl.hp <= 0) && !cells[0][i]) || (cells[0][i] && (cells[0][i].cl.ability.indexOf("invisible") > -1 || cells[0][i].cl.hp <= 0) && cells[0][i] && (cells[1][i].cl.ability.indexOf("invisible") > -1 || cells[1][i].cl.hp <= 0))) {
                 if (cells[2][i]) {
-                    damage1 = damage1 + forDamage(cells[2][i].cl.attack, 0, cells[2][i].cl.attackSpeed)
+                    damage1 = damage1 + calculateDamage(cells[2][i].cl.attack, 0, cells[2][i].cl.attackSpeed)
                     if (cells[2][i].cl.ability.indexOf("Feedback") > -1) {
                         manaBurn1 = manaBurn1 + 10
                     }
@@ -2438,7 +1296,7 @@ function App() {
                     }
                 }
                 if (cells[3][i]) {
-                    damage1 = damage1 + forDamage(cells[3][i].cl.attack, 0, cells[3][i].cl.attackSpeed)
+                    damage1 = damage1 + calculateDamage(cells[3][i].cl.attack, 0, cells[3][i].cl.attackSpeed)
                     if (cells[3][i].cl.ability.indexOf("Feedback") > -1) {
                         manaBurn1 = manaBurn1 + 10
                     }
@@ -2446,13 +1304,13 @@ function App() {
             }
             if (!cells[2][i] && !cells[3][i]) {
                 if (cells[0][i]) {
-                    damage2 = damage2 + forDamage(cells[0][i].cl.attack, 0, cells[0][i].cl.attackSpeed)
+                    damage2 = damage2 + calculateDamage(cells[0][i].cl.attack, 0, cells[0][i].cl.attackSpeed)
                     if (cells[0][i].cl.ability.indexOf("Feedback") > -1) {
                         manaBurn2 = manaBurn2 + 10
                     }
                 }
                 if (cells[1][i]) {
-                    damage2 = damage2 + forDamage(cells[1][i].cl.attack, 0, cells[1][i].cl.attackSpeed)
+                    damage2 = damage2 + calculateDamage(cells[1][i].cl.attack, 0, cells[1][i].cl.attackSpeed)
                     if (cells[1][i].cl.ability.indexOf("Feedback") > -1) {
                         manaBurn2 = manaBurn2 + 10
                     }
@@ -2647,90 +1505,100 @@ function App() {
                             plu={item}
                             onCellClick={() => {
                                 let newRow = cells[0]
-                                if (selectedPlu.cl.type.indexOf("unitCard") > -1) {
-                                    if (!selectedPlu || turn % 2 !== 0 || selectedPlu.cl.rangeOfAttack === "melee") {
-                                        return
-                                    }
-
-                                    if ((player1.gold - selectedPlu.cl.cost) < 0) {
-                                        alert("need more gold")
-                                        return
-                                    }
-                                    newRow = cells[0].map((item2, i2) => {
-                                        if (i2 === i) {
-                                            setPlayer1({
-                                                ...player1,
-                                                gold: player1.gold - selectedPlu.cl.cost
-                                            })
-                                            return selectedPlu
+                                if (selectedPlu !== null) {
+                                    if (selectedPlu.cl.type.indexOf("unitCard") > -1) {
+                                        if (!selectedPlu || turn % 2 !== 0 || selectedPlu.cl.rangeOfAttack === "melee") {
+                                            return
+                                        }    
+                                        if ((player1.gold - selectedPlu.cl.cost) < 0) {
+                                            alert("need more gold")
+                                            return
                                         }
-                                        return item2
-                                    })
+                                        newRow = cells[0].map((item2, i2) => {
+                                            if (i2 === i) {
+                                                setPlayer1({
+                                                    ...player1,
+                                                    gold: player1.gold - selectedPlu.cl.cost
+                                                })
+                                                return selectedPlu
+                                            }
+                                            return item2
+                                        })
+                                    }
                                 }
-                                if (selectedPlu.cl.type.indexOf("buff") > -1) {
-                                    
-                                    if (!selectedPlu || turn % 2 !== 0) {
-                                        return
-                                    }
-                                    if ((player1.mp - selectedPlu.cl.manacost) < 0) {
-                                        alert("need more mana")
-                                        return
-                                    }
-                                    newRow = cells[0].map((item2, i2) => {
+                                
+                                if (selectedPlu !== null) {
+                                    if (selectedPlu.cl.type.indexOf("buff") > -1) {
 
-                                        if (i2 === i) {
-                                            setPlayer1({
-                                                ...player1,
-                                                mp: player1.mp - selectedPlu.cl.manacost,
-                                                xp: player1.xp + player1.intelligence * 10 * selectedPlu.cl.bonusXP
-                                            })
-                                            
-                                            item2 = selectedPlu.cl.effect(item2, 1, player1.intelligence)
+                                        if (!selectedPlu || turn % 2 !== 0) {
+                                            return
                                         }
-                                        return item2
-                                    })
-                                }
-                                if (selectedPlu.cl.type.indexOf("damage") > -1) {
-                                    
-                                    if (!selectedPlu || turn % 2 === 0) {
-                                        return
-                                    }
-                                    if ((player2.mp - selectedPlu.cl.manacost) < 0) {
-                                        alert("need more mana")
-                                        return
-                                    }
-                                    newRow = cells[0].map((item2, i2) => {
-                                        if (i2 === i) {
-                                            setPlayer2({
-                                                ...player2,
-                                                mp: player2.mp - selectedPlu.cl.manacost,
-                                            })
-                                            item2 = selectedPlu.cl.effect(item2, 2, player2.intelligence)
+                                        if ((player1.mp - selectedPlu.cl.manacost) < 0) {
+                                            alert("need more mana")
+                                            return
                                         }
-                                        return item2
-                                    })
+                                        newRow = cells[0].map((item2, i2) => {
+                                            if (i2 === i) {
+                                                if (item2 === null) {
+                                                    return item2
+                                                } else {
+                                                    setPlayer1({
+                                                        ...player1,
+                                                        mp: player1.mp - selectedPlu.cl.manacost,
+                                                        xp: player1.xp + player1.intelligence * 10 * selectedPlu.cl.bonusXP
+                                                    })
+                                                    item2 = selectedPlu.cl.effect(item2, 1, player1.intelligence)
+                                                }
+                                            }
+                                            return item2
+                                        })
+                                    }
                                 }
-                                if (selectedPlu.cl.type.indexOf("summon") > -1) {
-                                    
-                                    if (!selectedPlu || turn % 2 !== 0) {
-                                        return
-                                    }
-                                    if ((player1.mp - selectedPlu.cl.manacost) < 0) {
-                                        alert("need more mana")
-                                        return
-                                    }
-                                    newRow = cells[0].map((item2, i2) => {
+                                if (selectedPlu !== null) {
+                                    if (selectedPlu.cl.type.indexOf("damage") > -1) {
 
-                                        if (i2 === i) {
-                                            setPlayer1({
-                                                ...player1,
-                                                mp: player1.mp - selectedPlu.cl.manacost,
-                                            })
-                                            
-                                            item2 = selectedPlu.cl.effect(item2, 1, player1.intelligence)
+                                        if (!selectedPlu || turn % 2 === 0) {
+                                            return
                                         }
-                                        return item2
-                                    })
+                                        if ((player2.mp - selectedPlu.cl.manacost) < 0) {
+                                            alert("need more mana")
+                                            return
+                                        }
+                                        newRow = cells[0].map((item2, i2) => {
+                                            if (i2 === i) {
+                                                setPlayer2({
+                                                    ...player2,
+                                                    mp: player2.mp - selectedPlu.cl.manacost,
+                                                })
+                                                item2 = selectedPlu.cl.effect(item2, 2, player2.intelligence)
+                                            }
+                                            return item2
+                                        })
+                                    }
+                                }
+                                if (selectedPlu !== null) {
+                                    if (selectedPlu.cl.type.indexOf("summon") > -1) {
+
+                                        if (!selectedPlu || turn % 2 !== 0) {
+                                            return
+                                        }
+                                        if ((player1.mp - selectedPlu.cl.manacost) < 0) {
+                                            alert("need more mana")
+                                            return
+                                        }
+                                        newRow = cells[0].map((item2, i2) => {
+    
+                                            if (i2 === i) {
+                                                setPlayer1({
+                                                    ...player1,
+                                                    mp: player1.mp - selectedPlu.cl.manacost,
+                                                })
+    
+                                                item2 = selectedPlu.cl.effect(item2, 1, player1.intelligence)
+                                            }
+                                            return item2
+                                        })
+                                    }
                                 }
                                 setSelectedCells([
                                     newRow,
@@ -2794,7 +1662,7 @@ function App() {
                                     })
                                 }
                                 if (selectedPlu.cl.type.indexOf("damage") > -1) {
-                                    
+
                                     if (!selectedPlu || turn % 2 === 0) {
                                         return
                                     }
@@ -2814,7 +1682,7 @@ function App() {
                                     })
                                 }
                                 if (selectedPlu.cl.type.indexOf("summon") > -1) {
-                                    
+
                                     if (!selectedPlu || turn % 2 !== 0) {
                                         return
                                     }
@@ -2829,7 +1697,7 @@ function App() {
                                                 ...player1,
                                                 mp: player1.mp - selectedPlu.cl.manacost,
                                             })
-                                            
+
                                             item2 = selectedPlu.cl.effect(item2, 1, player1.intelligence)
                                         }
                                         return item2
@@ -2897,7 +1765,7 @@ function App() {
                                     })
                                 }
                                 if (selectedPlu.cl.type.indexOf("damage") > -1) {
-                                    
+
                                     if (!selectedPlu || turn % 2 !== 0) {
                                         return
                                     }
@@ -2917,7 +1785,7 @@ function App() {
                                     })
                                 }
                                 if (selectedPlu.cl.type.indexOf("summon") > -1) {
-                                    
+
                                     if (!selectedPlu || turn % 2 === 0) {
                                         return
                                     }
@@ -2932,7 +1800,7 @@ function App() {
                                                 ...player2,
                                                 mp: player2.mp - selectedPlu.cl.manacost,
                                             })
-                                            
+
                                             item2 = selectedPlu.cl.effect(item2, 2, player2.intelligence)
                                         }
                                         return item2
@@ -3000,7 +1868,7 @@ function App() {
                                     })
                                 }
                                 if (selectedPlu.cl.type.indexOf("damage") > -1) {
-                                    
+
                                     if (!selectedPlu || turn % 2 !== 0) {
                                         return
                                     }
@@ -3020,7 +1888,7 @@ function App() {
                                     })
                                 }
                                 if (selectedPlu.cl.type.indexOf("summon") > -1) {
-                                    
+
                                     if (!selectedPlu || turn % 2 === 0) {
                                         return
                                     }
@@ -3035,7 +1903,7 @@ function App() {
                                                 ...player2,
                                                 mp: player2.mp - selectedPlu.cl.manacost,
                                             })
-                                            
+
                                             item2 = selectedPlu.cl.effect(item2, 2, player2.intelligence)
                                         }
                                         return item2

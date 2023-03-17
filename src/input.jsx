@@ -24,8 +24,6 @@ export default class Input extends React.Component {
                     }}>
                         <option value="necromancer">Necromancer</option>
                         <option value="cleric">Cleric</option>
-                        <option value="mageOfFire">MageOfFire</option>
-                        <option value="mageOfWater">MageOfWater</option>
                     </select> 
                 </div>
                 <div>Race1

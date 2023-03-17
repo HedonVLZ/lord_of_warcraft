@@ -7,7 +7,7 @@ export function Unit(props) { // { key: "Peasant", cl: { name: "Peasant", attack
             className={classNames("unit", {
                 "selectedUnit": props.selected // if props.selected is true, it returns "unit selectedUnit", else it returns "unit"
             })}
-            onClick={() => props.onSelect()} // при клике он вызывает функцию, которую ему передал родитель
+            onClick={() => props.onSelect && props.onSelect()} // при клике он вызывает функцию, которую ему передал родитель
         >
             <p>{props.cl.name}</p>
             <img src={props.cl.img} />              
