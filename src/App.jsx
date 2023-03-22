@@ -38,8 +38,6 @@ import { defaultGrunt, defaultKodo, defaultTaurenChieftain, defaultBladeMaster, 
 import { raiseSkeleton, raiseBoneFletcher, raiseSkeletonKing, deathCoil, sacrifice, reincarnation, suddenDeath } from './magicCards'
 import { orbOfCorroption, antiMagicShell, unholyFrenzy, heal, holyAttackMagic, innerFire, resurrection, } from './magicCards'
 import { purifyingFlames, fireBolt, fireArrows, wallOfFire, fireBall, fenix } from './magicCards'
-let incomeOfTheFirstPlayer = 10
-let incomeOfTheSecondPlayer = 10
 
 let unitsOfRaces = {
     human: [defaultPeasant, defaultMilitia, defaultTower, defaultFootman, defaultGryphonRider, defaultKnight, defaultPaladin,],
@@ -231,15 +229,12 @@ function calculateOfTheUnitsState(currentCells) {
         [0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0],
     ]
-    const refreshingCells0 = currentCells[0].map(unit => cleanCurrentEffect(calculateRegeneration(removeDeadUnit(unit))))
-    const refreshingCells1 = currentCells[1].map(unit => cleanCurrentEffect(calculateRegeneration(removeDeadUnit(unit))))
-    const refreshingCells2 = currentCells[2].map(unit => cleanCurrentEffect(calculateRegeneration(removeDeadUnit(unit))))
-    const refreshingCells3 = currentCells[3].map(unit => cleanCurrentEffect(calculateRegeneration(removeDeadUnit(unit))))
-    let newCells = []
-    newCells[0] = refreshingCells0
-    newCells[1] = refreshingCells1
-    newCells[2] = refreshingCells2
-    newCells[3] = refreshingCells3
+    for (let i = 0; i < 6; i++) {
+        currentCells[0][i] = cleanCurrentEffect(calculateRegeneration(removeDeadUnit(currentCells[0][i])))
+        currentCells[1][i] = cleanCurrentEffect(calculateRegeneration(removeDeadUnit(currentCells[1][i])))
+        currentCells[2][i] = cleanCurrentEffect(calculateRegeneration(removeDeadUnit(currentCells[2][i])))
+        currentCells[3][i] = cleanCurrentEffect(calculateRegeneration(removeDeadUnit(currentCells[3][i])))
+    }
     const newRow0 = currentCells[0].map((unit, i) => {
         supporter = null
         defender = currentCells[1][i]
@@ -324,6 +319,7 @@ function calculateOfTheUnitsState(currentCells) {
             }
         }
     })
+    let newCells = []
     newCells[0] = newRow0
     newCells[1] = newRow1
     newCells[2] = newRow2
@@ -1276,6 +1272,8 @@ function App() {
         )
     })
     const calculateStatsOfHeroes = () => {
+        let incomeOfTheFirstPlayer = 10
+        let incomeOfTheSecondPlayer = 10
         let manaBurn1 = -Math.round(player1.maxMP / 10)
         let manaBurn2 = -Math.round(player2.maxMP / 10)
         let damage1 = 0
@@ -1542,7 +1540,6 @@ function App() {
 
                                 if (selectedPlu !== null) {
                                     if (selectedPlu.cl.type.indexOf("buff") > -1) {
-
                                         if (!selectedPlu || turn % 2 !== 0) {
                                             return
                                         }
@@ -1741,15 +1738,15 @@ function App() {
                                         return
                                     }
 
-                                    if ((player1.gold - selectedPlu.cl.cost) < 0) {
+                                    if ((player2.gold - selectedPlu.cl.cost) < 0) {
                                         alert("need more gold")
                                         return
                                     }
                                     newRow = cells[2].map((item2, i2) => {
                                         if (i2 === i) {
-                                            setPlayer1({
-                                                ...player1,
-                                                gold: player1.gold - selectedPlu.cl.cost
+                                            setPlayer2({
+                                                ...player2,
+                                                gold: player2.gold - selectedPlu.cl.cost
                                             })
                                             return selectedPlu
                                         }
@@ -1798,7 +1795,6 @@ function App() {
                                     })
                                 }
                                 if (selectedPlu.cl.type.indexOf("summon") > -1) {
-
                                     if (!selectedPlu || turn % 2 === 0) {
                                         return
                                     }
@@ -1807,7 +1803,6 @@ function App() {
                                         return
                                     }
                                     newRow = cells[3].map((item2, i2) => {
-
                                         if (i2 === i) {
                                             setPlayer2({
                                                 ...player2,
@@ -1843,16 +1838,15 @@ function App() {
                                     if (!selectedPlu || turn % 2 === 0) {
                                         return
                                     }
-
-                                    if ((player1.gold - selectedPlu.cl.cost) < 0) {
+                                    if ((player2.gold - selectedPlu.cl.cost) < 0) {
                                         alert("need more gold")
                                         return
                                     }
                                     newRow = cells[3].map((item2, i2) => {
                                         if (i2 === i) {
-                                            setPlayer1({
-                                                ...player1,
-                                                gold: player1.gold - selectedPlu.cl.cost
+                                            setPlayer2({
+                                                ...player2,
+                                                gold: player2.gold - selectedPlu.cl.cost
                                             })
                                             return selectedPlu
                                         }

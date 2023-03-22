@@ -41,9 +41,9 @@ export let raiseSkeleton = {
             return {
                 ...defaultSkeletonWarrior,
                 cl: {
-                    ...defaultSkeletonWarrior,
-                    hp: defaultSkeletonWarrior.hp + Intelligence - 3,
-                    hpMax: defaultSkeletonWarrior.hpMax + Intelligence - 3
+                    ...defaultSkeletonWarrior.cl,
+                    hp: defaultSkeletonWarrior.cl.hp + Intelligence - 3,
+                    hpMax: defaultSkeletonWarrior.cl.hpMax + Intelligence - 3
                 }
             }
         }
@@ -70,8 +70,8 @@ export let raiseBoneFletcher = {
             return {
                 ...defaultBoneFletcher,
                 cl: {
-                    ...defaultBoneFletcher,
-                    attack: defaultBoneFletcher.attack + Intelligence - 3
+                    ...defaultBoneFletcher.cl,
+                    attack: defaultBoneFletcher.cl.attack + Intelligence - 3
                 }
             }
         }
@@ -97,9 +97,9 @@ export let raiseSkeletonKing = {
                 ...defaultSkeletonKing,
                 cl: {
                     ...defaultSkeletonKing.cl,
-                    hp: defaultSkeletonKing.hp + 2 * Intelligence - 6,
-                    hpMax: defaultSkeletonKing.hpMax + 2 * Intelligence - 6,
-                    attack: defaultSkeletonKing.attack + 2 * Intelligence - 6,
+                    hp: defaultSkeletonKing.cl.hp + 2 * Intelligence - 6,
+                    hpMax: defaultSkeletonKing.cl.hpMax + 2 * Intelligence - 6,
+                    attack: defaultSkeletonKing.cl.attack + 2 * Intelligence - 6,
                 }
             }
         }
@@ -314,7 +314,7 @@ export let unholyFrenzy = {
                 cl: {
                     ...target.cl,
                     armor: target.cl.armor - 5,
-                    AS: target.cl.AS + Intelligence - 2,
+                    attackSpeed: target.cl.attackSpeed + Intelligence - 2,
                     ability: target.cl.ability.concat("UnholyFrenzy"),
                     abilityImg: target.cl.abilityImg.concat(BTNUnholyFrenzy)
                 }
