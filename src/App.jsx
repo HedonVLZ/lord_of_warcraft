@@ -166,7 +166,6 @@ function cleanCurrentEffect(unit) {
                     attackSpeed: unit.cl.attackSpeed - 1,
                     ability: unit.cl.ability.filter(a => a !== "MomentOfCourageActive")
                 }
-
             }
         }
     }
@@ -245,6 +244,8 @@ function calculateOfTheUnitsState(currentCells) {
         ASofThe2thEnemy = calculateNumberOfAttack(the2thEnemy, unit)
         unit = calculateDeBuff(the1thEnemy, unit, ASofThe1thEnemy)
         unit = calculateDeBuff(the2thEnemy, unit, ASofThe2thEnemy)
+        ASofThe1thEnemy = calculateNumberOfAttack(the1thEnemy, unit)
+        ASofThe2thEnemy = calculateNumberOfAttack(the2thEnemy, unit)
         if (unit) {
             return {
                 ...unit,
@@ -266,6 +267,8 @@ function calculateOfTheUnitsState(currentCells) {
         ASofThe2thEnemy = calculateNumberOfAttack(the2thEnemy, unit)
         unit = calculateDeBuff(the1thEnemy, unit, ASofThe1thEnemy)
         unit = calculateDeBuff(the2thEnemy, unit, ASofThe2thEnemy)
+        ASofThe1thEnemy = calculateNumberOfAttack(the1thEnemy, unit)
+        ASofThe2thEnemy = calculateNumberOfAttack(the2thEnemy, unit)
         massDamage[0][i] = massDamage[0][i] + calculateLineDamage(the1thEnemy, unit, ASofThe1thEnemy) + calculateLineDamage(the2thEnemy, unit, ASofThe2thEnemy)
         if (unit) {
             return {
@@ -288,6 +291,8 @@ function calculateOfTheUnitsState(currentCells) {
         ASofThe2thEnemy = calculateNumberOfAttack(the2thEnemy, unit)
         unit = calculateDeBuff(the1thEnemy, unit, ASofThe1thEnemy)
         unit = calculateDeBuff(the2thEnemy, unit, ASofThe2thEnemy)
+        ASofThe1thEnemy = calculateNumberOfAttack(the1thEnemy, unit)
+        ASofThe2thEnemy = calculateNumberOfAttack(the2thEnemy, unit)
         massDamage[0][i] = massDamage[0][i] + calculateLineDamage(the1thEnemy, unit, ASofThe1thEnemy) + calculateLineDamage(the2thEnemy, unit, ASofThe2thEnemy)
         if (unit) {
             return {
@@ -309,6 +314,8 @@ function calculateOfTheUnitsState(currentCells) {
         ASofThe2thEnemy = calculateNumberOfAttack(the2thEnemy, unit)
         unit = calculateDeBuff(the1thEnemy, unit, ASofThe1thEnemy)
         unit = calculateDeBuff(the2thEnemy, unit, ASofThe2thEnemy)
+        ASofThe1thEnemy = calculateNumberOfAttack(the1thEnemy, unit)
+        ASofThe2thEnemy = calculateNumberOfAttack(the2thEnemy, unit)
         if (unit) {
             return {
                 ...unit,
@@ -1659,7 +1666,6 @@ function App() {
                                         return
                                     }
                                     newRow = cells[1].map((item2, i2) => {
-
                                         if (i2 === i) {
                                             setPlayer1({
                                                 ...player1,
@@ -1672,7 +1678,6 @@ function App() {
                                     })
                                 }
                                 if (selectedPlu.cl.type.indexOf("damage") > -1) {
-
                                     if (!selectedPlu || turn % 2 === 0) {
                                         return
                                     }
