@@ -137,48 +137,55 @@ class PlayerMagic {
 }
 
 function cleanCurrentEffect(unit) {
-    if (unit) {
-        if (unit.cl.ability.indexOf("bashed") > -1) {
-            return {
-                ...unit,
-                cl: {
-                    ...unit.cl,
-                    abilityImg: unit.cl.abilityImg.filter(a => a !== BTNStun),
-                    ability: unit.cl.ability.filter(a => a !== "bashed")
-                }
-            }
+    let currentUnit = unit
+    if (currentUnit) {
+        if (currentUnit.cl.ability.indexOf("bashed") > -1) {
+            currentUnit.cl.ability = currentUnit.cl.ability.filter(a => a !== "bashed")
         }
-        if (unit.cl.ability.indexOf("cooling") > -1) {
-            return {
-                ...unit,
-                cl: {
-                    ...unit.cl,
-                    abilityImg: unit.cl.abilityImg.filter(a => a !== BTNFrost),
-                    ability: unit.cl.ability.filter(a => a !== "cooling")
-                }
-            }
+        if (currentUnit.cl.ability.indexOf("bashedForTheNextTurn") > -1) {
+            currentUnit.cl.abilityImg = currentUnit.cl.abilityImg.filter(a => a !== BTNStun)
+            currentUnit.cl.ability = currentUnit.cl.ability.filter(a => a !== "bashedForTheNextTurn").concat("bashed")
         }
-        if (unit.cl.ability.indexOf("MomentOfCourageActive") > -1) {
-            return {
-                ...unit,
-                cl: {
-                    ...unit.cl,
-                    attackSpeed: unit.cl.attackSpeed - 1,
-                    ability: unit.cl.ability.filter(a => a !== "MomentOfCourageActive")
-                }
-            }
+        if (currentUnit.cl.ability.indexOf("cooling") > -1) {
+            currentUnit.cl.abilityImg = currentUnit.cl.abilityImg.filter(a => a !== BTNFrost)
+            currentUnit.cl.ability = currentUnit.cl.ability.filter(a => a !== "cooling")
+        }
+        if (currentUnit.cl.ability.indexOf("MomentOfCourageActive") > -1) {
+            currentUnit.cl.attackSpeed = currentUnit.cl.attackSpeed - 1
+            currentUnit.cl.ability = currentUnit.cl.ability = currentUnit.cl.ability.filter(a => a !== "MomentOfCourageActive")
+        }
+        if (currentUnit.cl.ability.indexOf("MomentOfCourageActivatedForNextTurn") > -1) {
+            currentUnit.cl.attackSpeed = currentUnit.cl.attackSpeed + 1
+            currentUnit.cl.ability = currentUnit.cl.ability.filter(a => a !== "MomentOfCourageActivatedForNextTurn").concat("MomentOfCourageActive")
+        }
+        if (currentUnit.cl.ability.indexOf("marksmanActive") > -1) {
+            currentUnit.cl.attack = currentUnit.cl.attack - 1
+            currentUnit.cl.attackSpeed = currentUnit.cl.attackSpeed - 1
+            currentUnit.cl.ability = currentUnit.cl.ability.filter(a => a !== "marksmanActive").concat("marksman")
+        }
+        if (currentUnit.cl.ability.indexOf("burrow") > -1 && currentUnit.cl.hp >= currentUnit.cl.hpMax) {
+            currentUnit.cl.attackSpeed = 1
+            currentUnit.cl.attack = 4
+            currentUnit.cl.ability = unit.cl.ability.filter(a => a !== ["burrow", "invisible"]).concat("UnBurrow")
+            currentUnit.cl.abilityImg = unit.cl.abilityImg.filter(a => a !== BTNCryptFiendBurrow).concat(BTNCryptFiendUnBurrow)
+        }
+        if (currentUnit.cl.ability.indexOf("BorrowedTimeActive") > -1 && currentUnit.cl.hp > 3) {
+            currentUnit.cl.ability = unit.cl.ability.filter(a => a !== "BorrowedTimeActive").concat("BorrowedTime")
         }
     }
+    unit = currentUnit
     return unit
 }
 
 function calculateLineDamage(unit, target, AS) {
     let damage = 0
-    if (unit && unit.cl.ability.indexOf("dragonAbilities") > -1 && target) {
-        damage = calculateDamage(unit.cl.attack, target.cl.armor, AS) * calculateBonusDamage(unit.cl, target.cl, AS)
-    }
-    if (unit && unit.cl.ability.indexOf("PowerShot") > -1 && target) {
-        damage = calculateDamage(unit.cl.attack, target.cl.armor, AS) * calculateBonusDamage(unit.cl, target.cl, AS)
+    if (unit && target) {
+        if (unit.cl.ability.indexOf("dragonAbilities") > -1) {
+            damage = calculateDamage(unit.cl.attack, target.cl.armor, AS) * calculateBonusDamage(unit, target, AS)
+        }
+        if (unit.cl.ability.indexOf("PowerShot") > -1) {
+            damage = calculateDamage(unit.cl.attack, target.cl.armor, AS) * calculateBonusDamage(unit, target, AS)
+        }
     }
     return damage
 }
@@ -208,7 +215,7 @@ function calculateMainTakenDamageOfUnit(target, defender, attacker1, attacker2, 
     if (defender && defender.cl.ability.indexOf("invisible") > -1) {
         defender = null
     }
-    if (defender === null && target.cl.ability.indexOf("invisible") === -1) {
+    if (!defender && target.cl.ability.indexOf("invisible") === -1) {
         return Math.ceil(calculateDamage(attack1, target.cl.armor, ASofAttacker1) * calculateBonusDamage(attacker1, target, ASofAttacker1) + calculateDamage(attack2, target.cl.armor, ASofAttacker2) * calculateBonusDamage(attacker2, target, ASofAttacker2))
     } else {
         return 0
@@ -244,8 +251,7 @@ function calculateOfTheUnitsState(currentCells) {
         ASofThe2thEnemy = calculateNumberOfAttack(the2thEnemy, unit)
         unit = calculateDeBuff(the1thEnemy, unit, ASofThe1thEnemy)
         unit = calculateDeBuff(the2thEnemy, unit, ASofThe2thEnemy)
-        ASofThe1thEnemy = calculateNumberOfAttack(the1thEnemy, unit)
-        ASofThe2thEnemy = calculateNumberOfAttack(the2thEnemy, unit)
+        returnDamage(unit, the1thEnemy, ASofThe1thEnemy)
         if (unit) {
             return {
                 ...unit,
@@ -267,8 +273,7 @@ function calculateOfTheUnitsState(currentCells) {
         ASofThe2thEnemy = calculateNumberOfAttack(the2thEnemy, unit)
         unit = calculateDeBuff(the1thEnemy, unit, ASofThe1thEnemy)
         unit = calculateDeBuff(the2thEnemy, unit, ASofThe2thEnemy)
-        ASofThe1thEnemy = calculateNumberOfAttack(the1thEnemy, unit)
-        ASofThe2thEnemy = calculateNumberOfAttack(the2thEnemy, unit)
+        returnDamage(unit, the1thEnemy, ASofThe1thEnemy)
         massDamage[0][i] = massDamage[0][i] + calculateLineDamage(the1thEnemy, unit, ASofThe1thEnemy) + calculateLineDamage(the2thEnemy, unit, ASofThe2thEnemy)
         if (unit) {
             return {
@@ -291,8 +296,7 @@ function calculateOfTheUnitsState(currentCells) {
         ASofThe2thEnemy = calculateNumberOfAttack(the2thEnemy, unit)
         unit = calculateDeBuff(the1thEnemy, unit, ASofThe1thEnemy)
         unit = calculateDeBuff(the2thEnemy, unit, ASofThe2thEnemy)
-        ASofThe1thEnemy = calculateNumberOfAttack(the1thEnemy, unit)
-        ASofThe2thEnemy = calculateNumberOfAttack(the2thEnemy, unit)
+        returnDamage(unit, the1thEnemy, ASofThe1thEnemy)
         massDamage[0][i] = massDamage[0][i] + calculateLineDamage(the1thEnemy, unit, ASofThe1thEnemy) + calculateLineDamage(the2thEnemy, unit, ASofThe2thEnemy)
         if (unit) {
             return {
@@ -314,8 +318,7 @@ function calculateOfTheUnitsState(currentCells) {
         ASofThe2thEnemy = calculateNumberOfAttack(the2thEnemy, unit)
         unit = calculateDeBuff(the1thEnemy, unit, ASofThe1thEnemy)
         unit = calculateDeBuff(the2thEnemy, unit, ASofThe2thEnemy)
-        ASofThe1thEnemy = calculateNumberOfAttack(the1thEnemy, unit)
-        ASofThe2thEnemy = calculateNumberOfAttack(the2thEnemy, unit)
+        returnDamage(unit, the1thEnemy, ASofThe1thEnemy)
         if (unit) {
             return {
                 ...unit,
@@ -327,11 +330,7 @@ function calculateOfTheUnitsState(currentCells) {
         }
     })
     let newCells = []
-    newCells[0] = newRow0
-    newCells[1] = newRow1
-    newCells[2] = newRow2
-    newCells[3] = newRow3
-    newCells[0] = newCells[0].map((unit, i) => {
+    newCells[0] = newRow0.map((unit, i) => {
         if (unit) {
             return {
                 ...unit,
@@ -342,7 +341,7 @@ function calculateOfTheUnitsState(currentCells) {
             }
         }
     })
-    newCells[1] = newCells[1].map((unit, i) => {
+    newCells[1] = newRow1.map((unit, i) => {
         if (unit) {
             return {
                 ...unit,
@@ -353,7 +352,7 @@ function calculateOfTheUnitsState(currentCells) {
             }
         }
     })
-    newCells[2] = newCells[2].map((unit, i) => {
+    newCells[2] = newRow2.map((unit, i) => {
         if (unit) {
             return {
                 ...unit,
@@ -364,7 +363,7 @@ function calculateOfTheUnitsState(currentCells) {
             }
         }
     })
-    newCells[3] = newCells[3].map((unit, i) => {
+    newCells[3] = newRow3.map((unit, i) => {
         if (unit) {
             return {
                 ...unit,
@@ -375,9 +374,95 @@ function calculateOfTheUnitsState(currentCells) {
             }
         }
     })
+    newCells[1] = newCells[1].map((unit, i) => calculateCannibalize(unit, newCells[2][i], newCells[3][i]))
+    newCells[2] = newCells[2].map((unit, i) => calculateCannibalize(unit, newCells[1][i], newCells[0][i]))
     return newCells
 }
-
+function refreshAuraEffects(item2, effects1) {
+    let newItem = item2
+        if (item2 && item2.cl.ability.indexOf("building") === -1) {
+            if (effects1.indexOf("devotionAura") > -1 && item2.cl.abilityImg.indexOf(BTNDevotion) === -1) {
+                newItem = {
+                    ...newItem,
+                    cl: {
+                        ...newItem.cl,
+                        armor: newItem.cl.armor + 1,
+                        abilityImg: newItem.cl.abilityImg.concat(BTNDevotion)
+                    }
+                }
+            }
+            if (item2.cl.abilityImg.indexOf(BTNDevotion) > -1 && effects1.indexOf("devotionAura") === -1) {
+                newItem = {
+                    ...newItem,
+                    cl: {
+                        ...newItem.cl,
+                        armor: newItem.cl.armor - 1,
+                        abilityImg: newItem.cl.abilityImg.filter(a => a !== BTNDevotion)
+                    }
+                }
+            }
+            if (effects1.indexOf("NaturalOrder") > -1 && item2.cl.abilityImg.indexOf(NaturalOrder) === -1) {
+                newItem = {
+                    ...newItem,
+                    cl: {
+                        ...newItem.cl,
+                        armor: 0,
+                        abilityImg: newItem.cl.abilityImg.concat(NaturalOrder)
+                    }
+                }
+            }
+            if (item2.cl.abilityImg.indexOf(NaturalOrder) > -1 && effects1.indexOf("NaturalOrder") === -1) {
+                newItem = {
+                    ...newItem,
+                    cl: {
+                        ...newItem.cl,
+                        armor: newItem.cl.DefaultArmor,
+                        abilityImg: newItem.cl.abilityImg.filter(a => a !== NaturalOrder)
+                    }
+                }
+            }
+            if (effects1.indexOf("Drum") > -1 && item2.cl.abilityImg.indexOf(PASBTNDrum) === -1) {
+                newItem = {
+                    ...newItem,
+                    cl: {
+                        ...newItem.cl,
+                        attack: newItem.cl.attack + 1,
+                        abilityImg: newItem.cl.abilityImg.concat(PASBTNDrum)
+                    }
+                }
+            }
+            if (item2.cl.abilityImg.indexOf(PASBTNDrum) > -1 && effects1.indexOf("Drum") === -1) {
+                newItem = {
+                    ...newItem,
+                    cl: {
+                        ...newItem.cl,
+                        attack: newItem.cl.attack - 1,
+                        abilityImg: newItem.cl.abilityImg.filter(a => a !== PASBTNDrum)
+                    }
+                }
+            }
+            if (item2.cl.ability.indexOf("undead") === -1 && item2.cl.abilityImg.indexOf(PASBTNPlagueCloud) > -1) {
+                newItem = {
+                    ...newItem,
+                    cl: {
+                        ...newItem.cl,
+                        hp: newItem.cl.hp - 1,
+                        ability: newItem.cl.ability.concat("decease")
+                    }
+                }
+            }
+            if (item2.cl.ability.indexOf("undead") === -1 && effects1.indexOf("UnholyAura") > -1) {
+                newItem = {
+                    ...newItem,
+                    cl: {
+                        ...newItem.cl,
+                        hp: newItem.cl.hp - 1,
+                    }
+                }
+            }
+        }
+        return newItem
+}
 function calculateMassEffect(currentCells) {
     let newCells = cloneDeep(currentCells)
     let effects1 = []
@@ -414,10 +499,10 @@ function calculateMassEffect(currentCells) {
                 }
             }
             if (newCells[i][j] && newCells[i][j].cl.ability.indexOf("ShackleShot") > -1) {
-                if (newCells[2][j] && newCells[3][j]) {
-                    newCells[2][j].cl.ability = newCells[2][j].cl.ability.concat("bashed")
+                if (newCells[2][j] && newCells[3][j] && Math.round(Math.random() * 0.625 + 0.375) === 0) {
+                    newCells[2][j].cl.ability = newCells[2][j].cl.ability.concat("bashedForTheNextTurn")
                     newCells[2][j].cl.abilityImg = newCells[2][j].cl.abilityImg.concat(BTNStun)
-                    newCells[3][j].cl.ability = newCells[3][j].cl.ability.concat("bashed")
+                    newCells[3][j].cl.ability = newCells[3][j].cl.ability.concat("bashedForTheNextTurn")
                     newCells[3][j].cl.abilityImg = newCells[3][j].cl.abilityImg.concat(BTNStun)
                 }
             }
@@ -455,340 +540,32 @@ function calculateMassEffect(currentCells) {
                 }
             }
             if (newCells[i][j] && newCells[i][j].cl.ability.indexOf("ShackleShot") > -1) {
-                if (newCells[0][j] && newCells[1][j]) {
-                    newCells[0][j].cl.ability = newCells[0][j].cl.ability.concat("bashed")
+                if (newCells[0][j] && newCells[1][j] && Math.round(Math.random() * 0.625 + 0.375) === 0) {
+                    newCells[0][j].cl.ability = newCells[0][j].cl.ability.concat("bashedForTheNextTurn")
                     newCells[0][j].cl.abilityImg = newCells[0][j].cl.abilityImg.concat(BTNStun)
-                    newCells[1][j].cl.ability = newCells[1][j].cl.ability.concat("bashed")
+                    newCells[1][j].cl.ability = newCells[1][j].cl.ability.concat("bashedForTheNextTurn")
                     newCells[1][j].cl.abilityImg = newCells[1][j].cl.abilityImg.concat(BTNStun)
                 }
             }
         }
     }
-    const newRow0 = newCells[0].map((item2, i2) => {
-        let newItem = item2
-        if (item2 && item2.cl.ability.indexOf("building") === -1 && effects1.indexOf("devotionAura") > -1 && item2.cl.abilityImg.indexOf(BTNDevotion) === -1) {
-            newItem = {
-                ...newItem,
-                cl: {
-                    ...newItem.cl,
-                    armor: newItem.cl.armor + 1,
-                    abilityImg: newItem.cl.abilityImg.concat(BTNDevotion)
-                }
-            }
-        }
-
-        if (item2 && item2.cl.abilityImg.indexOf(BTNDevotion) > -1 && effects1.indexOf("devotionAura") === -1) {
-            newItem = {
-                ...newItem,
-                cl: {
-                    ...newItem.cl,
-                    armor: newItem.cl.armor - 1,
-                    abilityImg: newItem.cl.abilityImg.filter(a => a !== BTNDevotion)
-                }
-            }
-        }
-        if (item2 && item2.cl.ability.indexOf("building") === -1 && effects1.indexOf("NaturalOrder") > -1 && item2.cl.abilityImg.indexOf(NaturalOrder) === -1) {
-            newItem = {
-                ...newItem,
-                cl: {
-                    ...newItem.cl,
-                    armor: 0,
-                    abilityImg: newItem.cl.abilityImg.concat(NaturalOrder)
-                }
-            }
-        }
-        if (item2 && item2.cl.abilityImg.indexOf(NaturalOrder) > -1 && effects1.indexOf("NaturalOrder") === -1) {
-            newItem = {
-                ...newItem,
-                cl: {
-                    ...newItem.cl,
-                    armor: newItem.cl.DefaultArmor,
-                    abilityImg: newItem.cl.abilityImg.filter(a => a !== NaturalOrder)
-                }
-            }
-        }
-        if (item2 && item2.cl.ability.indexOf("building") === -1 && effects1.indexOf("Drum") > -1 && item2.cl.abilityImg.indexOf(PASBTNDrum) === -1) {
-            newItem = {
-                ...newItem,
-                cl: {
-                    ...newItem.cl,
-                    attack: newItem.cl.attack + 1,
-                    abilityImg: newItem.cl.abilityImg.concat(PASBTNDrum)
-                }
-            }
-        }
-        if (item2 && item2.cl.abilityImg.indexOf(PASBTNDrum) > -1 && effects1.indexOf("Drum") === -1) {
-            newItem = {
-                ...newItem,
-                cl: {
-                    ...newItem.cl,
-                    attack: newItem.cl.attack - 1,
-                    abilityImg: newItem.cl.abilityImg.filter(a => a !== PASBTNDrum)
-                }
-            }
-        }
-        if (item2 && item2.cl.ability.indexOf("building") === -1 && item2.cl.ability.indexOf("undead") === -1 && item2.cl.abilityImg.indexOf(PASBTNPlagueCloud) > -1) {
-            newItem = {
-                ...newItem,
-                cl: {
-                    ...newItem.cl,
-                    hp: newItem.cl.hp - 1,
-                    ability: newItem.cl.ability.concat("decease")
-                }
-            }
-        }
-        if (item2 && item2.cl.ability.indexOf("building") === -1 && item2.cl.ability.indexOf("undead") === -1 && effects1.indexOf("UnholyAura") > -1) {
-            newItem = {
-                ...newItem,
-                cl: {
-                    ...newItem.cl,
-                    hp: newItem.cl.hp - 1,
-                }
-            }
-        }
-        return newItem
-    })
-    const newRow1 = newCells[1].map((item2, i2) => {
-        let newItem = item2
-        if (item2 && item2.cl.ability.indexOf("building") === -1 && effects1.indexOf("devotionAura") > -1 && item2.cl.abilityImg.indexOf(BTNDevotion) === -1) {
-            newItem = {
-                ...newItem,
-                cl: {
-                    ...newItem.cl,
-                    armor: newItem.cl.armor + 1,
-                    abilityImg: newItem.cl.abilityImg.concat(BTNDevotion)
-                }
-            }
-        }
-        if (item2 && item2.cl.abilityImg.indexOf(BTNDevotion) > -1 && effects1.indexOf("devotionAura") === -1) {
-            newItem = {
-                ...newItem,
-                cl: {
-                    ...newItem.cl,
-                    armor: newItem.cl.armor - 1,
-                    abilityImg: newItem.cl.abilityImg.filter(a => a !== BTNDevotion)
-                }
-            }
-        }
-        if (item2 && item2.cl.ability.indexOf("building") === -1 && effects1.indexOf("NaturalOrder") > -1 && item2.cl.abilityImg.indexOf(NaturalOrder) === -1) {
-            newItem = {
-                ...newItem,
-                cl: {
-                    ...newItem.cl,
-                    armor: 0,
-                    abilityImg: newItem.cl.abilityImg.concat(NaturalOrder)
-                }
-            }
-        }
-        if (item2 && item2.cl.abilityImg.indexOf(NaturalOrder) > -1 && effects1.indexOf("NaturalOrder") === -1) {
-            newItem = {
-                ...newItem,
-                cl: {
-                    ...newItem.cl,
-                    armor: newItem.cl.DefaultArmor,
-                    abilityImg: newItem.cl.abilityImg.filter(a => a !== NaturalOrder)
-                }
-            }
-        }
-        if (item2 && item2.cl.ability.indexOf("building") === -1 && effects1.indexOf("Drum") > -1 && item2.cl.abilityImg.indexOf(PASBTNDrum) === -1) {
-            newItem = {
-                ...newItem,
-                cl: {
-                    ...newItem.cl,
-                    attack: newItem.cl.attack + 1,
-                    abilityImg: newItem.cl.abilityImg.concat(PASBTNDrum)
-                }
-            }
-        }
-        if (item2 && item2.cl.ability.indexOf("building") === -1 && item2.cl.ability.indexOf("undead") === -1 && item2.cl.abilityImg.indexOf(PASBTNPlagueCloud) > -1) {
-            newItem = {
-                ...newItem,
-                cl: {
-                    ...newItem.cl,
-                    hp: newItem.cl.hp - 1,
-                    ability: newItem.cl.ability.concat("decease")
-                }
-            }
-        }
-        if (item2 && item2.cl.ability.indexOf("building") === -1 && item2.cl.ability.indexOf("undead") === -1 && effects1.indexOf("UnholyAura") > -1) {
-            newItem = {
-                ...newItem,
-                cl: {
-                    ...newItem.cl,
-                    hp: newItem.cl.hp - 1,
-                }
-            }
-        }
-        return newItem
-    })
-    const newRow2 = newCells[2].map((item2, i2) => {
-        let newItem = item2
-        if (item2 && item2.cl.ability.indexOf("building") === -1 && effects2.indexOf("devotionAura") > -1 && item2.cl.abilityImg.indexOf(BTNDevotion) === -1) {
-            newItem = {
-                ...newItem,
-                cl: {
-                    ...newItem.cl,
-                    armor: newItem.cl.armor + 1,
-                    abilityImg: newItem.cl.abilityImg.concat(BTNDevotion)
-                }
-            }
-        }
-        if (item2 && item2.cl.abilityImg.indexOf(BTNDevotion) > -1 && effects1.indexOf("devotionAura") === -1) {
-            newItem = {
-                ...newItem,
-                cl: {
-                    ...newItem.cl,
-                    armor: newItem.cl.armor - 1,
-                    abilityImg: newItem.cl.abilityImg.filter(a => a !== BTNDevotion)
-                }
-            }
-        }
-        if (item2 && item2.cl.ability.indexOf("building") === -1 && effects2.indexOf("NaturalOrder") > -1 && item2.cl.abilityImg.indexOf(NaturalOrder) === -1) {
-            newItem = {
-                ...newItem,
-                cl: {
-                    ...newItem.cl,
-                    armor: 0,
-                    abilityImg: newItem.cl.abilityImg.concat(NaturalOrder)
-                }
-            }
-        }
-        if (item2 && item2.cl.abilityImg.indexOf(NaturalOrder) > -1 && effects2.indexOf("NaturalOrder") === -1) {
-            newItem = {
-                ...newItem,
-                cl: {
-                    ...newItem.cl,
-                    armor: newItem.cl.DefaultArmor,
-                    abilityImg: newItem.cl.abilityImg.filter(a => a !== NaturalOrder)
-                }
-            }
-        }
-        if (item2 && item2.cl.ability.indexOf("building") === -1 && effects1.indexOf("Drum") > -1 && item2.cl.abilityImg.indexOf(PASBTNDrum) === -1) {
-            newItem = {
-                ...newItem,
-                cl: {
-                    ...newItem.cl,
-                    attack: newItem.cl.attack + 1,
-                    abilityImg: newItem.cl.abilityImg.concat(PASBTNDrum)
-                }
-            }
-        }
-        if (item2 && item2.cl.ability.indexOf("building") === -1 && item2.cl.ability.indexOf("undead") === -1 && item2.cl.abilityImg.indexOf(PASBTNPlagueCloud) > -1) {
-            newItem = {
-                ...newItem,
-                cl: {
-                    ...newItem.cl,
-                    hp: newItem.cl.hp - 1,
-                    ability: newItem.cl.ability.concat("decease")
-                }
-            }
-        }
-        if (item2 && item2.cl.ability.indexOf("building") === -1 && item2.cl.ability.indexOf("undead") === -1 && effects2.indexOf("UnholyAura") > -1) {
-            newItem = {
-                ...newItem,
-                cl: {
-                    ...newItem.cl,
-                    hp: newItem.cl.hp - 1,
-                }
-            }
-        }
-        return newItem
-    })
-    const newRow3 = newCells[3].map((item2, i2) => {
-        let newItem = item2
-        if (item2 && item2.cl.ability.indexOf("building") === -1 && effects2.indexOf("devotionAura") > -1 && item2.cl.abilityImg.indexOf(BTNDevotion) === -1) {
-            newItem = {
-                ...newItem,
-                cl: {
-                    ...newItem.cl,
-                    armor: newItem.cl.armor + 1,
-                    abilityImg: newItem.cl.abilityImg.concat(BTNDevotion)
-                }
-            }
-        }
-        if (item2 && item2.cl.abilityImg.indexOf(BTNDevotion) > -1 && effects1.indexOf("devotionAura") === -1) {
-            newItem = {
-                ...newItem,
-                cl: {
-                    ...newItem.cl,
-                    armor: newItem.cl.armor - 1,
-                    abilityImg: newItem.cl.abilityImg.filter(a => a !== BTNDevotion)
-                }
-            }
-        }
-        if (item2 && item2.cl.ability.indexOf("building") === -1 && effects2.indexOf("NaturalOrder") > -1 && item2.cl.abilityImg.indexOf(NaturalOrder) === -1) {
-            newItem = {
-                ...newItem,
-                cl: {
-                    ...newItem.cl,
-                    armor: 0,
-                    abilityImg: newItem.cl.abilityImg.concat(NaturalOrder)
-                }
-            }
-        }
-        if (item2 && item2.cl.abilityImg.indexOf(NaturalOrder) > -1 && effects2.indexOf("NaturalOrder") === -1) {
-            newItem = {
-                ...newItem,
-                cl: {
-                    ...newItem.cl,
-                    armor: newItem.cl.DefaultArmor,
-                    abilityImg: newItem.cl.abilityImg.filter(a => a !== NaturalOrder)
-                }
-            }
-        }
-        if (item2 && item2.cl.ability.indexOf("building") === -1 && effects1.indexOf("Drum") > -1 && item2.cl.abilityImg.indexOf(PASBTNDrum) === -1) {
-            newItem = {
-                ...newItem,
-                cl: {
-                    ...newItem.cl,
-                    attack: newItem.cl.attack + 1,
-                    abilityImg: newItem.cl.abilityImg.concat(PASBTNDrum)
-                }
-            }
-        }
-        if (item2 && item2.cl.ability.indexOf("building") === -1 && item2.cl.ability.indexOf("undead") === -1 && item2.cl.abilityImg.indexOf(PASBTNPlagueCloud) > -1) {
-            newItem = {
-                ...newItem,
-                cl: {
-                    ...newItem.cl,
-                    hp: newItem.cl.hp - 1,
-                    ability: newItem.cl.ability.concat("decease")
-                }
-            }
-        }
-        if (item2 && item2.cl.ability.indexOf("building") === -1 && item2.cl.ability.indexOf("undead") === -1 && effects2.indexOf("UnholyAura") > -1) {
-            newItem = {
-                ...newItem,
-                cl: {
-                    ...newItem.cl,
-                    hp: newItem.cl.hp - 1,
-                }
-            }
-        }
-        return newItem
-    })
-    newCells[0] = newRow0
-    newCells[1] = newRow1
-    newCells[2] = newRow2
-    newCells[3] = newRow3
+    newCells[0] = newCells[0].map((item2) => refreshAuraEffects(item2, effects1))
+    newCells[1] = newCells[1].map((item2) => refreshAuraEffects(item2, effects1))
+    newCells[2] = newCells[2].map((item2) => refreshAuraEffects(item2, effects2))
+    newCells[3] = newCells[3].map((item2) => refreshAuraEffects(item2, effects2))
     return newCells
 }
 
 function calculateBuff(unit, target) {
+    let currentTarget = target
     if (unit && target) {
         if (target.cl.ability.indexOf("building") === -1 && target.cl.ability.indexOf("MagicImmunity") === -1 && target.cl.ability.indexOf("dragonAbilities") === -1) {
-            if (unit.cl.ability.indexOf("Heal") > -1 && target.cl.hp < target.cl.hpMax) {
-                return {
-                    ...target,
-                    cl: {
-                        ...target.cl,
-                        hp: target.cl.hp + 1
-                    }
-                }
+            if (unit.cl.ability.indexOf("Heal") > -1 && currentTarget.cl.hp < currentTarget.cl.hpMax) {
+                currentTarget.cl.hp = target.cl.hp + 1
             }
         }
     }
-    return target
+    return currentTarget
 }
 
 function calculateDamage(attack, armor, attackSpeed) {
@@ -802,14 +579,14 @@ function calculateDamage(attack, armor, attackSpeed) {
 function calculateNumberOfAttack(unit, enemy) {
     if (unit && enemy) {
         let result = unit.cl.attackSpeed
-        if (unit.cl.attackSpeed < 1) {
+        if (result < 1) {
             return 0
         }
         if (unit.cl.ability.indexOf("bashed") > -1) {
-            return result = 0
+            return 0
         }
         if ((enemy.cl.ability.indexOf("flying") > -1 || enemy.cl.ability.indexOf("dragonAbilities") > -1) && unit.cl.rangeOfAttack === "melee") {
-            return result = 0
+            return 0
         }
         if (enemy.cl.ability.indexOf("reflect") > -1) {
             if (unit.cl.rangeOfAttack === "range" && unit.cl.attackSpeed > 0) {
@@ -821,8 +598,8 @@ function calculateNumberOfAttack(unit, enemy) {
                 }
             }
         }
-        if (unit.cl.ability.indexOf("trueSeen") === -1 && enemy.cl.ability.indexOf("invisible") > -1) {
-            return result = 0
+        if (unit.cl.ability.indexOf("trueSeen") === -1 && unit.cl.ability.indexOf("dragonAbilities") === -1 && enemy.cl.ability.indexOf("invisible") > -1) {
+            return 0
         }
         return result
     } else {
@@ -831,154 +608,69 @@ function calculateNumberOfAttack(unit, enemy) {
 }
 
 function convertTheUnit(unit, enemy1, enemy2) {
-    if (unit && unit.cl.ability.indexOf("invisible") === -1) {
-        if (enemy1 && enemy1.cl.ability.indexOf("Devour") > -1 && unit.cl.hpMax < 11) {
-            return {
-                ...unit,
-                cl: {
-                    ...unit.cl,
-                    hp: -100,
-                }
-            }
+    let currentUnit = unit
+    if (currentUnit && currentUnit.cl.ability.indexOf("invisible") === -1) {
+        if (enemy1 && enemy1.cl.ability.indexOf("Devour") > -1 && currentUnit.cl.hpMax < 11) {
+            currentUnit.cl.hp = -100
         }
-        if (unit.cl.ability.indexOf("militia") > -1) {
+        if (currentUnit.cl.ability.indexOf("militia") > -1) {
             if (enemy1 || enemy2) {
-                return {
-                    ...unit,
-                    cl: {
-                        ...unit.cl,
-                        img: BTNMilitia,
-                        name: "Militia",
-                        attack: unit.cl.attack + 1,
-                        armor: unit.cl.armor + 1,
-                        abilityImg: unit.cl.abilityImg.filter(a => a !== BTNCallToArms).filter(a => a !== BTNGatherGold).concat(BTNBacktoWork),
-                        ability: unit.cl.ability.filter(a => a !== "militia").filter(a => a !== "worker").concat("backToWork")
-                    }
-                }
+                currentUnit.cl.img = BTNMilitia
+                currentUnit.cl.name = "Militia"
+                currentUnit.cl.attack = currentUnit.cl.attack + 1
+                currentUnit.cl.armor = currentUnit.cl.armor + 1
+                currentUnit.cl.abilityImg = currentUnit.cl.abilityImg.filter(a => a !== BTNCallToArms).filter(a => a !== BTNGatherGold).concat(BTNBacktoWork)
+                currentUnit.cl.ability = currentUnit.cl.ability.filter(a => a !== "militia").filter(a => a !== "worker").concat("backToWork")
             }
         }
-        if (unit.cl.ability.indexOf("backToWork") > -1) {
+        if (currentUnit.cl.ability.indexOf("backToWork") > -1) {
             if (!enemy1 && !enemy2) {
-                return {
-                    ...unit,
-                    cl: {
-                        ...unit.cl,
-                        img: BTNPeasant,
-                        name: "Peasant",
-                        attack: unit.cl.attack - 1,
-                        armor: unit.cl.armor - 1,
-                        abilityImg: unit.cl.abilityImg.filter(a => a !== BTNBacktoWork).concat(BTNGatherGold, BTNCallToArms),
-                        ability: unit.cl.ability.filter(a => a !== "backToWork").concat("worker", "militia")
-                    }
-                }
+                currentUnit.cl.img = BTNPeasant
+                currentUnit.cl.name = "Peasant"
+                currentUnit.cl.attack = currentUnit.cl.attack - 1
+                currentUnit.cl.armor = currentUnit.cl.armor - 1
+                currentUnit.cl.abilityImg = currentUnit.cl.abilityImg.filter(a => a !== BTNBacktoWork).concat(BTNGatherGold, BTNCallToArms)
+                currentUnit.cl.ability = currentUnit.cl.ability.filter(a => a !== "backToWork").concat("worker", "militia")
             }
         }
-        if (unit.cl.ability.indexOf("cannibalize") > -1) {
-            if (enemy1 && enemy1.cl.hp <= 0 && enemy1.cl.ability.indexOf("building") === -1) {
-                return {
-                    ...unit,
-                    cl: {
-                        ...unit.cl,
-                        hp: unit.cl.hpMax,
-                    }
-                }
-            }
-            if (!enemy1 && enemy2 && enemy2.cl.hp <= 0 && enemy2.cl.ability.indexOf("building") === -1) {
-                return {
-                    ...unit,
-                    cl: {
-                        ...unit.cl,
-                        hp: unit.cl.hpMax,
-                    }
-                }
-            }
+        if (currentUnit.cl.ability.indexOf("marksman") > -1 && !enemy1) {
+            currentUnit.cl.attack = currentUnit.cl.attack + 1
+            currentUnit.cl.attackSpeed = currentUnit.cl.attackSpeed + 1
+            currentUnit.cl.ability = currentUnit.cl.ability.filter(a => a !== "marksman").concat("marksmanActive")
         }
-        if (unit.cl.ability.indexOf("marksman") > -1 && !enemy1) {
-            return {
-                ...unit,
-                cl: {
-                    ...unit.cl,
-                    attack: unit.cl.attack + 1,
-                    attackSpeed: unit.cl.attackSpeed + 1,
-                    ability: unit.cl.ability.filter(a => a !== "marksman").concat("marksmanActive")
-                }
-            }
+        if (currentUnit.cl.ability.indexOf("flying") > -1 && ((enemy1 && enemy1.cl.ability.indexOf("web") > -1) || (enemy2 && enemy2.cl.ability.indexOf("web") > -1))) {
+            currentUnit.cl.ability = currentUnit.cl.ability.filter(a => a !== "flying").concat("underWeb")
+            currentUnit.cl.abilityImg = currentUnit.cl.abilityImg.filter(a => a !== BTNAlbatross).concat(BTNWeb)
         }
-        if (unit.cl.ability.indexOf("marksmanActive") > -1 && enemy1) {
-            return {
-                ...unit,
-                cl: {
-                    ...unit.cl,
-                    attack: unit.cl.attack - 1,
-                    attackSpeed: unit.cl.attackSpeed - 1,
-                    ability: unit.cl.ability.filter(a => a !== "marksmanActive").concat("marksman")
-                }
-            }
+        if (currentUnit.cl.ability.indexOf("flying") > -1 && ((enemy1 && enemy1.cl.ability.indexOf("Ensnare") > -1) || (enemy2 && enemy2.cl.ability.indexOf("Ensnare") > -1))) {
+            currentUnit.cl.ability = currentUnit.cl.ability.filter(a => a !== "flying").concat("underWeb")
+            currentUnit.cl.abilityImg = currentUnit.cl.abilityImg.filter(a => a !== BTNAlbatross).concat(BTNEnsnare)
         }
-        if (unit.cl.ability.indexOf("flying") > -1 && ((enemy1 && enemy1.cl.ability.indexOf("web") > -1) || (enemy2 && enemy2.cl.ability.indexOf("web") > -1))) {
-            return {
-                ...unit,
-                cl: {
-                    ...unit.cl,
-                    ability: unit.cl.ability.filter(a => a !== "flying").concat("underWeb"),
-                    abilityImg: unit.cl.abilityImg.filter(a => a !== BTNAlbatross).concat(BTNWeb)
-                }
-            }
+        if (currentUnit.cl.ability.indexOf("UnBurrow") > -1 && currentUnit.cl.hp > 0 && currentUnit.cl.hp < 5) {
+            currentUnit.cl.attack = 0
+            currentUnit.cl.attackSpeed = 0
+            currentUnit.cl.ability = currentUnit.cl.ability.filter(a => a !== "UnBurrow").concat(["burrow", "invisible"])
+            currentUnit.cl.abilityImg = currentUnit.cl.abilityImg.filter(a => a !== BTNCryptFiendUnBurrow).concat(BTNCryptFiendBurrow)
         }
-        if (unit.cl.ability.indexOf("flying") > -1 && ((enemy1 && enemy1.cl.ability.indexOf("Ensnare") > -1) || (enemy2 && enemy2.cl.ability.indexOf("Ensnare") > -1))) {
-            return {
-                ...unit,
-                cl: {
-                    ...unit.cl,
-                    ability: unit.cl.ability.filter(a => a !== "flying").concat("underWeb"),
-                    abilityImg: unit.cl.abilityImg.filter(a => a !== BTNAlbatross).concat(BTNEnsnare)
-                }
-            }
-        }
-        if (unit.cl.ability.indexOf("UnBurrow") > -1 && unit.cl.hp < 5 && unit.cl.hp > 0) {
-            return {
-                ...unit,
-                cl: {
-                    ...unit.cl,
-                    attack: 0,
-                    attackSpeed: 0,
-                    ability: unit.cl.ability.filter(a => a !== "UnBurrow").concat(["burrow", "invisible"]),
-                    abilityImg: unit.cl.abilityImg.filter(a => a !== BTNCryptFiendUnBurrow).concat(BTNCryptFiendBurrow)
-                }
-            }
-        }
-        if (unit.cl.ability.indexOf("burrow") > -1 && unit.cl.hp >= unit.cl.hpMax) {
-            return {
-                ...unit,
-                cl: {
-                    ...unit.cl,
-                    attackSpeed: 1,
-                    attack: 4,
-                    ability: unit.cl.ability.filter(a => a !== ["burrow", "invisible"]).concat("UnBurrow"),
-                    abilityImg: unit.cl.abilityImg.filter(a => a !== BTNCryptFiendBurrow).concat(BTNCryptFiendUnBurrow)
-                }
-            }
-        }
-        if (unit.cl.ability.indexOf("BorrowedTime") > -1 && unit.cl.hp < 4) {
-            return {
-                ...unit,
-                cl: {
-                    ...unit.cl,
-                    ability: unit.cl.ability.filter(a => a !== "BorrowedTime").concat("BorrowedTimeActive"),
-                }
-            }
-        }
-        if (unit.cl.ability.indexOf("BorrowedTimeActive") > -1 && unit.cl.hp > 3) {
-            return {
-                ...unit,
-                cl: {
-                    ...unit.cl,
-                    ability: unit.cl.ability.filter(a => a !== "BorrowedTimeActive").concat("BorrowedTime"),
-                }
-            }
+        if (currentUnit.cl.ability.indexOf("BorrowedTime") > -1 && currentUnit.cl.hp < 4) {
+            currentUnit.cl.ability = currentUnit.cl.ability.filter(a => a !== "BorrowedTime").concat("BorrowedTimeActive")
         }
     }
-    return unit
+    return currentUnit
+}
+function calculateCannibalize(currentUnit, enemy1, enemy2) {
+    if (!currentUnit) {
+        return null
+    }
+    if (currentUnit.cl.ability.indexOf("cannibalize") > -1) {
+        if (enemy1 && enemy1.cl.hp <= 0 && enemy1.cl.ability.indexOf("building") === -1) {
+            currentUnit.cl.hp = currentUnit.cl.hpMax
+        }
+        if (!enemy1 && enemy2 && enemy2.cl.hp <= 0 && enemy2.cl.ability.indexOf("building") === -1) {
+            currentUnit.cl.hp = currentUnit.cl.hpMax
+        }
+    }
+    return currentUnit
 }
 
 function calculateRegeneration(unit) {
@@ -987,13 +679,13 @@ function calculateRegeneration(unit) {
         if (unit.cl.ability.indexOf("underPoison") > -1) {
             regeneration = regeneration - 1
         }
-        if (unit.cl.ability.indexOf("burrow") > -1 && unit.hp < unit.hpMax) {
+        if (unit.cl.ability.indexOf("burrow") > -1 && unit.cl.hp < unit.cl.hpMax) {
             regeneration = regeneration + 1
         }
-        if (unit.cl.ability.indexOf("innerFireEffect") > -1 && unit.hp < unit.hpMax) {
+        if (unit.cl.ability.indexOf("innerFireEffect") > -1 && unit.cl.hp < unit.cl.hpMax) {
             regeneration = regeneration + 1
         }
-        if (unit.cl.ability.indexOf("purifyingFlamesEffect") > -1 && unit.hp < unit.hpMax) {
+        if (unit.cl.ability.indexOf("purifyingFlamesEffect") > -1 && unit.cl.hp < unit.cl.hpMax) {
             regeneration = regeneration + 1
         }
         return {
@@ -1015,25 +707,13 @@ function calculateBonusDamage(unit, enemy, numberOfAttack) {
             if (unit.cl.ability.indexOf("holyAttack") > -1 && enemy.cl.ability.indexOf("undead") > -1) {
                 bonus = bonus * 1.5
             }
-        }
-    }
-    if (unit && enemy) {
-        if (numberOfAttack > 0) {
             if (enemy.cl.ability.indexOf("BorrowedTimeActive") > -1) {
                 bonus = bonus * (-1)
             }
-        }
-    }
-    if (unit && enemy) {
-        if (numberOfAttack > 0) {
             if (unit.cl.ability.indexOf("CriticalStrike15X4") > -1 && (Math.random() <= 0.15)) {
                 alert("x4 criticalStrike!!!")
                 bonus = bonus * 4
             }
-        }
-    }
-    if (unit && enemy) {
-        if (numberOfAttack > 0) {
             if (unit.cl.ability.indexOf("CriticalStrike15X3") > -1 && (Math.random() <= 0.15)) {
                 alert("x3 criticalStrike!!!")
                 bonus = bonus * 3
@@ -1043,123 +723,86 @@ function calculateBonusDamage(unit, enemy, numberOfAttack) {
     return bonus
 }
 
+function returnDamage(unit, enemy, numberOfAttackOfEnemy) {
+    if (unit && enemy) {
+        if (unit.cl.ability.indexOf("thornShield") > -1 && enemy.cl.rangeOfAttack === "melee") {
+            return {
+                ...enemy,
+                cl: {
+                    ...enemy.cl,
+                    hp: enemy.cl.hp - Math.ceil((calculateDamage(enemy.cl.attack, unit.cl.armor, numberOfAttackOfEnemy) * calculateBonusDamage(enemy, unit, numberOfAttackOfEnemy)) * 0.5)
+                }
+            }
+        }
+    }
+}
+
 function calculateDeBuff(unit, enemy, numberOfAttack) {
     let effect = 1
     if (!enemy) {
         return null
     }
+    let currentEnemy = enemy
     if (unit) {
         if (numberOfAttack > 0) {
-            if (unit.cl.ability.indexOf("bash") > -1 && enemy.cl.ability.indexOf("building") === -1 && enemy.cl.ability.indexOf("bashed") === -1) {
+            if (unit.cl.ability.indexOf("Hex") > -1 && currentEnemy.cl.ability.indexOf("building") === -1 && currentEnemy.cl.name !== "Sheep" && currentEnemy.cl.ability.indexOf("MagicImmunity") === -1 && currentEnemy.cl.ability.indexOf("dragonAbilities") === -1) {
+                if (Math.round((enemy.cost / 50) * Math.random() * 0.625 + 0.375) === 0) {
+                    alert("Hex!")
+                    currentEnemy.cl.img = BTNSheep
+                    currentEnemy.cl.name = "Sheep"
+                    currentEnemy.cl.attack =  0
+                    currentEnemy.cl.rangeOfAttack = "range"
+                    currentEnemy.cl.typeOfAttack = "physic"
+                    currentEnemy.cl.attackSpeed = 0
+                    currentEnemy.cl.hp = 5
+                    currentEnemy.cl.armor = 0
+                    currentEnemy.cl.abilityImg = []
+                    currentEnemy.cl.ability = []
+                    currentEnemy.cl.cost = 3
+                }
+            }
+            if (unit.cl.ability.indexOf("bash") > -1 && currentEnemy.cl.ability.indexOf("building") === -1 && currentEnemy.cl.ability.indexOf("bashedForTheNextTurn") === -1) {
                 for (let i = 0; i < numberOfAttack; i++) {
                     effect = Math.round(Math.random() * 0.625 + 0.375)
                     if (effect === 0) {
-                        alert(unit.cl.name + " have bashed " + enemy.cl.name + "!")
-                        return {
-                            ...enemy,
-                            cl: {
-                                ...enemy.cl,
-                                abilityImg: enemy.cl.abilityImg.concat(BTNStun),
-                                ability: enemy.cl.ability.concat("bashed")
-                            }
-                        }
+                        alert(unit.cl.name + " have bashed " + currentEnemy.cl.name + "!")
+                        currentEnemy.cl.abilityImg = currentEnemy.cl.abilityImg.concat(BTNStun)
+                        currentEnemy.cl.ability = currentEnemy.cl.ability.concat("bashedForTheNextTurn")
                     }
                 }
             }
-            if (unit.cl.ability.indexOf("EnvenomedSpear") > -1 && enemy.cl.ability.indexOf("building") === -1 && enemy.cl.ability.indexOf("underPoison") === -1) {
-                return {
-                    ...enemy,
-                    cl: {
-                        ...enemy.cl,
-                        abilityImg: enemy.cl.abilityImg.concat(BTNPoisonArrow),
-                        ability: enemy.cl.ability.concat("underPoison")
-                    }
-                }
+            if (unit.cl.ability.indexOf("EnvenomedSpear") > -1 && currentEnemy.cl.ability.indexOf("building") === -1 && currentEnemy.cl.ability.indexOf("underPoison") === -1) {
+                currentEnemy.cl.abilityImg = currentEnemy.cl.abilityImg.concat(BTNPoisonArrow)
+                currentEnemy.cl.ability = currentEnemy.cl.ability.concat("underPoison")
             }
-            if (unit.cl.ability.indexOf("BreathOfFrost") > -1 && enemy.cl.ability.indexOf("building") === -1 && enemy.cl.ability.indexOf("cooling") === -1 && enemy.cl.attackSpeed > 1) {
-                return {
-                    ...enemy,
-                    cl: {
-                        ...enemy.cl,
-                        attackSpeed: enemy.cl.attackSpeed - 1,
-                        ability: enemy.cl.ability.concat("cooling"),
-                        abilityImg: enemy.cl.abilityImg.concat(BTNFrost)
-                    }
-                }
+            if (unit.cl.ability.indexOf("BreathOfFrost") > -1 && currentEnemy.cl.ability.indexOf("building") === -1 && currentEnemy.cl.ability.indexOf("cooling") === -1 && currentEnemy.cl.attackSpeed > 1) {
+                currentEnemy.cl.attackSpeed = currentEnemy.cl.attackSpeed - 1
+                currentEnemy.cl.ability = currentEnemy.cl.ability.concat("cooling")
+                currentEnemy.cl.abilityImg = currentEnemy.cl.abilityImg.concat(BTNFrost)
             }
-            if (unit.cl.ability.indexOf("thornShield") > -1 && enemy.cl.rangeOfAttack === "melee") {
-                return {
-                    ...enemy,
-                    cl: {
-                        ...enemy.cl,
-                        hp: enemy.cl.hp - Math.ceil((calculateDamage(enemy.cl.attack, unit.cl.armor, numberOfAttack) * calculateBonusDamage(enemy, unit, numberOfAttack)) * 0.5)
-                    }
-                }
-            }
-            if (enemy.cl.ability.indexOf("MomentOfCourage") > -1) {
+            if (currentEnemy.cl.ability.indexOf("MomentOfCourage") > -1 && currentEnemy.cl.ability.indexOf("MomentOfCourageActivatedForNextTurn") === -1) {
                 for (let i = 0; i < numberOfAttack; i++) {
                     effect = Math.round(Math.random() * 0.625 + 0.375)
                     if (effect === 0) {
                         alert("MomentOfCourage!")
-                        return {
-                            ...enemy,
-                            cl: {
-                                ...enemy.cl,
-                                attackSpeed: enemy.cl.attackSpeed + 1,
-                                ability: enemy.cl.ability.concat("MomentOfCourageActive")
-                            }
-                        }
+                        currentEnemy.cl.ability = currentEnemy.cl.ability.concat("MomentOfCourageActivatedForNextTurn")
                     }
                 }
             }
-            if (unit.cl.ability.indexOf("Slow") > -1 && enemy.cl.ability.indexOf("building") === -1 && enemy.cl.ability.indexOf("MagicImmunity") === -1 && enemy.cl.ability.indexOf("dragonAbilities") === -1 && enemy.cl.ability.indexOf("Slowed") === -1 && enemy.cl.attackSpeed > 1) {
-                return {
-                    ...enemy,
-                    cl: {
-                        ...enemy.cl,
-                        attackSpeed: enemy.cl.attackSpeed - 1,
-                        ability: enemy.cl.ability.concat("Slowed"),
-                        abilityImg: enemy.cl.abilityImg.concat(BTNSlow)
-                    }
-                }
+            if (unit.cl.ability.indexOf("Slow") > -1 && currentEnemy.cl.ability.indexOf("building") === -1 && currentEnemy.cl.ability.indexOf("MagicImmunity") === -1 && currentEnemy.cl.ability.indexOf("dragonAbilities") === -1 && currentEnemy.cl.ability.indexOf("Slowed") === -1 && currentEnemy.cl.attackSpeed > 1) {
+                currentEnemy.cl.attackSpeed = currentEnemy.cl.attackSpeed - 1
+                currentEnemy.cl.ability = currentEnemy.cl.ability.concat("Slowed")
+                currentEnemy.cl.abilityImg = currentEnemy.cl.abilityImg.concat(BTNSlow)
             }
-            if (unit.cl.ability.indexOf("Hex") > -1 && enemy.cl.ability.indexOf("building") === -1 && enemy.cl.name !== "Sheep" && enemy.cl.ability.indexOf("MagicImmunity") === -1 && enemy.cl.ability.indexOf("dragonAbilities") === -1) {
-                if (Math.round((enemy.cost / 50) * Math.random() * 0.625 + 0.375) === 0) {
-                    alert("Hex!")
-                    return {
-                        ...enemy,
-                        cl: {
-                            ...enemy.cl,
-                            img: BTNSheep,
-                            name: "Sheep",
-                            attack: 0,
-                            rangeOfAttack: "range",
-                            typeOfAttack: "physic",
-                            attackSpeed: 0,
-                            hp: 5,
-                            armor: 0,
-                            abilityImg: [],
-                            ability: [],
-                            cost: 3,
-                        }
 
-                    }
-                }
-            }
-            if (unit.cl.ability.indexOf("corruptAttack") > -1 && enemy.cl.ability.indexOf("building") === -1 && enemy.cl.ability.indexOf("underCorruptAttack") === -1) {
-                return {
-                    ...enemy,
-                    cl: {
-                        ...enemy.cl,
-                        armor: enemy.cl.armor - 2,
-                        abilityImg: enemy.cl.abilityImg.concat(Stygian_Desolator),
-                        ability: enemy.cl.ability.concat("underCorruptAttack")
-                    }
-                }
+            if (unit.cl.ability.indexOf("corruptAttack") > -1 && currentEnemy.cl.ability.indexOf("building") === -1 && currentEnemy.cl.ability.indexOf("underCorruptAttack") === -1) {
+                currentEnemy.cl.armor = currentEnemy.cl.armor - 2
+                currentEnemy.cl.abilityImg = currentEnemy.cl.abilityImg.concat(Stygian_Desolator)
+                currentEnemy.cl.ability = currentEnemy.cl.ability.concat("underCorruptAttack")
             }
         }
     }
-    return enemy
+    return currentEnemy
 }
 
 function App() {
