@@ -181,14 +181,15 @@ function calculateLineDamage(unit, target, AS) {
     let damage = 0
     if (unit && target) {
         if (unit.cl.ability.indexOf("dragonAbilities") > -1) {
-            damage = calculateDamage(unit.cl.attack, target.cl.armor, AS) * calculateBonusDamage(unit, target, AS)
+            damage = damage + calculateDamage(unit.cl.attack, target.cl.armor, AS) * calculateBonusDamage(unit, target, AS)
         }
         if (unit.cl.ability.indexOf("PowerShot") > -1) {
-            damage = calculateDamage(unit.cl.attack, target.cl.armor, AS) * calculateBonusDamage(unit, target, AS)
+            damage = damage + calculateDamage(unit.cl.attack, target.cl.armor, AS) * calculateBonusDamage(unit, target, AS)
         }
     }
     return damage
 }
+
 function removeDeadUnit(unit) {
     if (unit) {
         if (unit.cl.hp <= 0) {
@@ -200,6 +201,7 @@ function removeDeadUnit(unit) {
         return null
     }
 }
+
 function calculateMainTakenDamageOfUnit(target, defender, attacker1, attacker2, ASofAttacker1, ASofAttacker2) {
     let attack1 = 0
     let attack2 = 0
@@ -222,6 +224,28 @@ function calculateMainTakenDamageOfUnit(target, defender, attacker1, attacker2, 
     }
 }
 
+function calculateAOEEffect(newCells) {
+    for (let i = 0; i < 4; i++) {
+        for (let j = 0; j < 6; j++) {
+            if (newCells[i][j] && newCells[i][j].cl.ability.indexOf("plagueCloud") > -1) {
+                if (newCells[i - 1][j] && newCells[i - 1][j].cl.abilityImg.indexOf(PASBTNPlagueCloud) === -1) {
+                    newCells[i - 1][j].cl.abilityImg = newCells[i - 1][j].cl.abilityImg.concat(PASBTNPlagueCloud)
+                }
+                if (newCells[i + 1][j] && newCells[i + 1][j].cl.abilityImg.indexOf(PASBTNPlagueCloud) === -1) {
+                    newCells[i + 1][j].cl.abilityImg = newCells[i + 1][j].cl.abilityImg.concat(PASBTNPlagueCloud)
+                }
+                if (newCells[i][j + 1] && newCells[i][j + 1].cl.abilityImg.indexOf(PASBTNPlagueCloud) === -1) {
+                    newCells[i][j + 1].cl.abilityImg = newCells[i][j + 1].cl.abilityImg.concat(PASBTNPlagueCloud)
+                }
+                if (newCells[i][j - 1] && newCells[i][j - 1].cl.abilityImg.indexOf(PASBTNPlagueCloud) === -1) {
+                    newCells[i][j - 1].cl.abilityImg = newCells[i][j - 1].cl.abilityImg.concat(PASBTNPlagueCloud)
+                }
+            }
+        }
+    }
+    return newCells
+}
+
 function calculateOfTheUnitsState(currentCells) {
     let ASofThe1thEnemy = 0
     let ASofThe2thEnemy = 0
@@ -241,7 +265,7 @@ function calculateOfTheUnitsState(currentCells) {
         currentCells[2][i] = cleanCurrentEffect(calculateRegeneration(removeDeadUnit(currentCells[2][i])))
         currentCells[3][i] = cleanCurrentEffect(calculateRegeneration(removeDeadUnit(currentCells[3][i])))
     }
-    const newRow0 = currentCells[0].map((unit, i) => {
+    currentCells[0] = currentCells[0].map((unit, i) => {
         supporter = null
         defender = currentCells[1][i]
         the1thEnemy = currentCells[2][i]
@@ -251,7 +275,7 @@ function calculateOfTheUnitsState(currentCells) {
         ASofThe2thEnemy = calculateNumberOfAttack(the2thEnemy, unit)
         unit = calculateDeBuff(the1thEnemy, unit, ASofThe1thEnemy)
         unit = calculateDeBuff(the2thEnemy, unit, ASofThe2thEnemy)
-        returnDamage(unit, the1thEnemy, ASofThe1thEnemy)
+        currentCells[2][i] = returnDamage(unit, currentCells[2][i], ASofThe1thEnemy)
         if (unit) {
             return {
                 ...unit,
@@ -262,7 +286,7 @@ function calculateOfTheUnitsState(currentCells) {
             }
         }
     })
-    const newRow1 = currentCells[1].map((unit, i) => {
+    currentCells[1] = currentCells[1].map((unit, i) => {
         supporter = currentCells[0][i]
         defender = null
         the1thEnemy = currentCells[2][i]
@@ -273,7 +297,7 @@ function calculateOfTheUnitsState(currentCells) {
         ASofThe2thEnemy = calculateNumberOfAttack(the2thEnemy, unit)
         unit = calculateDeBuff(the1thEnemy, unit, ASofThe1thEnemy)
         unit = calculateDeBuff(the2thEnemy, unit, ASofThe2thEnemy)
-        returnDamage(unit, the1thEnemy, ASofThe1thEnemy)
+        currentCells[2][i] = returnDamage(unit, currentCells[2][i], ASofThe1thEnemy)
         massDamage[0][i] = massDamage[0][i] + calculateLineDamage(the1thEnemy, unit, ASofThe1thEnemy) + calculateLineDamage(the2thEnemy, unit, ASofThe2thEnemy)
         if (unit) {
             return {
@@ -285,7 +309,7 @@ function calculateOfTheUnitsState(currentCells) {
             }
         }
     })
-    const newRow2 = currentCells[2].map((unit, i) => {
+    currentCells[2] = currentCells[2].map((unit, i) => {
         supporter = currentCells[3][i]
         defender = null
         the1thEnemy = currentCells[1][i]
@@ -296,8 +320,8 @@ function calculateOfTheUnitsState(currentCells) {
         ASofThe2thEnemy = calculateNumberOfAttack(the2thEnemy, unit)
         unit = calculateDeBuff(the1thEnemy, unit, ASofThe1thEnemy)
         unit = calculateDeBuff(the2thEnemy, unit, ASofThe2thEnemy)
-        returnDamage(unit, the1thEnemy, ASofThe1thEnemy)
-        massDamage[0][i] = massDamage[0][i] + calculateLineDamage(the1thEnemy, unit, ASofThe1thEnemy) + calculateLineDamage(the2thEnemy, unit, ASofThe2thEnemy)
+        currentCells[1][i] = returnDamage(unit, currentCells[1][i], ASofThe1thEnemy)
+        massDamage[3][i] = massDamage[3][i] + calculateLineDamage(the1thEnemy, unit, ASofThe1thEnemy) + calculateLineDamage(the2thEnemy, unit, ASofThe2thEnemy)
         if (unit) {
             return {
                 ...unit,
@@ -308,7 +332,7 @@ function calculateOfTheUnitsState(currentCells) {
             }
         }
     })
-    const newRow3 = currentCells[3].map((unit, i) => {
+    currentCells[3] = currentCells[3].map((unit, i) => {
         supporter = null
         defender = currentCells[2][i]
         the1thEnemy = currentCells[1][i]
@@ -318,7 +342,7 @@ function calculateOfTheUnitsState(currentCells) {
         ASofThe2thEnemy = calculateNumberOfAttack(the2thEnemy, unit)
         unit = calculateDeBuff(the1thEnemy, unit, ASofThe1thEnemy)
         unit = calculateDeBuff(the2thEnemy, unit, ASofThe2thEnemy)
-        returnDamage(unit, the1thEnemy, ASofThe1thEnemy)
+        currentCells[1][i] = returnDamage(unit, currentCells[1][i], ASofThe1thEnemy)
         if (unit) {
             return {
                 ...unit,
@@ -330,7 +354,7 @@ function calculateOfTheUnitsState(currentCells) {
         }
     })
     let newCells = []
-    newCells[0] = newRow0.map((unit, i) => {
+    newCells[0] = currentCells[0].map((unit, i) => {
         if (unit) {
             return {
                 ...unit,
@@ -341,7 +365,7 @@ function calculateOfTheUnitsState(currentCells) {
             }
         }
     })
-    newCells[1] = newRow1.map((unit, i) => {
+    newCells[1] = currentCells[1].map((unit, i) => {
         if (unit) {
             return {
                 ...unit,
@@ -352,7 +376,7 @@ function calculateOfTheUnitsState(currentCells) {
             }
         }
     })
-    newCells[2] = newRow2.map((unit, i) => {
+    newCells[2] = currentCells[2].map((unit, i) => {
         if (unit) {
             return {
                 ...unit,
@@ -363,7 +387,7 @@ function calculateOfTheUnitsState(currentCells) {
             }
         }
     })
-    newCells[3] = newRow3.map((unit, i) => {
+    newCells[3] = currentCells[3].map((unit, i) => {
         if (unit) {
             return {
                 ...unit,
@@ -374,136 +398,118 @@ function calculateOfTheUnitsState(currentCells) {
             }
         }
     })
+    console.log(massDamage)
     newCells[1] = newCells[1].map((unit, i) => calculateCannibalize(unit, newCells[2][i], newCells[3][i]))
     newCells[2] = newCells[2].map((unit, i) => calculateCannibalize(unit, newCells[1][i], newCells[0][i]))
+    newCells = calculateAOEEffect(newCells)
     return newCells
 }
+
 function refreshAuraEffects(item2, effects1) {
     let newItem = item2
-        if (item2 && item2.cl.ability.indexOf("building") === -1) {
-            if (effects1.indexOf("devotionAura") > -1 && item2.cl.abilityImg.indexOf(BTNDevotion) === -1) {
-                newItem = {
-                    ...newItem,
-                    cl: {
-                        ...newItem.cl,
-                        armor: newItem.cl.armor + 1,
-                        abilityImg: newItem.cl.abilityImg.concat(BTNDevotion)
-                    }
-                }
-            }
-            if (item2.cl.abilityImg.indexOf(BTNDevotion) > -1 && effects1.indexOf("devotionAura") === -1) {
-                newItem = {
-                    ...newItem,
-                    cl: {
-                        ...newItem.cl,
-                        armor: newItem.cl.armor - 1,
-                        abilityImg: newItem.cl.abilityImg.filter(a => a !== BTNDevotion)
-                    }
-                }
-            }
-            if (effects1.indexOf("NaturalOrder") > -1 && item2.cl.abilityImg.indexOf(NaturalOrder) === -1) {
-                newItem = {
-                    ...newItem,
-                    cl: {
-                        ...newItem.cl,
-                        armor: 0,
-                        abilityImg: newItem.cl.abilityImg.concat(NaturalOrder)
-                    }
-                }
-            }
-            if (item2.cl.abilityImg.indexOf(NaturalOrder) > -1 && effects1.indexOf("NaturalOrder") === -1) {
-                newItem = {
-                    ...newItem,
-                    cl: {
-                        ...newItem.cl,
-                        armor: newItem.cl.DefaultArmor,
-                        abilityImg: newItem.cl.abilityImg.filter(a => a !== NaturalOrder)
-                    }
-                }
-            }
-            if (effects1.indexOf("Drum") > -1 && item2.cl.abilityImg.indexOf(PASBTNDrum) === -1) {
-                newItem = {
-                    ...newItem,
-                    cl: {
-                        ...newItem.cl,
-                        attack: newItem.cl.attack + 1,
-                        abilityImg: newItem.cl.abilityImg.concat(PASBTNDrum)
-                    }
-                }
-            }
-            if (item2.cl.abilityImg.indexOf(PASBTNDrum) > -1 && effects1.indexOf("Drum") === -1) {
-                newItem = {
-                    ...newItem,
-                    cl: {
-                        ...newItem.cl,
-                        attack: newItem.cl.attack - 1,
-                        abilityImg: newItem.cl.abilityImg.filter(a => a !== PASBTNDrum)
-                    }
-                }
-            }
-            if (item2.cl.ability.indexOf("undead") === -1 && item2.cl.abilityImg.indexOf(PASBTNPlagueCloud) > -1) {
-                newItem = {
-                    ...newItem,
-                    cl: {
-                        ...newItem.cl,
-                        hp: newItem.cl.hp - 1,
-                        ability: newItem.cl.ability.concat("decease")
-                    }
-                }
-            }
-            if (item2.cl.ability.indexOf("undead") === -1 && effects1.indexOf("UnholyAura") > -1) {
-                newItem = {
-                    ...newItem,
-                    cl: {
-                        ...newItem.cl,
-                        hp: newItem.cl.hp - 1,
-                    }
+    if (item2 && item2.cl.ability.indexOf("building") === -1) {
+        if (effects1.indexOf("devotionAura") > -1 && item2.cl.abilityImg.indexOf(BTNDevotion) === -1) {
+            newItem = {
+                ...newItem,
+                cl: {
+                    ...newItem.cl,
+                    armor: newItem.cl.armor + 1,
+                    abilityImg: newItem.cl.abilityImg.concat(BTNDevotion)
                 }
             }
         }
-        return newItem
+        if (item2.cl.abilityImg.indexOf(BTNDevotion) > -1 && effects1.indexOf("devotionAura") === -1) {
+            newItem = {
+                ...newItem,
+                cl: {
+                    ...newItem.cl,
+                    armor: newItem.cl.armor - 1,
+                    abilityImg: newItem.cl.abilityImg.filter(a => a !== BTNDevotion)
+                }
+            }
+        }
+        if (effects1.indexOf("NaturalOrder") > -1 && item2.cl.abilityImg.indexOf(NaturalOrder) === -1) {
+            newItem = {
+                ...newItem,
+                cl: {
+                    ...newItem.cl,
+                    armor: 0,
+                    abilityImg: newItem.cl.abilityImg.concat(NaturalOrder)
+                }
+            }
+        }
+        if (item2.cl.abilityImg.indexOf(NaturalOrder) > -1 && effects1.indexOf("NaturalOrder") === -1) {
+            newItem = {
+                ...newItem,
+                cl: {
+                    ...newItem.cl,
+                    armor: newItem.cl.DefaultArmor,
+                    abilityImg: newItem.cl.abilityImg.filter(a => a !== NaturalOrder)
+                }
+            }
+        }
+        if (effects1.indexOf("Drum") > -1 && item2.cl.abilityImg.indexOf(PASBTNDrum) === -1) {
+            newItem = {
+                ...newItem,
+                cl: {
+                    ...newItem.cl,
+                    attack: newItem.cl.attack + 1,
+                    abilityImg: newItem.cl.abilityImg.concat(PASBTNDrum)
+                }
+            }
+        }
+        if (item2.cl.abilityImg.indexOf(PASBTNDrum) > -1 && effects1.indexOf("Drum") === -1) {
+            newItem = {
+                ...newItem,
+                cl: {
+                    ...newItem.cl,
+                    attack: newItem.cl.attack - 1,
+                    abilityImg: newItem.cl.abilityImg.filter(a => a !== PASBTNDrum)
+                }
+            }
+        }
+        if (item2.cl.ability.indexOf("undead") === -1 && effects1.indexOf("UnholyAura") > -1) {
+            newItem = {
+                ...newItem,
+                cl: {
+                    ...newItem.cl,
+                    hp: newItem.cl.hp - 1,
+                }
+            }
+        }
+    }
+    return newItem
 }
-function calculateMassEffect(currentCells) {
-    let newCells = cloneDeep(currentCells)
+
+function calculateAuraEffect(currentCells) {
+    let newCells = currentCells
     let effects1 = []
     let effects2 = []
     for (let i = 0; i < 2; i++) {
         for (let j = 0; j < 6; j++) {
-            if (newCells[i][j] && newCells[i][j].cl.ability.indexOf("devotionAura") > -1) {
-                effects1 = effects1.concat("devotionAura")
-            }
-            if (newCells[i][j] && newCells[i][j].cl.ability.indexOf("Drum") > -1) {
-                effects1 = effects1.concat("Drum")
-            }
-            if (newCells[i][j] && newCells[i][j].cl.ability.indexOf("UnholyAura") > -1) {
-                effects2 = effects2.concat("UnholyAura")
-            }
-            if (newCells[i][j] && newCells[i][j].cl.ability.indexOf("NaturalOrder") > -1) {
-                effects2 = effects2.concat("NaturalOrder")
-            }
-            if (newCells[i][j] && (newCells[i][j].cl.ability.indexOf("dragonAbilities") > -1 || newCells[i][j].cl.ability.indexOf("trueSeen") > -1)) {
-                effects1 = effects1.concat("trueSeen")
-            }
-            if (newCells[i][j] && newCells[i][j].cl.ability.indexOf("plagueCloud") > -1) {
-                if (newCells[i - 1][j] && newCells[i - 1][j].cl.abilityImg.indexOf(PASBTNPlagueCloud) === -1) {
-                    newCells[i - 1][j].cl.abilityImg = newCells[i - 1][j].cl.abilityImg.concat(PASBTNPlagueCloud)
+            if (newCells[i][j]) {
+                if (newCells[i][j].cl.ability.indexOf("devotionAura") > -1) {
+                    effects1 = effects1.concat("devotionAura")
                 }
-                if (newCells[i + 1][j] && newCells[i + 1][j].cl.abilityImg.indexOf(PASBTNPlagueCloud) === -1) {
-                    newCells[i + 1][j].cl.abilityImg = newCells[i + 1][j].cl.abilityImg.concat(PASBTNPlagueCloud)
+                if (newCells[i][j].cl.ability.indexOf("Drum") > -1) {
+                    effects1 = effects1.concat("Drum")
                 }
-                if (newCells[i][j + 1] && newCells[i][j + 1].cl.abilityImg.indexOf(PASBTNPlagueCloud) === -1) {
-                    newCells[i][j + 1].cl.abilityImg = newCells[i][j + 1].cl.abilityImg.concat(PASBTNPlagueCloud)
+                if (newCells[i][j].cl.ability.indexOf("UnholyAura") > -1) {
+                    effects2 = effects2.concat("UnholyAura")
                 }
-                if (newCells[i][j - 1] && newCells[i][j - 1].cl.abilityImg.indexOf(PASBTNPlagueCloud) === -1) {
-                    newCells[i][j - 1].cl.abilityImg = newCells[i][j - 1].cl.abilityImg.concat(PASBTNPlagueCloud)
+                if (newCells[i][j].cl.ability.indexOf("NaturalOrder") > -1) {
+                    effects2 = effects2.concat("NaturalOrder")
                 }
-            }
-            if (newCells[i][j] && newCells[i][j].cl.ability.indexOf("ShackleShot") > -1) {
-                if (newCells[2][j] && newCells[3][j] && Math.round(Math.random() * 0.625 + 0.375) === 0) {
-                    newCells[2][j].cl.ability = newCells[2][j].cl.ability.concat("bashedForTheNextTurn")
-                    newCells[2][j].cl.abilityImg = newCells[2][j].cl.abilityImg.concat(BTNStun)
-                    newCells[3][j].cl.ability = newCells[3][j].cl.ability.concat("bashedForTheNextTurn")
-                    newCells[3][j].cl.abilityImg = newCells[3][j].cl.abilityImg.concat(BTNStun)
+                if (newCells[i][j].cl.ability.indexOf("dragonAbilities") > -1 || newCells[i][j].cl.ability.indexOf("trueSeen") > -1) {
+                    effects1 = effects1.concat("trueSeen")
+                }
+                if (newCells[i][j].cl.ability.indexOf("ShackleShot") > -1) {
+                    if (newCells[2][j] && newCells[3][j] && 0 * Math.round(Math.random() * 0.625 + 0.375) === 0) {
+                        newCells[2][j].cl.ability = newCells[2][j].cl.ability.concat("bashedForTheNextTurn")
+                        newCells[2][j].cl.abilityImg = newCells[2][j].cl.abilityImg.concat(BTNStun)
+                        newCells[3][j].cl.ability = newCells[3][j].cl.ability.concat("bashedForTheNextTurn")
+                        newCells[3][j].cl.abilityImg = newCells[3][j].cl.abilityImg.concat(BTNStun)
+                    }
                 }
             }
         }
@@ -525,22 +531,8 @@ function calculateMassEffect(currentCells) {
             if (newCells[i][j] && (newCells[i][j].cl.ability.indexOf("dragonAbilities") > -1 || newCells[i][j].cl.ability.indexOf("trueSeen") > -1)) {
                 effects2 = effects2.concat("trueSeen")
             }
-            if (newCells[i][j] && newCells[i][j].cl.ability.indexOf("plagueCloud") > -1) {
-                if (newCells[i - 1][j] && newCells[i - 1][j].cl.abilityImg.indexOf(PASBTNPlagueCloud) === -1) {
-                    newCells[i - 1][j].cl.abilityImg = newCells[i - 1][j].cl.abilityImg.concat(PASBTNPlagueCloud)
-                }
-                if (newCells[i + 1][j] && newCells[i + 1][j].cl.abilityImg.indexOf(PASBTNPlagueCloud) === -1) {
-                    newCells[i + 1][j].cl.abilityImg = newCells[i + 1][j].cl.abilityImg.concat(PASBTNPlagueCloud)
-                }
-                if (newCells[i][j + 1] && newCells[i][j + 1].cl.abilityImg.indexOf(PASBTNPlagueCloud) === -1) {
-                    newCells[i][j + 1].cl.abilityImg = newCells[i][j + 1].cl.abilityImg.concat(PASBTNPlagueCloud)
-                }
-                if (newCells[i][j - 1] && newCells[i][j - 1].cl.abilityImg.indexOf(PASBTNPlagueCloud) === -1) {
-                    newCells[i][j - 1].cl.abilityImg = newCells[i][j - 1].cl.abilityImg.concat(PASBTNPlagueCloud)
-                }
-            }
             if (newCells[i][j] && newCells[i][j].cl.ability.indexOf("ShackleShot") > -1) {
-                if (newCells[0][j] && newCells[1][j] && Math.round(Math.random() * 0.625 + 0.375) === 0) {
+                if (newCells[0][j] && newCells[1][j] && 0 * Math.round(Math.random() * 0.625 + 0.375) === 0) {
                     newCells[0][j].cl.ability = newCells[0][j].cl.ability.concat("bashedForTheNextTurn")
                     newCells[0][j].cl.abilityImg = newCells[0][j].cl.abilityImg.concat(BTNStun)
                     newCells[1][j].cl.ability = newCells[1][j].cl.ability.concat("bashedForTheNextTurn")
@@ -658,6 +650,7 @@ function convertTheUnit(unit, enemy1, enemy2) {
     }
     return currentUnit
 }
+
 function calculateCannibalize(currentUnit, enemy1, enemy2) {
     if (!currentUnit) {
         return null
@@ -687,6 +680,9 @@ function calculateRegeneration(unit) {
         }
         if (unit.cl.ability.indexOf("purifyingFlamesEffect") > -1 && unit.cl.hp < unit.cl.hpMax) {
             regeneration = regeneration + 1
+        }
+        if (unit.cl.ability.indexOf("undead") === -1 && unit.cl.abilityImg.indexOf(PASBTNPlagueCloud) > -1) {
+            regeneration = regeneration - 1
         }
         return {
             ...unit,
@@ -735,6 +731,7 @@ function returnDamage(unit, enemy, numberOfAttackOfEnemy) {
             }
         }
     }
+    return enemy
 }
 
 function calculateDeBuff(unit, enemy, numberOfAttack) {
@@ -746,11 +743,11 @@ function calculateDeBuff(unit, enemy, numberOfAttack) {
     if (unit) {
         if (numberOfAttack > 0) {
             if (unit.cl.ability.indexOf("Hex") > -1 && currentEnemy.cl.ability.indexOf("building") === -1 && currentEnemy.cl.name !== "Sheep" && currentEnemy.cl.ability.indexOf("MagicImmunity") === -1 && currentEnemy.cl.ability.indexOf("dragonAbilities") === -1) {
-                if (Math.round((enemy.cost / 50) * Math.random() * 0.625 + 0.375) === 0) {
+                if (Math.round((enemy.cl.cost / 50) * Math.random() * 0.625 + 0.375) === 0) {
                     alert("Hex!")
                     currentEnemy.cl.img = BTNSheep
                     currentEnemy.cl.name = "Sheep"
-                    currentEnemy.cl.attack =  0
+                    currentEnemy.cl.attack = 0
                     currentEnemy.cl.rangeOfAttack = "range"
                     currentEnemy.cl.typeOfAttack = "physic"
                     currentEnemy.cl.attackSpeed = 0
@@ -924,10 +921,10 @@ function App() {
     const calculateStatsOfHeroes = () => {
         let incomeOfTheFirstPlayer = 10
         let incomeOfTheSecondPlayer = 10
-        let manaBurn1 = -Math.round(player1.maxMP / 10)
-        let manaBurn2 = -Math.round(player2.maxMP / 10)
-        let damage1 = 0
-        let damage2 = 0
+        let manaBurnOf1thPlayer = -Math.round(player1.maxMP / 10)
+        let manaBurnOf2thPlayer = -Math.round(player2.maxMP / 10)
+        let damageTo1thPlayer = 0
+        let damageTo2thPlayer = 0
         let experience1 = 0
         let experience2 = 0
         for (let i = 0; i < 2; i++) {
@@ -947,9 +944,9 @@ function App() {
         for (let i = 0; i < 6; i++) {
             if ((!cells[0][i] && !cells[1][i]) || (cells[0][i] && (cells[0][i].cl.ability.indexOf("invisible") > -1 || cells[0][i].cl.hp <= 0) && !cells[1][i]) || (cells[1][i] && (cells[1][i].cl.ability.indexOf("invisible") > -1 || cells[1][i].cl.hp <= 0) && !cells[0][i]) || (cells[0][i] && (cells[0][i].cl.ability.indexOf("invisible") > -1 || cells[0][i].cl.hp <= 0) && cells[0][i] && (cells[1][i].cl.ability.indexOf("invisible") > -1 || cells[1][i].cl.hp <= 0))) {
                 if (cells[2][i]) {
-                    damage1 = damage1 + calculateDamage(cells[2][i].cl.attack, 0, cells[2][i].cl.attackSpeed)
+                    damageTo1thPlayer = damageTo1thPlayer + calculateDamage(cells[2][i].cl.attack, 0, cells[2][i].cl.attackSpeed)
                     if (cells[2][i].cl.ability.indexOf("Feedback") > -1) {
-                        manaBurn1 = manaBurn1 + 10
+                        manaBurnOf1thPlayer = manaBurnOf1thPlayer + 10
                     }
                     if (cells[2][i].cl.ability.indexOf("Pillage") > -1) {
                         incomeOfTheSecondPlayer = incomeOfTheSecondPlayer + 1
@@ -957,23 +954,23 @@ function App() {
                     }
                 }
                 if (cells[3][i]) {
-                    damage1 = damage1 + calculateDamage(cells[3][i].cl.attack, 0, cells[3][i].cl.attackSpeed)
+                    damageTo1thPlayer = damageTo1thPlayer + calculateDamage(cells[3][i].cl.attack, 0, cells[3][i].cl.attackSpeed)
                     if (cells[3][i].cl.ability.indexOf("Feedback") > -1) {
-                        manaBurn1 = manaBurn1 + 10
+                        manaBurnOf1thPlayer = manaBurnOf1thPlayer + 10
                     }
                 }
             }
             if (!cells[2][i] && !cells[3][i]) {
                 if (cells[0][i]) {
-                    damage2 = damage2 + calculateDamage(cells[0][i].cl.attack, 0, cells[0][i].cl.attackSpeed)
+                    damageTo2thPlayer = damageTo2thPlayer + calculateDamage(cells[0][i].cl.attack, 0, cells[0][i].cl.attackSpeed)
                     if (cells[0][i].cl.ability.indexOf("Feedback") > -1) {
-                        manaBurn2 = manaBurn2 + 10
+                        manaBurnOf2thPlayer = manaBurnOf2thPlayer + 10
                     }
                 }
                 if (cells[1][i]) {
-                    damage2 = damage2 + calculateDamage(cells[1][i].cl.attack, 0, cells[1][i].cl.attackSpeed)
+                    damageTo2thPlayer = damageTo2thPlayer + calculateDamage(cells[1][i].cl.attack, 0, cells[1][i].cl.attackSpeed)
                     if (cells[1][i].cl.ability.indexOf("Feedback") > -1) {
-                        manaBurn2 = manaBurn2 + 10
+                        manaBurnOf2thPlayer = manaBurnOf2thPlayer + 10
                     }
                     if (cells[1][i].cl.ability.indexOf("Pillage") > -1) {
                         incomeOfTheFirstPlayer = incomeOfTheFirstPlayer + 1
@@ -982,17 +979,17 @@ function App() {
                 }
             }
         }
-        if (player1.mp - manaBurn1 < 0) {
-            manaBurn1 = player1.mp
+        if (player1.mp - manaBurnOf1thPlayer < 0) {
+            manaBurnOf1thPlayer = player1.mp
         }
-        if (player1.mp - manaBurn1 > player1.maxMP) {
-            manaBurn1 = player1.mp - player1.maxMP
+        if (player1.mp - manaBurnOf1thPlayer > player1.maxMP) {
+            manaBurnOf1thPlayer = player1.mp - player1.maxMP
         }
-        if (player2.mp - manaBurn2 < 0) {
-            manaBurn2 = player2.mp
+        if (player2.mp - manaBurnOf2thPlayer < 0) {
+            manaBurnOf2thPlayer = player2.mp
         }
-        if (player2.mp - manaBurn2 > player2.maxMP) {
-            manaBurn2 = player2.mp - player2.maxMP
+        if (player2.mp - manaBurnOf2thPlayer > player2.maxMP) {
+            manaBurnOf2thPlayer = player2.mp - player2.maxMP
         }
         for (let i = 0; i < 6; i++) {
             if (cells[1][i] && cells[1][i].cl.ability.indexOf("worker") > -1) {
@@ -1010,11 +1007,12 @@ function App() {
         if (Math.round(0.1 * (player2.xp + experience2) ** 0.5) - player2.lvl > 0) {
             point2 = Math.round(0.1 * (player2.xp + experience2) ** 0.5) - player2.lvl
         }
+        console.log(manaBurnOf1thPlayer, manaBurnOf2thPlayer)
         setPlayer1({
             ...player1,
-            hp: player1.hp - damage1,
+            hp: player1.hp - damageTo1thPlayer,
             gold: player1.gold + incomeOfTheFirstPlayer,
-            mp: player1.mp - manaBurn1,
+            mp: player1.mp - manaBurnOf1thPlayer,
             xp: player1.xp + experience1,
             abilityPoint: player1.abilityPoint + point1,
             magicPoint: player1.magicPoint + point1,
@@ -1022,9 +1020,9 @@ function App() {
         })
         setPlayer2({
             ...player2,
-            hp: player2.hp - damage2,
+            hp: player2.hp - damageTo2thPlayer,
             gold: player2.gold + incomeOfTheSecondPlayer,
-            mp: player2.mp - manaBurn2,
+            mp: player2.mp - manaBurnOf2thPlayer,
             xp: player2.xp + experience2,
             abilityPoint: player2.abilityPoint + point2,
             magicPoint: player2.magicPoint + point2,
@@ -1045,29 +1043,6 @@ function App() {
         <div className="App">
             <Input player={player1} onPlayerChanged={setPlayer1} />
             <Input player={player2} onPlayerChanged={setPlayer2} />
-            <button
-                onClick={() => {
-                    setPlayer1({
-                        ...player1,
-                        magic: magicsOfMage[player1.classOfHero],
-                        intelligence: int[player1.classOfHero],
-                        hp: hp[player1.classOfHero],
-                        mp: mp[player1.classOfHero],
-                        maxMP: mp[player1.classOfHero],
-                        xp: 0,
-                    })
-                    setPlayer2({
-                        ...player2,
-                        magic: magicsOfMage[player1.classOfHero],
-                        intelligence: int[player2.classOfHero],
-                        hp: hp[player2.classOfHero],
-                        mp: mp[player2.classOfHero],
-                        maxMP: mp[player2.classOfHero],
-                        xp: 0,
-                    })
-                }}>
-                Accept
-            </button>
             <div>------------------------------------------------------------------------------------------------------------------------------------------------------------------------</div>
             <div>Player 1</div>
             <div className="NameOfHero1"> Name: {JSON.stringify(player1.NameOfHero)}</div>
@@ -1151,7 +1126,7 @@ function App() {
             <div className="time">Time: {JSON.stringify(time)}</div>
             <button className="endOfTurn" onClick={() => {
                 setSelectedPlu(null)
-                setSelectedCells(calculateOfTheUnitsState(calculateMassEffect(cells)))
+                setSelectedCells(calculateOfTheUnitsState(calculateAuraEffect(cells)))
                 calculateStatsOfHeroes()
                 setTurn(turn + 1)
                 timeOfDay(turn);
