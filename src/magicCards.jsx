@@ -1,49 +1,63 @@
-import BTNDivineIntervention from './pictures/BTNDivineIntervention.webp';
-import BTNStun from './pictures/BTNStun.webp';
-import BTNSkeletonWarrior from './pictures/BTNSkeletonWarrior.webp';
-import BTNSkeletonMage from './pictures/BTNSkeletonMage.webp';
-import BTNSacrifice from './pictures/BTNSacrifice.webp';
-import SkeletonKing from './pictures/Skeleton_King.gif';
-import ReincarnationImg from './pictures/Reincarnation.gif';
-import BTNOrbOfCorruption from './pictures/BTNOrbOfCorruption.webp';
-import BTNAntiMagicShell from './pictures/BTNAntiMagicShell.webp';
-import BTNUnholyFrenzy from './pictures/BTNUnholyFrenzy.webp';
-import BTNHeal from './pictures/BTNHeal.webp';
-import BTNDeathCoil from './pictures/BTNDeathCoil.webp';
-import BTNCorpseExplode from './pictures/BTNCorpseExplode.webp';
-import BTNInnerFire from './pictures/BTNInnerFire.webp';
-import BTNResurrection from './pictures/BTNResurrection.webp';
-import Purifying_Flames from './pictures/Purifying_Flames.jpg';
-import BTNFire from './pictures/BTNFire.webp';
-import BTNSearingArrowsOff from './pictures/BTNSearingArrowsOff.webp';
-import BTNWallOfFire from './pictures/BTNWallOfFire.webp';
-import BTNFireBolt from './pictures/BTNFireBolt.webp';
-import BTNMarkOfFire from './pictures/BTNMarkOfFire.webp';
-import fenixImg from './pictures/fenix.jpg';
-import errorSound from './sounds/error.mp3';
+import BTNDivineIntervention from './pictures/BTNDivineIntervention.webp'
+import BTNStun from './pictures/BTNStun.webp'
+import BTNSkeletonWarrior from './pictures/BTNSkeletonWarrior.webp'
+import BTNSkeletonMage from './pictures/BTNSkeletonMage.webp'
+import BTNSacrifice from './pictures/BTNSacrifice.webp'
+import SkeletonKing from './pictures/Skeleton_King.gif'
+import ReincarnationImg from './pictures/Reincarnation.gif'
+import BTNOrbOfCorruption from './pictures/BTNOrbOfCorruption.webp'
+import BTNAntiMagicShell from './pictures/BTNAntiMagicShell.webp'
+import BTNUnholyFrenzy from './pictures/BTNUnholyFrenzy.webp'
+import BTNHeal from './pictures/BTNHeal.webp'
+import BTNDeathCoil from './pictures/BTNDeathCoil.webp'
+import BTNCorpseExplode from './pictures/BTNCorpseExplode.webp'
+import BTNInnerFire from './pictures/BTNInnerFire.webp'
+import BTNResurrection from './pictures/BTNResurrection.webp'
+import Purifying_Flames from './pictures/Purifying_Flames.jpg'
+import BTNFire from './pictures/BTNFire.webp'
+import BTNSearingArrowsOff from './pictures/BTNSearingArrowsOff.webp'
+import BTNWallOfFire from './pictures/BTNWallOfFire.webp'
+import BTNFireBolt from './pictures/BTNFireBolt.webp'
+import BTNMarkOfFire from './pictures/BTNMarkOfFire.webp'
+import fenixImg from './pictures/fenix.jpg'
+import {playErrorSound} from './sounds'
 import {defaultBoneFletcher, defaultSkeletonWarrior, defaultSkeletonKing, defaultFenix} from './unitCards'
 export let raiseSkeleton = {
     name: "raiseSkeleton",
     img: BTNSkeletonWarrior,
-    type: "buff",
+    type: "magicCard",
     target: ["ally"],
     manacost: 23,
     bonusXP: 0,
     effect: function (target, numberOfPlayer, Intelligence) {
         if (target === null) {
+            playErrorSound()
             alert("incorrect target")
             return target
         }
-        if (target.cl.ability.indexOf("building") > -1 || target.player !== numberOfPlayer || target.cl.hp > 0) {
+        if (target.cl.ability.indexOf("building") > -1 || target.player !== numberOfPlayer || target.cl.hp > 0 || target.cl.ability.indexOf("MagicImmunity") > -1) {
+            playErrorSound()
             alert("incorrect target")
             return target
         } else {
             return {
-                ...defaultSkeletonWarrior,
+                ...target,
                 cl: {
-                    ...defaultSkeletonWarrior.cl,
-                    hp: defaultSkeletonWarrior.cl.hp + Intelligence - 3,
-                    hpMax: defaultSkeletonWarrior.cl.hpMax + Intelligence - 3
+                    ...target.cl,
+                    type: "summonUnitCard",
+                    img: BTNSkeletonWarrior,
+                    name: "SkeletonWarrior",
+                    attack: defaultSkeletonWarrior.attack,
+                    rangeOfAttack: "melee",
+                    typeOfAttack: "physic",
+                    attackSpeed: defaultSkeletonWarrior.attackSpeed,
+                    hp: defaultSkeletonWarrior.hp + Intelligence - 3,
+                    hpMax: defaultSkeletonWarrior.hpMax + Intelligence - 3,
+                    armor: defaultSkeletonWarrior.armor,
+                    DefaultArmor: defaultSkeletonWarrior.DefaultArmor,
+                    abilityImg: defaultSkeletonWarrior.abilityImg,
+                    ability: ["undead"],
+                    cost: defaultSkeletonWarrior.cost,
                 }
             }
         }
@@ -54,16 +68,18 @@ export let raiseSkeleton = {
 export let raiseBoneFletcher = {
     name: "raiseBoneFletcher",
     img: BTNSkeletonMage,
-    type: "buff",
+    type: "magicCard",
     target: ["ally"],
     manacost: 72,
     bonusXP: 0,
     effect: function (target, numberOfPlayer, Intelligence) {
         if (target === null) {
+            playErrorSound()
             alert("incorrect target")
             return target
         }
-        if (target.cl.ability.indexOf("building") > -1 || target.player !== numberOfPlayer || target.cl.hp > 0) {
+        if (target.cl.ability.indexOf("building") > -1 || target.player !== numberOfPlayer || target.cl.hp > 0 || target.cl.ability.indexOf("MagicImmunity") > -1) {
+            playErrorSound()
             alert("incorrect target")
             return target
         } else {
@@ -80,16 +96,18 @@ export let raiseBoneFletcher = {
 export let raiseSkeletonKing = {
     name: "raiseSkeletonKing",
     img: SkeletonKing,
-    type: "buff",
+    type: "magicCard",
     target: ["ally"],
     manacost: 131,
     bonusXP: 0,
     effect: function (target, numberOfPlayer, Intelligence) {
         if (target === null) {
+            playErrorSound()
             alert("incorrect target")
             return target
         }
-        if (target.cl.ability.indexOf("building") > -1 || target.player !== numberOfPlayer || target.cl.hp > 0) {
+        if (target.cl.ability.indexOf("building") > -1 || target.player !== numberOfPlayer || target.cl.hp > 0 || target.cl.ability.indexOf("MagicImmunity") > -1) {
+            playErrorSound()
             alert("incorrect target")
             return target
         } else {
@@ -108,16 +126,18 @@ export let raiseSkeletonKing = {
 export let deathCoil = {
     name: "deathCoil",
     img: BTNDeathCoil,
-    type: ["buff", "damage"],
+    type: "magicCard",
     target: ["ally", "enemy"],
     manacost: 20,
     bonusXP: 0,
     effect: function (target, numberOfPlayer, Intelligence) {
         if (target === null) {
+            playErrorSound()
             alert("incorrect target")
             return target
         }
-        if (target.cl.ability.indexOf("building") > -1) {
+        if (target.cl.ability.indexOf("building") > -1 || target.cl.ability.indexOf("MagicImmunity") > -1) {
+            playErrorSound()
             alert("incorrect target")
             return target
         }
@@ -150,16 +170,18 @@ export let deathCoil = {
 export let sacrifice = {
     name: "Sacrifice",
     img: BTNSacrifice,
-    type: "buff",
+    type: "magicCard",
     target: ["ally"],
     manacost: 30,
     bonusXP: 1,
     effect: function (target, numberOfPlayer, Intelligence) {
         if (target === null) {
+            playErrorSound()
             alert("incorrect target")
             return target
         }
-        if (target.cl.ability.indexOf("building") > -1 || target.player !== numberOfPlayer || target.cl.hp <= 0) {
+        if (target.cl.ability.indexOf("building") > -1 || target.player !== numberOfPlayer || target.cl.hp <= 0 || target.cl.ability.indexOf("MagicImmunity") > -1) {
+            playErrorSound()
             alert("incorrect target")
             return target
         } else {
@@ -177,16 +199,18 @@ export let sacrifice = {
 export let reincarnation = {
     name: "Reincarnation",
     img: ReincarnationImg,
-    type: "buff",
+    type: "magicCard",
     target: ["ally"],
     manacost: 40,
     bonusXP: 0,
     effect: function (target, numberOfPlayer, Intelligence) {
         if (target === null) {
+            playErrorSound()
             alert("incorrect target")
             return target
         }
-        if (target.cl.ability.indexOf("undead") === -1 || target.player !== numberOfPlayer || target.cl.hp > 0 || target.cl.cost >= Intelligence * 15) {
+        if (target.cl.ability.indexOf("undead") === -1 || target.player !== numberOfPlayer || target.cl.hp > 0 || target.cl.cost >= Intelligence * 15 || target.cl.ability.indexOf("MagicImmunity") > -1) {
+            playErrorSound()
             alert("incorrect target")
             if (target.cl.cost >= Intelligence * 15) {
                 alert("Intelligence is not enough")
@@ -206,16 +230,18 @@ export let reincarnation = {
 export let suddenDeath = {
     name: "SuddenDeath",
     img: BTNCorpseExplode,
-    type: "damage",
+    type: "magicCard",
     target: ["enemy"],
     manacost: 50,
     bonusXP: 0,
     effect: function (target, numberOfPlayer, Intelligence) {
         if (target === null) {
+            playErrorSound()
             alert("incorrect target")
             return target
         }
-        if (target.cl.hp <= 0 || target.cl.ability.indexOf("undead") > -1 || target.cl.ability.indexOf("building") > -1 || target.cl.cost >= Intelligence * 10) {
+        if (target.cl.hp <= 0 || target.cl.ability.indexOf("undead") > -1 || target.cl.ability.indexOf("building") > -1 || target.cl.cost >= Intelligence * 10 || target.cl.ability.indexOf("MagicImmunity") > -1) {
+            playErrorSound()
             alert("incorrect target")
             if (target.cl.cost >= Intelligence * 10) {
                 alert("Intelligence is not enough")
@@ -235,16 +261,18 @@ export let suddenDeath = {
 export let orbOfCorroption = {
     name: "orbOfCorroption",
     img: BTNOrbOfCorruption,
-    type: "buff",
+    type: "magicCard",
     target: ["ally"],
     manacost: 30,
     bonusXP: 0,
     effect: function (target, numberOfPlayer, Intelligence) {
         if (target === null) {
+            playErrorSound()
             alert("incorrect target")
             return target
         }
-        if (target.cl.ability.indexOf("building") > -1) {
+        if (target.cl.ability.indexOf("building") > -1 && target.cl.ability.indexOf("MagicImmunity") > -1) {
+            playErrorSound()
             alert("incorrect target")
             return target
         } else {
@@ -263,16 +291,18 @@ export let orbOfCorroption = {
 export let antiMagicShell = {
     name: "AntiMagicShell",
     img: BTNAntiMagicShell,
-    type: "buff",
+    type: "magicCard",
     target: ["ally"],
     manacost: 40,
     bonusXP: 0,
     effect: function (target, numberOfPlayer, Intelligence) {
         if (target === null) {
+            playErrorSound()
             alert("incorrect target")
             return target
         }
-        if (target.cl.ability.indexOf("building") > -1 || target.cl.cost >= Intelligence * 20) {
+        if (target.cl.ability.indexOf("building") > -1 || target.cl.cost >= Intelligence * 20 || target.cl.ability.indexOf("MagicImmunity") > -1) {
+            playErrorSound()
             alert("incorrect target")
             if (target.cl.cost >= Intelligence * 20) {
                 alert("Intelligence is not enough")
@@ -293,16 +323,18 @@ export let antiMagicShell = {
 export let unholyFrenzy = {
     name: "UnholyFrenzy",
     img: BTNUnholyFrenzy,
-    type: "buff",
+    type: "magicCard",
     target: ["ally"],
     manacost: 50,
     bonusXP: 0,
     effect: function (target, numberOfPlayer, Intelligence) {
         if (target === null) {
+            playErrorSound()
             alert("incorrect target")
             return target
         }
-        if (target.cl.ability.indexOf("building") > -1 || target.cl.cost >= Intelligence * 20) {
+        if (target.cl.ability.indexOf("building") > -1 || target.cl.cost >= Intelligence * 20 || target.cl.ability.indexOf("MagicImmunity") > -1) {
+            playErrorSound()
             alert("incorrect target")
             if (target.cl.cost >= Intelligence * 20) {
                 alert("Intelligence is not enough")
@@ -325,16 +357,18 @@ export let unholyFrenzy = {
 export let heal = {
     name: "heal",
     img: BTNHeal,
-    type: "buff",
+    type: "magicCard",
     target: ["ally"],
     manacost: 15,
     bonusXP: 0,
     effect: function (target, numberOfPlayer, Intelligence) {
         if (target === null) {
+            playErrorSound()
             alert("incorrect target")
             return target
         }
-        if (target.player !== numberOfPlayer || target.cl.ability.indexOf("building") > -1) {
+        if (target.player !== numberOfPlayer || target.cl.ability.indexOf("building") > -1 || target.cl.ability.indexOf("MagicImmunity") > -1) {
+            playErrorSound()
             alert("incorrect target")
             return target
         } else {
@@ -357,16 +391,18 @@ export let heal = {
 export let holyAttackMagic = {
     name: "holyAttack",
     img: BTNDivineIntervention,
-    type: "buff",
+    type: "magicCard",
     target: ["ally"],
     manacost: 30,
     bonusXP: 0,
     effect: function (target, numberOfPlayer, Intelligence) {
         if (target === null) {
+            playErrorSound()
             alert("incorrect target")
             return target
         }
-        if (target.cl.ability.indexOf("building") > -1) {
+        if (target.cl.ability.indexOf("building") > -1 || target.cl.ability.indexOf("MagicImmunity") > -1) {
+            playErrorSound()
             alert("incorrect target")
             return target
         } else {
@@ -385,16 +421,18 @@ export let holyAttackMagic = {
 export let innerFire = {
     name: "innerFire",
     img: BTNInnerFire,
-    type: "buff",
+    type: "magicCard",
     target: ["ally"],
     manacost: 70,
     bonusXP: 0,
     effect: function (target, numberOfPlayer, Intelligence) {
         if (target === null) {
+            playErrorSound()
             alert("incorrect target")
             return target
         }
-        if (target.cl.ability.indexOf("building") > -1) {
+        if (target.cl.ability.indexOf("building") > -1 || target.cl.ability.indexOf("MagicImmunity") > -1) {
+            playErrorSound()
             alert("incorrect target")
             return target
         } else {
@@ -413,16 +451,18 @@ export let innerFire = {
 export let resurrection = {
     name: "Reincarnation",
     img: BTNResurrection,
-    type: "buff",
+    type: "magicCard",
     target: ["ally"],
     manacost: 60,
     bonusXP: 0,
     effect: function (target, numberOfPlayer, Intelligence) {
         if (target === null) {
+            playErrorSound()
             alert("incorrect target")
             return target
         }
-        if (target.cl.hp > 0 || target.player !== numberOfPlayer || target.cl.ability.indexOf("undead") === 0 || target.cl.cost >= Intelligence * 15) {
+        if (target.cl.hp > 0 || target.player !== numberOfPlayer || target.cl.ability.indexOf("undead") === 0 || target.cl.cost >= Intelligence * 15 || target.cl.ability.indexOf("MagicImmunity") > -1) {
+            playErrorSound()
             alert("incorrect target")
             if (target.cl.cost >= Intelligence * 15) {
                 alert("Intelligence is not enough")
@@ -442,16 +482,18 @@ export let resurrection = {
 export let purifyingFlames = {
     name: "purifyingFlames",
     img: Purifying_Flames,
-    type: ["buff", "damage"],
+    type: "magicCard",
     target: ["any"],
     manacost: 40,
     bonusXP: 0,
     effect: function (target, numberOfPlayer, Intelligence) {
         if (target === null) {
+            playErrorSound()
             alert("incorrect target")
             return target
         }
-        if (target.cl.ability.indexOf("building") > -1) {
+        if (target.cl.ability.indexOf("building") > -1 || target.cl.ability.indexOf("MagicImmunity") > -1) {
+            playErrorSound()
             alert("incorrect target")
             return target
         } else {
@@ -470,16 +512,18 @@ export let purifyingFlames = {
 export let fireBolt = {
     name: "fireBolt",
     img: BTNFire,
-    type: ["damage"],
+    type: "magicCard",
     target: ["enemy"],
     manacost: 20,
     bonusXP: 0,
     effect: function (target, numberOfPlayer, Intelligence) {
         if (target === null) {
+            playErrorSound()
             alert("incorrect target")
             return target
         }
-        if (target.cl.ability.indexOf("building") > -1) {
+        if (target.cl.ability.indexOf("building") > -1 || target.cl.ability.indexOf("MagicImmunity") > -1) {
+            playErrorSound()
             alert("incorrect target")
             return target
         } else {
@@ -496,16 +540,18 @@ export let fireBolt = {
 export let fireArrows = {
     name: "fireArrows",
     img: BTNSearingArrowsOff,
-    type: ["buff"],
+    type: "magicCard",
     target: ["ally"],
     manacost: 20,
     bonusXP: 0,
     effect: function (target, numberOfPlayer, Intelligence) {
         if (target === null) {
+            playErrorSound()
             alert("incorrect target")
             return target
         }
-        if (target.cl.ability.indexOf("building") > -1 || target.cl.ability.indexOf("fireArrows") > -1) {
+        if (target.cl.ability.indexOf("building") > -1 || target.cl.ability.indexOf("fireArrows") > -1 || target.cl.ability.indexOf("MagicImmunity") > -1) {
+            playErrorSound()
             alert("incorrect target")
             return target
         } else {
@@ -524,16 +570,18 @@ export let fireArrows = {
 export let wallOfFire = {
     name: "WallOfFire",
     img: BTNWallOfFire,
-    type: ["damage"],
+    type: "magicCard",
     target: ["enemy"],
     manacost: 35,
     bonusXP: 0,
     effect: function (target, numberOfPlayer, Intelligence) {
         if (target === null) {
+            playErrorSound()
             alert("incorrect target")
             return target
         }
-        if (target.cl.ability.indexOf("flying") > -1) {
+        if (target.cl.ability.indexOf("flying") > -1 || target.cl.ability.indexOf("MagicImmunity") > -1) {
+            playErrorSound()
             alert("incorrect target")
             return target
         } else {
@@ -550,16 +598,18 @@ export let wallOfFire = {
 export let fireBall = {
     name: "fireBall",
     img: BTNFireBolt,
-    type: ["damage"],
+    type: "magicCard",
     target: ["enemy"],
     manacost: 40,
     bonusXP: 0,
     effect: function (target, numberOfPlayer, Intelligence) {
         if (target === null) {
+            playErrorSound()
             alert("incorrect target")
             return target
         }
-        if (target.cl.ability.indexOf("building") > -1) {
+        if (target.cl.ability.indexOf("building") > -1 || target.cl.ability.indexOf("MagicImmunity") > -1) {
+            playErrorSound()
             alert("incorrect target")
             return target
         } else {
@@ -578,12 +628,13 @@ export let fireBall = {
 export let fenix = {
     name: "fenix",
     img: BTNMarkOfFire,
-    type: ["summon"],
+    type: "magicCard",
     target: ["freePlace"],
     manacost: 80,
     bonusXP: 0,
     effect: function (target, numberOfPlayer, Intelligence) {
         if (target !== null) {
+            playErrorSound()
             alert("incorrect target")
             return target
         } else {

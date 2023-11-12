@@ -6,8 +6,7 @@ import { Magic } from './magic';
 export function Cell(props) {
     return (
         <button className="cell" onClick={() => props.onCellClick()}>
-            {!props.plu ? (null) :
-            (props.plu.cl.type === "unitCard") ? <Unit cl={props.plu.cl} /> : <Magic cl={props.plu.cl} />}
+            {!props.plu ? (null) : <Unit cl={props.plu.cl} />}
         </button>
     )
 }

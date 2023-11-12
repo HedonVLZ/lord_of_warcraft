@@ -17,10 +17,17 @@
 .int1, .int2 {
   color: darkblue;
 }
+
 .ability {
   width: 2rem;
   height: 2rem;
 }
+
+.abilityTimeElem {
+  height: 2rem;
+  width: 2rem;
+}
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -31,6 +38,7 @@
   font-size: calc(10px + 2vmin);
   color: white;
 }
+
 .unit {
   border: 1px solid black;
   background-color: antiquewhite;
@@ -38,28 +46,38 @@
   width: 150px;
   height: 235px;
 }
+
 .unit.selectedUnit {
   border: 1px solid blue;
   outline: 3px solid blue;
 }
 
-.units11, .units12, .units21, .units22, .magic  {
-  display: flex;
-  flex-direction: row;
+.unit.deadUnit {
+  color: grey;
 }
+
+.units11, .units12, .units21, .units22, .magic, .abilityTime  {
+  display: flex;
+}
+
 .userInput {
   display: flex;
-  flex-direction: row;
 }
+
 .cell {
   border-style: double;
   background-color: whitesmoke;
   height: 250px;
   width: 168px;
+  text-align: left;
 }
+
 .cells {
   display: flex;
-  flex-direction: row;
+}
+
+.classOfHero {
+  color: black;
 }
 
 .App-link {
