@@ -8,7 +8,7 @@ export function Unit(props) {
         <div 
             className={classNames("unit", {
                 "selectedUnit": props.selected,
-                "deadUnit": props.cl.hp < 0 ? true: false
+                "deadUnit": props.cl.hp < 1 ? true: false
             })}
             onClick={() => {
                     props.onSelect && props.onSelect()

@@ -75,9 +75,7 @@ import CriticalStrike from './pictures/Critical_Strike.jpg';
 import fenixImg from './pictures/fenix.jpg';
 import { set } from 'lodash';
 
-export function calculateDamage(attack, armor) {
-    if (attack > armor) {return attack - armor} else {return 1}
-}
+
 
 export function findTargetCoordinates(cells, i , j) {
     let targetsCoordinates = []
@@ -102,144 +100,176 @@ export function findTargetCoordinates(cells, i , j) {
     return targetsCoordinates
 }
 
-export function makeAttack(cells, i , j, player1, player2) {
-    let targetsCoordinates = findTargetCoordinates(cells, i , j)
-    let newCells = cells
-    const [currentCells, setCurrentCells] = React.useState(cells)
-    if (cells[i, j].player === 1) {
-        const [currentEnemyPlayer, setCurrentEnemyPlayer] = React.useState(player2)
-    } else {
-        const [currentEnemyPlayer, setCurrentEnemyPlayer] = React.useState(player1)
-    }
-    if (!targetsCoordinates[0]) {
-        setCurrentEnemyPlayer({
-            ...currentEnemyPlayer,
-            hp: currentEnemyPlayer.hp - calculateDamage(cells[i, j].cl.attack, 0)
-        })
-    } else {
-        cells[targetsCoordinates[0], j].cl.ability.defense.map(ab => ab(cells, i , j, player1, player2))
-        cells[i, j].cl.ability.attack.map(ab => ab(cells, i , j, player1, player2))
-        newCells[targetsCoordinates[0], j].cl.hp = newCells[targetsCoordinates[0], j].cl.hp - calculateDamage(cells[i, j].cl.attack, cells[targetsCoordinates[0], j].cl.armor)
-    }
-    setCurrentCells([
-        newCells[0],
-        newCells[1],
-        newCells[2],
-        newCells[3],
-    ])
-        // while (attackNumber < cells[i][j].cl.attackSpeed) {
-        //     cells[targetsCoordinates[0]][j].cl.hp = targets[0].cl.hp - calculateDamage(cells[i][j].cl.attack, targets[0].cl.armor)
-        //     attackNumber++
-        // }
-}
 
 
 
 
 
 
-// export function makeFlyingAbility(cells, i , j, player1, player2) {
-//     if (attacker.cl.rangeOfAttack === "melee") {
-//         let newTargets = attacker.cl.targets
-//         newTargets.splice(0, 1)
-//         setCurrentAttacker({
-//              ...currentAttacker.cl,
-//              targets: newTargets,
+// // export function makeFlyingAbility(cells, i , j, player1, player2) {
+// //     if (attacker.cl.rangeOfAttack === "melee") {
+// //         let newTargets = attacker.cl.targets
+// //         newTargets.splice(0, 1)
+// //         setCurrentAttacker({
+// //              ...currentAttacker.cl,
+// //              targets: newTargets,
+// //         })
+// //     }
+// // }
+
+// export function makeWorkerAbility(cells, i , j, player1, player2) {
+//     const [currentPlayer1, setCurrentPlayer1] = React.useState(player1)
+//     const [currentPlayer2, setCurrentPlayer2] = React.useState(player2)
+//     if (cells[i, j].player === 1) {
+//         setCurrentPlayer1({
+//             ...currentPlayer1,
+//             gold: gold + 3,
+//         })
+//     } else {
+//         setCurrentPlayer2({
+//             ...currentPlayer2,
+//             gold: gold + 3,
 //         })
 //     }
 // }
 
-export function makeWorkerAbility(cells, i , j, player1, player2) {
-    const [currentPlayer1, setCurrentPlayer1] = React.useState(player1)
-    const [currentPlayer2, setCurrentPlayer2] = React.useState(player2)
-    if (cells[i, j].player === 1) {
-        setCurrentPlayer1({
-            ...currentPlayer1,
-            gold: gold + 3,
-        })
-    } else {
-        setCurrentPlayer2({
-            ...currentPlayer2,
-            gold: gold + 3,
-        })
-    }
-}
+// export function makeReflectAbility(cells, i , j, player1, player2) {
+//     const [currentAttacker, setCurrentAttacker] = React.useState(attacker)
+//     if (attacker.cl.rangeOfAttack === "range") {
+//         if (Math.round(Math.random()) === 1) {
+//             alert("defender have reflected damage!")
+//             setCurrentAttacker({
+//                 ...currentAttacker,
+//                 attackAbility: false,
+//             })
+//         }
+//     }
+// }
 
-export function makeReflectAbility(cells, i , j, player1, player2) {
-    const [currentAttacker, setCurrentAttacker] = React.useState(attacker)
-    if (attacker.cl.rangeOfAttack === "range") {
-        if (Math.round(Math.random()) === 1) {
-            alert("defender have reflected damage!")
-            setCurrentAttacker({
-                ...currentAttacker,
-                attackAbility: false,
-            })
-        }
-    }
-}
+// export function makeBashedEffect(cells, i , j, player1, player2) {
+//     const [currentUnit, setCurrentUnit] = React.useState(cells[i, j])
+//     setCurrentUnit({
+//         ...currentUnit.cl,
+//         attackAbility: false,
+//     })
+// }
 
-export function makeBashedEffect(cells, i , j, player1, player2) {
-    const [currentUnit, setCurrentUnit] = React.useState(cells[i, j])
-    setCurrentUnit({
-        ...currentUnit.cl,
-        attackAbility: false,
-    })
-}
+// export function makeMilitiaAbility(cells, i , j, player1, player2) {
+//     const [currentUnit, setCurrentUnit] = React.useState(cells[i, j])
+//     if (attacker) {
+//         setCurrentUnit({
+//             ...currentUnit.cl,
+//             img: BTNMilitia,
+//             name: "Militia",
+//             attack: currentUnit.cl.attack + 1,
+//             armor: currentUnit.cl.armor + 1,
+//             abilityImg: currentUnit.cl.abilityImg.filter(a => a !== BTNCallToArms).filter(a => a !== BTNGatherGold).concat(BTNBacktoWork),
+//             ability: currentUnit.cl.ability.filter(a => a !== "militia").filter(a => a !== "worker").concat("backToWork"),
+//         })
+//     }
+// }
 
-export function makeMilitiaAbility(cells, i , j, player1, player2) {
-    const [currentUnit, setCurrentUnit] = React.useState(cells[i, j])
-    if (attacker) {
-        setCurrentUnit({
-            ...currentUnit.cl,
-            img: BTNMilitia,
-            name: "Militia",
-            attack: currentUnit.cl.attack + 1,
-            armor: currentUnit.cl.armor + 1,
-            abilityImg: currentUnit.cl.abilityImg.filter(a => a !== BTNCallToArms).filter(a => a !== BTNGatherGold).concat(BTNBacktoWork),
-            ability: currentUnit.cl.ability.filter(a => a !== "militia").filter(a => a !== "worker").concat("backToWork"),
-        })
-    }
-}
+// export function makeBackToWorkAbility(cells, i , j, player1, player2) {
+//     const [currentUnit, setCurrentUnit] = React.useState(unit)
+//     if (!attacker) {
+//         setCurrentUnit({
+//             ...currentUnit.cl,
+//             img: BTNPeasant,
+//             name: "Peasant",
+//             attack: currentUnit.cl.attack - 1,
+//             armor: currentUnit.cl.armor - 1,
+//             abilityImg: currentUnit.cl.abilityImg.filter(a => a !== BTNBacktoWork).concat(BTNGatherGold, BTNCallToArms),
+//             ability: currentUnit.cl.ability.filter(a => a !== "backToWork").concat("worker", "militia"),
+//         })
+//     }
+// }
 
-export function makeBackToWorkAbility(cells, i , j, player1, player2) {
-    const [currentUnit, setCurrentUnit] = React.useState(unit)
-    if (!attacker) {
-        setCurrentUnit({
-            ...currentUnit.cl,
-            img: BTNPeasant,
-            name: "Peasant",
-            attack: currentUnit.cl.attack - 1,
-            armor: currentUnit.cl.armor - 1,
-            abilityImg: currentUnit.cl.abilityImg.filter(a => a !== BTNBacktoWork).concat(BTNGatherGold, BTNCallToArms),
-            ability: currentUnit.cl.ability.filter(a => a !== "backToWork").concat("worker", "militia"),
-        })
-    }
-}
+// export function makeBashAbility(cells, i , j, player1, player2) {
+//     const [currentTarget, setCurrentTarget] = React.useState(target)
+//     if (currentTarget.cl.kind !== "building") {
+//         if (Math.round(Math.random() * 0.625 + 0.375) === 0) {
+//             alert(unit.cl.name + " have bashed " + target.cl.name + "!")
+//             setCurrentTarget({
+//                 ...currentTarget.cl,
+//                 abilityImg: currentTarget.cl.abilityImg.concat(BTNStun),
+//                 ability: currentTarget.cl.ability.concat(makeMilitiaAbility(unit, attacker, defender, target, player1, player2))
+//             })
+//         }
+//     }
+// }
 
-export function makeBashAbility(cells, i , j, player1, player2) {
-    const [currentTarget, setCurrentTarget] = React.useState(target)
-    if (currentTarget.cl.kind !== "building") {
-        if (Math.round(Math.random() * 0.625 + 0.375) === 0) {
-            alert(unit.cl.name + " have bashed " + target.cl.name + "!")
-            setCurrentTarget({
-                ...currentTarget.cl,
-                abilityImg: currentTarget.cl.abilityImg.concat(BTNStun),
-                ability: currentTarget.cl.ability.concat(makeMilitiaAbility(unit, attacker, defender, target, player1, player2))
-            })
-        }
-    }
-}
+// export function makeTrueSeenEffect(cells, i , j, player1, player2) {
+//     const [currentCells, setCurrentCells] = React.useState(cells)
+//     let newCells = cells
+//     newCells.forEach(currentUnit => {if (unit.player === 1) {
+//         if (currentUnit.player === 2) {currentUnit.visible = true}
+//     } else {
+//         if (currentUnit.player === 1) {currentUnit.visible = true}
+//     }})
+//     setCurrentCells({
+//         ...newCells,
+//     })
+// }
 
-export function makeTrueSeenEffect(cells, i , j, player1, player2) {
-    const [currentCells, setCurrentCells] = React.useState(cells)
+export function reduceAbilityTime(cells) {
     let newCells = cells
-    newCells.forEach(currentUnit => {if (unit.player === 1) {
-        if (currentUnit.player === 2) {currentUnit.visible = true}
-    } else {
-        if (currentUnit.player === 1) {currentUnit.visible = true}
-    }})
-    setCurrentCells({
-        ...newCells,
+    newCells.forEach(row => {
+        row.forEach(unit => {
+            if (unit) {
+                unit.cl.abilityTime.forEach((time, index) => {
+                    if (typeof(time) === "number") {
+                        if (time > 0) {
+                            unit.cl.abilityTime[index] = unit.cl.abilityTime[index] - 1
+                        } else {
+                            unit.cl.abilityTime.splice(index, 1)
+                            unit.cl.ability.splice(index, 1)
+                            unit.cl.abilityImg.splice(index, 1)
+                        }
+                    }
+                })
+            }
+        })
     })
+    return newCells
 }
 
+// function cleanCurrentEffect(unit) {
+//     let currentUnit = unit
+//     if (currentUnit) {
+//         if (currentUnit.cl.ability.indexOf("bashed") > -1) {
+//             currentUnit.cl.ability = currentUnit.cl.ability.filter(a => a !== "bashed")
+//         }
+//         if (currentUnit.cl.ability.indexOf("bashedForTheNextTurn") > -1) {
+//             currentUnit.cl.abilityImg = currentUnit.cl.abilityImg.filter(a => a !== BTNStun)
+//             currentUnit.cl.ability = currentUnit.cl.ability.filter(a => a !== "bashedForTheNextTurn").concat("bashed")
+//         }
+//         if (currentUnit.cl.ability.indexOf("cooling") > -1) {
+//             currentUnit.cl.abilityImg = currentUnit.cl.abilityImg.filter(a => a !== BTNFrost)
+//             currentUnit.cl.ability = currentUnit.cl.ability.filter(a => a !== "cooling")
+//         }
+//         if (currentUnit.cl.ability.indexOf("MomentOfCourageActive") > -1) {
+//             currentUnit.cl.attackSpeed = currentUnit.cl.attackSpeed - 1
+//             currentUnit.cl.ability = currentUnit.cl.ability = currentUnit.cl.ability.filter(a => a !== "MomentOfCourageActive")
+//         }
+//         if (currentUnit.cl.ability.indexOf("MomentOfCourageActivatedForNextTurn") > -1) {
+//             currentUnit.cl.attackSpeed = currentUnit.cl.attackSpeed + 1
+//             currentUnit.cl.ability = currentUnit.cl.ability.filter(a => a !== "MomentOfCourageActivatedForNextTurn").concat("MomentOfCourageActive")
+//         }
+//         if (currentUnit.cl.ability.indexOf("marksmanActive") > -1) {
+//             currentUnit.cl.attack = currentUnit.cl.attack - 1
+//             currentUnit.cl.attackSpeed = currentUnit.cl.attackSpeed - 1
+//             currentUnit.cl.ability = currentUnit.cl.ability.filter(a => a !== "marksmanActive").concat("marksman")
+//         }
+//         if (currentUnit.cl.ability.indexOf("burrow") > -1 && currentUnit.cl.hp >= currentUnit.cl.hpMax) {
+//             currentUnit.cl.attackSpeed = 1
+//             currentUnit.cl.attack = 4
+//             currentUnit.cl.ability = unit.cl.ability.filter(a => a !== ["burrow", "invisible"]).concat("UnBurrow")
+//             currentUnit.cl.abilityImg = unit.cl.abilityImg.filter(a => a !== BTNCryptFiendBurrow).concat(BTNCryptFiendUnBurrow)
+//         }
+//         if (currentUnit.cl.ability.indexOf("BorrowedTimeActive") > -1 && currentUnit.cl.hp > 3) {
+//             currentUnit.cl.ability = unit.cl.ability.filter(a => a !== "BorrowedTimeActive").concat("BorrowedTime")
+//         }
+//     }
+//     unit = currentUnit
+//     return unit
+// }
